@@ -44,76 +44,114 @@ export default function Dashboard() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="relative">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-500"></div>
+          <div className="absolute inset-0 rounded-full border-4 border-blue-500/20"></div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       <div className="p-6 max-w-7xl mx-auto">
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">My Team Plays</h1>
-              <p className="text-sm text-gray-600 mt-1">Welcome, {userEmail}</p>
-            </div>
-            <div className="flex gap-2">
-              <Link
-                to="/schedule"
-                className="px-4 py-2 rounded-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition-colors"
-              >
-                Schedule
-              </Link>
-              <Link
-                to="/new"
-                className="px-4 py-2 rounded-md bg-green-600 text-white hover:bg-green-700 transition-colors"
-              >
-                New Play
-              </Link>
-              <button
-                onClick={handleLogout}
-                className="px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700 transition-colors"
-              >
-                Logout
-              </button>
+        {/* Header */}
+        <div className="card mb-8">
+          <div className="card-header">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-4xl font-display font-bold text-white mb-2">
+                  <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+                    IRONforge
+                  </span>
+                  {' '}Playbook
+                </h1>
+                <div className="flex items-center gap-2">
+                  <span className="badge badge-blue">{userEmail}</span>
+                  <span className="badge badge-green">{plays.length} Plays</span>
+                </div>
+              </div>
+              <div className="flex gap-3">
+                <Link
+                  to="/schedule"
+                  className="btn-secondary"
+                >
+                  📅 Schedule
+                </Link>
+                <Link
+                  to="/new"
+                  className="btn-success"
+                >
+                  ➕ New Play
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="btn-danger"
+                >
+                  🚪 Logout
+                </button>
+              </div>
             </div>
           </div>
+        </div>
 
-          {plays.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-gray-500 mb-4">No plays yet. Create your first play!</p>
+        {/* Plays Grid */}
+        {plays.length === 0 ? (
+          <div className="card">
+            <div className="text-center py-16">
+              <div className="text-6xl mb-4">🏈</div>
+              <h3 className="text-2xl font-bold text-white mb-2">No Plays Yet</h3>
+              <p className="text-iron-300 mb-6">Create your first play to get started!</p>
               <Link
                 to="/new"
-                className="inline-block px-4 py-2 rounded-md bg-green-600 text-white hover:bg-green-700 transition-colors"
+                className="btn-primary inline-flex items-center gap-2"
               >
+                <span className="text-2xl">⚡</span>
                 Create First Play
               </Link>
             </div>
-          ) : (
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {plays.map(play => (
-                <div
-                  key={play.id}
-                  className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
-                >
-                  <Link
-                    to={`/play/${play.id}`}
-                    className="block space-y-2"
-                  >
-                    <h3 className="text-lg font-semibold text-blue-600 hover:text-blue-700">
-                      {play.name || 'Untitled Play'}
-                    </h3>
-                    <div className="space-y-1 text-sm text-gray-600">
-                      <p>Slides: {play.slides?.length || 0}</p>
-                      <p>Team ID: {play.teamId}</p>
+          </div>
+        ) : (
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {plays.map(play => (
+              <Link
+                key={play.id}
+                to={`/play/${play.id}`}
+                className="group"
+              >
+                <div className="card hover:border-blue-500/50 transition-all duration-300 hover:scale-105 h-full">
+                  <div className="p-6">
+                    <div className="flex items-start justify-between mb-4">
+                      <h3 className="text-xl font-display font-bold text-white group-hover:text-blue-400 transition-colors">
+                        {play.name || 'Untitled Play'}
+                      </h3>
+                      <div className="text-2xl">🏈</div>
                     </div>
-                  </Link>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-iron-400 text-sm">Slides</span>
+                        <span className="badge badge-blue">
+                          {play.slides?.length || 0}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-iron-400 text-sm">Team</span>
+                        <span className="text-iron-200 text-sm font-medium">
+                          {play.teamId}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="mt-4 pt-4 border-t border-iron-700">
+                      <span className="text-blue-400 text-sm font-semibold group-hover:text-blue-300">
+                        View Play →
+                      </span>
+                    </div>
+                  </div>
                 </div>
-              ))}
-            </div>
-          )}
-        </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

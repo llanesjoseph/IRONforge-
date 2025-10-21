@@ -59,24 +59,47 @@ export default function PlayerToken({ player, onDrag, onRename, onClick, editabl
       onDblClick={handleDoubleClick}
       onTap={handleDoubleClick}
     >
+      {/* Outer glow */}
       <Circle
-        radius={16}
-        fill="#ffffff"
-        stroke="#111827"
-        strokeWidth={2}
-        shadowColor="black"
-        shadowBlur={5}
-        shadowOpacity={0.3}
+        radius={20}
+        fill="#2563eb"
+        opacity={0.3}
+        shadowBlur={10}
+        shadowColor="#2563eb"
       />
+
+      {/* Main token - gradient effect with two circles */}
+      <Circle
+        radius={18}
+        fill="#3b82f6"
+        stroke="#1e40af"
+        strokeWidth={3}
+        shadowColor="rgba(0, 0, 0, 0.6)"
+        shadowBlur={8}
+        shadowOffsetY={3}
+        shadowOpacity={0.8}
+      />
+
+      {/* Inner highlight for 3D effect */}
+      <Circle
+        radius={15}
+        fill="rgba(147, 197, 253, 0.3)"
+        offsetY={-2}
+      />
+
+      {/* Player label with shadow for readability */}
       <Text
         text={player.label}
-        x={-10}
-        y={-7}
-        fontSize={12}
+        x={-12}
+        y={-8}
+        fontSize={13}
         fontStyle="bold"
-        fill="#111827"
+        fill="#ffffff"
         align="center"
-        width={20}
+        width={24}
+        shadowColor="#000000"
+        shadowBlur={4}
+        shadowOpacity={0.8}
       />
     </Group>
   );

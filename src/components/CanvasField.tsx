@@ -114,43 +114,115 @@ const CanvasField = forwardRef<CanvasHandle, CanvasProps>(
         ref={stageRef}
         width={width}
         height={height}
-        className="rounded-xl shadow bg-green-700"
+        className="rounded-xl shadow-field"
         onClick={handleStageClick}
         onDblClick={handleStageClick}
       >
         <Layer>
-          <Rect width={width} height={height} fill="#2e7d32" cornerRadius={12} />
+          {/* Base grass color */}
+          <Rect width={width} height={height} fill="#0a4d2e" cornerRadius={12} />
+
+          {/* Grass stripes (alternating dark/light) */}
+          {Array.from({ length: 14 }).map((_, i) => (
+            <Rect
+              key={`stripe-${i}`}
+              x={i * 50}
+              y={0}
+              width={50}
+              height={height}
+              fill={i % 2 === 0 ? '#0a4d2e' : '#0f6d3e'}
+              listening={false}
+            />
+          ))}
+
+          {/* Field border/sidelines */}
+          <Line
+            points={[10, 10, width - 10, 10, width - 10, height - 10, 10, height - 10, 10, 10]}
+            stroke="#ffffff"
+            strokeWidth={3}
+            listening={false}
+          />
+
+          {/* End zones - subtle shading */}
+          <Rect
+            x={10}
+            y={10}
+            width={width - 20}
+            height={50}
+            fill="rgba(0, 0, 0, 0.1)"
+            listening={false}
+          />
+          <Rect
+            x={10}
+            y={height - 60}
+            width={width - 20}
+            height={50}
+            fill="rgba(0, 0, 0, 0.1)"
+            listening={false}
+          />
 
           {/* Grid Overlay - render before yard lines so they appear behind */}
           {gridLines}
 
           {/* Horizontal Yard Lines (running left to right across field) */}
-          {yardLines.map(y => (
+          {yardLines.map((y, idx) => (
             <Line
               key={y}
-              points={[20, y, width - 20, y]}
-              stroke="#e5e7eb"
-              dash={[6, 6]}
-              strokeWidth={1}
+              points={[15, y, width - 15, y]}
+              stroke="rgba(255, 255, 255, 0.4)"
+              strokeWidth={2}
+              listening={false}
             />
           ))}
 
-          {/* Line of Scrimmage - Horizontal line */}
+          {/* Hash marks on yard lines */}
+          {yardLines.map(y => [
+            <Line
+              key={`hash-left-${y}`}
+              points={[width * 0.35, y - 3, width * 0.35, y + 3]}
+              stroke="rgba(255, 255, 255, 0.5)"
+              strokeWidth={2}
+              listening={false}
+            />,
+            <Line
+              key={`hash-right-${y}`}
+              points={[width * 0.65, y - 3, width * 0.65, y + 3]}
+              stroke="rgba(255, 255, 255, 0.5)"
+              strokeWidth={2}
+              listening={false}
+            />
+          ])}
+
+          {/* Line of Scrimmage - Glow effect */}
           <Line
-            points={[20, LOS_Y, width - 20, LOS_Y]}
-            stroke="#FF6B6B"
-            strokeWidth={4}
-            opacity={0.8}
+            points={[15, LOS_Y, width - 15, LOS_Y]}
+            stroke="#ef4444"
+            strokeWidth={6}
+            opacity={0.3}
+            listening={false}
+            shadowBlur={15}
+            shadowColor="#ef4444"
+          />
+          <Line
+            points={[15, LOS_Y, width - 15, LOS_Y]}
+            stroke="#dc2626"
+            strokeWidth={3}
+            opacity={1}
+            listening={false}
           />
 
           {/* LOS Label */}
           <KText
-            x={10}
-            y={LOS_Y - 20}
+            x={width - 140}
+            y={LOS_Y - 25}
             text="LINE OF SCRIMMAGE"
-            fill="#FF6B6B"
+            fill="#fef2f2"
             fontStyle="bold"
-            fontSize={12}
+            fontSize={11}
+            listening={false}
+            shadowBlur={8}
+            shadowColor="#000000"
+            shadowOpacity={0.8}
           />
 
           {/* Routes Layer - drawn before players so they appear behind */}
