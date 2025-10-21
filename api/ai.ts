@@ -23,9 +23,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     if (provider === 'gemini') {
-      const apiKey = process.env.VITE_GEMINI_API_KEY;
-      
+      // Try both VITE_ and non-VITE_ prefixed env vars
+      const apiKey = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
+
       if (!apiKey) {
+        console.error('Gemini API key not found. Checked: GEMINI_API_KEY, VITE_GEMINI_API_KEY');
         return res.status(500).json({ error: 'Gemini API key not configured' });
       }
 
@@ -56,9 +58,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(200).json({ text });
     } 
     else if (provider === 'anthropic') {
-      const apiKey = process.env.VITE_ANTHROPIC_API_KEY;
-      
+      // Try both VITE_ and non-VITE_ prefixed env vars
+      const apiKey = process.env.ANTHROPIC_API_KEY || process.env.VITE_ANTHROPIC_API_KEY;
+
       if (!apiKey) {
+        console.error('Anthropic API key not found. Checked: ANTHROPIC_API_KEY, VITE_ANTHROPIC_API_KEY');
         return res.status(500).json({ error: 'Anthropic API key not configured' });
       }
 
