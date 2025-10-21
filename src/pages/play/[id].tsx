@@ -712,11 +712,11 @@ export default function PlayEditor() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-6">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="bg-white rounded-lg shadow-sm p-6">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex-1">
+    <div className="min-h-screen bg-gray-50 py-3 md:py-6">
+      <div className="max-w-6xl mx-auto px-2 sm:px-4">
+        <div className="bg-white rounded-lg shadow-sm p-3 sm:p-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-3">
+            <div className="flex-1 w-full sm:w-auto">
               {isEditingName && canEdit ? (
                 <div className="flex gap-2 items-center">
                   <input
@@ -744,7 +744,7 @@ export default function PlayEditor() {
                 </div>
               ) : (
                 <div className="flex items-center gap-2">
-                  <h2 className="text-2xl font-bold text-gray-900">{play.name}</h2>
+                  <h2 className="text-xl sm:text-2xl font-bold text-gray-900">{play.name}</h2>
                   {canEdit && (
                     <button
                       onClick={() => setIsEditingName(true)}
@@ -762,32 +762,32 @@ export default function PlayEditor() {
                 {saving && <span className="ml-2 text-blue-600">Saving...</span>}
               </p>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 w-full sm:w-auto">
               {canEdit && (
                 <button
                   onClick={handleDelete}
-                  className="px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700 transition-colors"
+                  className="flex-1 sm:flex-none px-3 sm:px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700 transition-colors text-sm sm:text-base"
                 >
                   Delete Play
                 </button>
               )}
               <Link
                 to="/"
-                className="px-4 py-2 rounded-md bg-gray-600 text-white hover:bg-gray-700 transition-colors"
+                className="flex-1 sm:flex-none px-3 sm:px-4 py-2 rounded-md bg-gray-600 text-white hover:bg-gray-700 transition-colors text-center text-sm sm:text-base"
               >
                 Back
               </Link>
             </div>
           </div>
 
-          <div className="space-y-4">
-            <div className="flex gap-2 flex-wrap items-center">
+          <div className="space-y-3 sm:space-y-4">
+            <div className="flex gap-2 flex-wrap items-center text-sm sm:text-base">
               <button
                 disabled={!canEdit}
                 onClick={mirrorLeftRight}
-                className={`px-3 py-2 rounded border transition-colors ${
+                className={`px-3 py-2 rounded border transition-colors font-medium ${
                   canEdit
-                    ? 'bg-white hover:bg-gray-50 border-gray-300'
+                    ? 'bg-gray-100 text-gray-900 hover:bg-gray-200 border-gray-400'
                     : 'bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200'
                 }`}
               >
@@ -796,9 +796,9 @@ export default function PlayEditor() {
               <button
                 disabled={!canEdit}
                 onClick={flipField}
-                className={`px-3 py-2 rounded border transition-colors ${
+                className={`px-3 py-2 rounded border transition-colors font-medium ${
                   canEdit
-                    ? 'bg-white hover:bg-gray-50 border-gray-300'
+                    ? 'bg-gray-100 text-gray-900 hover:bg-gray-200 border-gray-400'
                     : 'bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200'
                 }`}
               >
@@ -807,9 +807,9 @@ export default function PlayEditor() {
               <button
                 disabled={!canEdit}
                 onClick={handleSnapToLOS}
-                className={`px-3 py-2 rounded border transition-colors ${
+                className={`px-3 py-2 rounded border transition-colors font-medium ${
                   canEdit
-                    ? 'bg-white hover:bg-gray-50 border-gray-300'
+                    ? 'bg-gray-100 text-gray-900 hover:bg-gray-200 border-gray-400'
                     : 'bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200'
                 }`}
               >
@@ -836,24 +836,24 @@ export default function PlayEditor() {
               />
 
               {/* Grid Controls */}
-              <div className="flex gap-3 items-center ml-auto border-l pl-3">
-                <label className="flex items-center gap-2 cursor-pointer">
+              <div className="flex gap-2 sm:gap-3 items-center sm:ml-auto sm:border-l sm:pl-3 w-full sm:w-auto justify-center sm:justify-start">
+                <label className="flex items-center gap-1 sm:gap-2 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={showGrid}
                     onChange={(e) => setShowGrid(e.target.checked)}
                     className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
                   />
-                  <span className="text-sm font-medium text-gray-700">Show Grid</span>
+                  <span className="text-xs sm:text-sm font-medium text-gray-700">Show Grid</span>
                 </label>
-                <label className="flex items-center gap-2 cursor-pointer">
+                <label className="flex items-center gap-1 sm:gap-2 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={enableSnapping}
                     onChange={(e) => setEnableSnapping(e.target.checked)}
                     className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
                   />
-                  <span className="text-sm font-medium text-gray-700">Snap to Grid</span>
+                  <span className="text-xs sm:text-sm font-medium text-gray-700">Snap to Grid</span>
                 </label>
               </div>
             </div>
