@@ -7,9 +7,20 @@ service cloud.firestore {
       return request.auth != null;
     }
 
+    function getUserRole() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && getUserRole() == 'admin';
+    }
+
     function isCoach() {
-      return isAuthenticated() &&
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'coach';
+      return isAuthenticated() && getUserRole() == 'coach';
+    }
+
+    function isCoachOrAdmin() {
+      return isAuthenticated() && (getUserRole() == 'coach' || getUserRole() == 'admin');
     }
 
     function isOwner(ownerId) {
@@ -18,6 +29,12 @@ service cloud.firestore {
 
     function belongsToTeam(teamId) {
       return isAuthenticated() && teamId == 'team-1'; // Simplified for MVP
+    }
+
+    function isTeamMember(teamId) {
+      return isAuthenticated() &&
+        exists(/databases/$(database)/documents/teams/$(teamId)) &&
+        get(/databases/$(database)/documents/teams/$(teamId)).data.members[request.auth.uid] != null;
     }
 
     function validPlayData() {
@@ -53,16 +70,16 @@ service cloud.firestore {
 
     // Users collection
     match /users/{userId} {
-      // Users can read their own profile
-      allow read: if isAuthenticated() && request.auth.uid == userId;
+      // Users can read their own profile, admins can read all profiles
+      allow read: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
 
-      // Users can create their profile
+      // Users can create their own profile
       allow create: if isAuthenticated() && request.auth.uid == userId;
 
-      // Users can update their profile but NOT change role
+      // Users can update their own profile
+      // Admins can update any profile (for team assignment)
       allow update: if isAuthenticated() &&
-        request.auth.uid == userId &&
-        (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['role']));
+        (request.auth.uid == userId || isAdmin());
     }
 
     // Schedule collection
@@ -82,6 +99,51 @@ service cloud.firestore {
 
       // Any authenticated user can delete events
       allow delete: if isAuthenticated();
+    }
+
+    // Teams collection
+    match /teams/{teamId} {
+      // Team members and admins can read team data
+      allow read: if isAuthenticated() && (isTeamMember(teamId) || isAdmin());
+
+      // Only admins can create teams
+      allow create: if isAdmin() &&
+        request.resource.data.createdBy == request.auth.uid;
+
+      // Admins and team creators can update team data
+      allow update: if isAuthenticated() &&
+        (isAdmin() || resource.data.createdBy == request.auth.uid);
+
+      // Only admins can delete teams
+      allow delete: if isAdmin();
+    }
+
+    // Invites collection
+    match /invites/{inviteId} {
+      // Users can read invites sent to their email
+      // Admins and coaches can read all invites for their team
+      allow read: if isAuthenticated() && (
+        request.auth.token.email == resource.data.email ||
+        isAdmin() ||
+        (isCoach() && exists(/databases/$(database)/documents/invites/$(inviteId)))
+      );
+
+      // Admins and coaches can create invites
+      allow create: if isAuthenticated() &&
+        isCoachOrAdmin() &&
+        request.resource.data.invitedBy == request.auth.uid;
+
+      // Users can update invites (to accept/decline)
+      // Admins and coaches can update their own invites
+      allow update: if isAuthenticated() && (
+        request.auth.token.email == resource.data.email ||
+        resource.data.invitedBy == request.auth.uid ||
+        isAdmin()
+      );
+
+      // Only the creator or admin can delete invites
+      allow delete: if isAuthenticated() &&
+        (resource.data.invitedBy == request.auth.uid || isAdmin());
     }
   }
 }
