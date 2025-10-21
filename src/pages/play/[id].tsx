@@ -1088,29 +1088,29 @@ export default function PlayEditor() {
                 ) : (
                   <div className="prose prose-sm max-w-none">
                     {playNotes ? (
-                      <p className="text-gray-700 whitespace-pre-wrap">{playNotes}</p>
+                      <p className="text-gray-900 whitespace-pre-wrap leading-relaxed">{playNotes}</p>
                     ) : (
-                      <p className="text-gray-400 italic">No notes added yet. Click Edit to add play notes.</p>
+                      <p className="text-gray-600 font-medium">No notes added yet. Click Edit to add play notes.</p>
                     )}
                   </div>
                 )}
 
                 {/* Quick Stats */}
                 <div className="mt-6 pt-4 border-t border-gray-200">
-                  <h4 className="text-sm font-bold text-gray-900 mb-2">Quick Stats</h4>
-                  <div className="space-y-2 text-sm">
+                  <h4 className="text-sm font-bold text-gray-900 mb-3">Quick Stats</h4>
+                  <div className="space-y-3 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Total Slides:</span>
-                      <span className="font-semibold text-gray-900">{play.slides.length}</span>
+                      <span className="text-gray-700 font-medium">Total Slides:</span>
+                      <span className="font-bold text-gray-900">{play.slides.length}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Routes (this slide):</span>
-                      <span className="font-semibold text-gray-900">{current.routes?.length || 0}</span>
+                      <span className="text-gray-700 font-medium">Routes (this slide):</span>
+                      <span className="font-bold text-gray-900">{current.routes?.length || 0}</span>
                     </div>
                     {play.formation && (
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Formation:</span>
-                        <span className="font-semibold text-gray-900 capitalize">
+                        <span className="text-gray-700 font-medium">Formation:</span>
+                        <span className="font-bold text-gray-900 capitalize">
                           {play.formation === 'trips' ? 'Trips Right' : play.formation === 'doubles' ? 'Doubles' : 'Empty'}
                         </span>
                       </div>

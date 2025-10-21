@@ -170,8 +170,8 @@ export default function SlideControls({
           </Stage>
 
           {/* Slide label overlay */}
-          <div className={`absolute bottom-0 left-0 right-0 px-2 py-1 text-center text-xs font-bold ${
-            isActive ? 'bg-blue-600 text-white' : 'bg-gray-700 text-white bg-opacity-80'
+          <div className={`absolute bottom-0 left-0 right-0 px-2 py-1 text-center text-xs font-bold shadow-lg ${
+            isActive ? 'bg-blue-600 text-white' : 'bg-gray-900 text-white'
           }`}>
             {index + 1}. {labels[index] || `Slide ${index + 1}`}
           </div>
