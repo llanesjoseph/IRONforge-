@@ -39,7 +39,9 @@ export type Play = {
 export type UserProfile = {
   uid: string;
   displayName?: string;
-  role: 'coach' | 'player';
+  email?: string;
+  role: 'admin' | 'coach' | 'player';
+  teamId?: string;
 }
 
 export type ScheduleEvent = {
@@ -98,3 +100,32 @@ export type GeneratedPlay = {
 
 // Play types for AI generation
 export type PlayType = 'run' | 'short-pass' | 'deep-pass' | 'screen' | 'play-action';
+
+// Team and Invite types
+export type TeamMember = {
+  uid: string;
+  email: string;
+  displayName?: string;
+  role: 'coach' | 'player';
+  joinedAt: any;
+}
+
+export type Team = {
+  id: string;
+  name: string;
+  createdBy: string; // Admin UID
+  members: { [uid: string]: TeamMember };
+  createdAt: any;
+}
+
+export type Invite = {
+  id: string;
+  teamId: string;
+  email: string;
+  role: 'coach' | 'player';
+  status: 'pending' | 'accepted' | 'declined' | 'expired';
+  invitedBy: string;
+  invitedByEmail: string;
+  createdAt: any;
+  expiresAt: any;
+}

@@ -127,6 +127,14 @@
     @apply bg-red-500/20 text-red-300 border border-red-500/30;
   }
 
+  .badge-purple {
+    @apply bg-purple-500/20 text-purple-300 border border-purple-500/30;
+  }
+
+  .badge-yellow {
+    @apply bg-yellow-500/20 text-yellow-300 border border-yellow-500/30;
+  }
+
   /* Text visibility utilities */
   .text-emphasis {
     @apply text-white font-bold;

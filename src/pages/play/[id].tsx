@@ -28,7 +28,7 @@ export default function PlayEditor() {
   const navigate = useNavigate();
   const [play, setPlay] = useState<Play | null>(null);
   const [slideIndex, setSlideIndex] = useState<number>(1);
-  const [role, setRole] = useState<'coach' | 'player'>('player');
+  const [role, setRole] = useState<'admin' | 'coach' | 'player'>('player');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [playName, setPlayName] = useState('');

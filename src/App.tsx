@@ -5,6 +5,8 @@ import PlayEditor from './pages/play/[id]';
 import NewPlay from './pages/new-play';
 import Schedule from './pages/schedule';
 import AITest from './pages/ai-test';
+import Team from './pages/Team';
+import InviteAccept from './pages/InviteAccept';
 import ProtectedRoute from './components/ProtectedRoute';
 
 export default function App() {
@@ -12,11 +14,20 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/invite/:inviteId" element={<InviteAccept />} />
         <Route
           path="/"
           element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/team"
+          element={
+            <ProtectedRoute>
+              <Team />
             </ProtectedRoute>
           }
         />

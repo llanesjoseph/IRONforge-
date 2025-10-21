@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 
 export default function Schedule() {
   const [events, setEvents] = useState<ScheduleEvent[]>([]);
-  const [role, setRole] = useState<'coach' | 'player'>('player');
+  const [role, setRole] = useState<'admin' | 'coach' | 'player'>('player');
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState<ScheduleEvent>({
     title: '',
