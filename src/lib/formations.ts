@@ -100,9 +100,10 @@ export function tripsRightTemplate(): Slide[] {
     { id: 'C',  label: 'C',  x: 340, y: 300 },
     { id: 'RG', label: 'RG', x: 380, y: 300 },
     { id: 'RT', label: 'RT', x: 420, y: 300 },
+    { id: 'TE', label: 'TE', x: 460, y: 300 }, // Tight end on right side
     { id: 'X',  label: 'X',  x: 200, y: 200 },
-    { id: 'Y',  label: 'Y',  x: 440, y: 220 },
-    { id: 'Z',  label: 'Z',  x: 480, y: 200 }
+    { id: 'Y',  label: 'Y',  x: 500, y: 220 }, // Adjusted position for trips
+    { id: 'Z',  label: 'Z',  x: 540, y: 200 }  // Adjusted position for trips
   ];
   return [1, 2, 3].map(i => ({
     index: i,

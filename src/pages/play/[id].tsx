@@ -4,7 +4,6 @@ import { doc, getDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { auth, db } from '../../lib/firebase';
 import CanvasField, { CanvasHandle } from '../../components/CanvasField';
 import SlideControls from '../../components/SlideControls';
-import PlayPreview from '../../components/PlayPreview';
 import ExportButtons from '../../components/ExportButtons';
 import AIAssistant from '../../components/AIAssistant';
 import PlayGeneratorModal from '../../components/PlayGeneratorModal';
@@ -20,7 +19,7 @@ import {
   GeneratedPlay,
   DefensivePlayer
 } from '../../types';
-import { FIELD, snapToGrid, snapToLOS, calculateRouteYardage } from '../../lib/formations';
+import { FIELD, snapToGrid, snapToLOS, calculateRouteYardage, tripsRightTemplate, doublesTemplate, emptyTemplate } from '../../lib/formations';
 import { getOrCreateUserProfile } from '../../lib/user';
 import { generatePlayFromEndpoint, challengePlayWithRedTeam } from '../../lib/ai';
 
@@ -196,6 +195,44 @@ export default function PlayEditor() {
       await updateDoc(doc(db, 'plays', play.id), { slides: updated });
     } catch (error) {
       console.error('Error snapping to LOS:', error);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleResetToFormation = async () => {
+    if (!play || !canEdit || !play.formation) {
+      alert('Formation template not available for this play');
+      return;
+    }
+
+    if (!confirm('Reset all player positions to original formation? Routes will be preserved.')) {
+      return;
+    }
+
+    // Get the original formation template
+    const templateSlides = play.formation === 'trips'
+      ? tripsRightTemplate()
+      : play.formation === 'doubles'
+      ? doublesTemplate()
+      : emptyTemplate();
+
+    const basePositions = templateSlides[0].positions;
+
+    // Reset positions but keep routes for each slide
+    const updated = play.slides.map(s => ({
+      ...s,
+      positions: basePositions.map(p => ({ ...p })) // Deep copy
+    }));
+
+    const np = { ...play, slides: updated };
+    setPlay(np);
+
+    try {
+      setSaving(true);
+      await updateDoc(doc(db, 'plays', play.id), { slides: updated });
+    } catch (error) {
+      console.error('Error resetting to formation:', error);
     } finally {
       setSaving(false);
     }
@@ -750,6 +787,20 @@ export default function PlayEditor() {
               >
                 Snap to LOS
               </button>
+              {play.formation && (
+                <button
+                  disabled={!canEdit}
+                  onClick={handleResetToFormation}
+                  className={`px-3 py-2 rounded border transition-colors ${
+                    canEdit
+                      ? 'bg-blue-600 text-white hover:bg-blue-700 border-blue-700'
+                      : 'bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200'
+                  }`}
+                  title="Reset all players to original formation positions"
+                >
+                  Reset to Formation
+                </button>
+              )}
               <ExportButtons
                 slide={current}
                 fileBase={`${play.name.replace(/\s+/g, '_')}-slide${slideIndex}`}
@@ -936,15 +987,6 @@ export default function PlayEditor() {
               </div>
             )}
 
-            <SlideControls
-              current={slideIndex}
-              setSlide={setSlideIndex}
-              totalSlides={play.slides.length}
-              onAddSlide={addSlide}
-              onDeleteSlide={deleteSlide}
-              canEdit={!!canEdit}
-            />
-
             <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
               <CanvasField
                 ref={canvasRef}
@@ -972,10 +1014,16 @@ export default function PlayEditor() {
               />
             </div>
 
-            <div className="pt-4 border-t border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">Play Preview</h3>
-              <PlayPreview slides={play.slides} />
-            </div>
+            {/* Slide Controls with Thumbnails and Animation - Below Canvas */}
+            <SlideControls
+              current={slideIndex}
+              setSlide={setSlideIndex}
+              totalSlides={play.slides.length}
+              slides={play.slides}
+              onAddSlide={addSlide}
+              onDeleteSlide={deleteSlide}
+              canEdit={!!canEdit}
+            />
           </div>
         </div>
       </div>

@@ -119,21 +119,8 @@ const CanvasField = forwardRef<CanvasHandle, CanvasProps>(
         onDblClick={handleStageClick}
       >
         <Layer>
-          {/* Base grass color */}
-          <Rect width={width} height={height} fill="#0a4d2e" cornerRadius={12} />
-
-          {/* Grass stripes (alternating dark/light) */}
-          {Array.from({ length: 14 }).map((_, i) => (
-            <Rect
-              key={`stripe-${i}`}
-              x={i * 50}
-              y={0}
-              width={50}
-              height={height}
-              fill={i % 2 === 0 ? '#0a4d2e' : '#0f6d3e'}
-              listening={false}
-            />
-          ))}
+          {/* Solid grass field - clean and simple */}
+          <Rect width={width} height={height} fill="#0f7d43" cornerRadius={12} />
 
           {/* Field border/sidelines */}
           <Line

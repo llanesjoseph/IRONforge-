@@ -31,6 +31,7 @@ export type Play = {
   createdBy: string;
   slides: Slide[];
   createdAt: any;
+  formation?: 'trips' | 'doubles' | 'empty'; // Formation template used
 }
 
 export type UserProfile = {

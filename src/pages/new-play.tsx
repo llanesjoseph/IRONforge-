@@ -37,6 +37,7 @@ export default function NewPlay() {
         teamId: 'team-1',
         createdBy: user.uid,
         slides,
+        formation, // Store the formation type
         createdAt: serverTimestamp(),
       });
 
