@@ -58,6 +58,10 @@ export default function PlayEditor() {
   const [playNotes, setPlayNotes] = useState('');
   const [isEditingNotes, setIsEditingNotes] = useState(false);
 
+  // Group selection state
+  const [isGroupSelectMode, setIsGroupSelectMode] = useState(false);
+  const [selectedPlayerIds, setSelectedPlayerIds] = useState<Set<string>>(new Set());
+
   // Allow anyone who owns the play to edit it (both coaches and players)
   const canEdit = auth.currentUser && play && play.createdBy === auth.currentUser.uid;
 
@@ -98,23 +102,65 @@ export default function PlayEditor() {
   const updatePosition = async (playerId: string, x: number, y: number) => {
     if (!play || !canEdit) return;
 
-    const updatedSlides = play.slides.map(s =>
-      s.index === slideIndex
-        ? { ...s, positions: s.positions.map(p => p.id === playerId ? { ...p, x, y } : p) }
-        : s
-    );
+    // If in group select mode and this player is selected, move all selected players
+    if (isGroupSelectMode && selectedPlayerIds.has(playerId)) {
+      const currentSlide = play.slides.find(s => s.index === slideIndex);
+      if (!currentSlide) return;
 
-    const newPlay = { ...play, slides: updatedSlides };
-    setPlay(newPlay);
+      // Find the player being dragged
+      const draggedPlayer = currentSlide.positions.find(p => p.id === playerId);
+      if (!draggedPlayer) return;
 
-    // Auto-save position changes
-    try {
-      setSaving(true);
-      await updateDoc(doc(db, 'plays', play.id), { slides: updatedSlides });
-    } catch (error) {
-      console.error('Error saving position:', error);
-    } finally {
-      setSaving(false);
+      // Calculate the delta
+      const deltaX = x - draggedPlayer.x;
+      const deltaY = y - draggedPlayer.y;
+
+      // Update all selected players by the same delta
+      const updatedSlides = play.slides.map(s =>
+        s.index === slideIndex
+          ? {
+              ...s,
+              positions: s.positions.map(p =>
+                selectedPlayerIds.has(p.id)
+                  ? { ...p, x: p.x + deltaX, y: p.y + deltaY }
+                  : p
+              )
+            }
+          : s
+      );
+
+      const newPlay = { ...play, slides: updatedSlides };
+      setPlay(newPlay);
+
+      // Auto-save position changes
+      try {
+        setSaving(true);
+        await updateDoc(doc(db, 'plays', play.id), { slides: updatedSlides });
+      } catch (error) {
+        console.error('Error saving position:', error);
+      } finally {
+        setSaving(false);
+      }
+    } else {
+      // Normal single player movement
+      const updatedSlides = play.slides.map(s =>
+        s.index === slideIndex
+          ? { ...s, positions: s.positions.map(p => p.id === playerId ? { ...p, x, y } : p) }
+          : s
+      );
+
+      const newPlay = { ...play, slides: updatedSlides };
+      setPlay(newPlay);
+
+      // Auto-save position changes
+      try {
+        setSaving(true);
+        await updateDoc(doc(db, 'plays', play.id), { slides: updatedSlides });
+      } catch (error) {
+        console.error('Error saving position:', error);
+      } finally {
+        setSaving(false);
+      }
     }
   };
 
@@ -312,6 +358,21 @@ export default function PlayEditor() {
   };
 
   const handlePlayerClick = (playerId: string) => {
+    // Group select mode: toggle player selection
+    if (isGroupSelectMode && canEdit) {
+      setSelectedPlayerIds(prev => {
+        const newSet = new Set(prev);
+        if (newSet.has(playerId)) {
+          newSet.delete(playerId);
+        } else {
+          newSet.add(playerId);
+        }
+        return newSet;
+      });
+      return;
+    }
+
+    // Route drawing mode
     if (!isDrawingRoute || !canEdit) return;
 
     // Start a new route from this player
@@ -330,6 +391,27 @@ export default function PlayEditor() {
 
     setCurrentRoute(newRoute);
     setSelectedPlayerId(playerId);
+  };
+
+  const toggleGroupSelectMode = () => {
+    setIsGroupSelectMode(!isGroupSelectMode);
+    // Clear selections when toggling off
+    if (isGroupSelectMode) {
+      setSelectedPlayerIds(new Set());
+    }
+    // Exit route drawing mode when entering group select mode
+    if (!isGroupSelectMode && isDrawingRoute) {
+      stopDrawingRoute();
+    }
+  };
+
+  const selectAllPlayers = () => {
+    if (!current) return;
+    setSelectedPlayerIds(new Set(current.positions.map(p => p.id)));
+  };
+
+  const clearSelection = () => {
+    setSelectedPlayerIds(new Set());
   };
 
   const handleCanvasClick = (x: number, y: number) => {
@@ -784,6 +866,38 @@ export default function PlayEditor() {
             <div className="flex gap-2 flex-wrap items-center text-sm sm:text-base">
               <button
                 disabled={!canEdit}
+                onClick={toggleGroupSelectMode}
+                className={`px-3 py-2 rounded border transition-colors font-bold ${
+                  isGroupSelectMode
+                    ? 'bg-purple-600 text-white hover:bg-purple-700 border-purple-700'
+                    : canEdit
+                    ? 'bg-gray-100 text-gray-900 hover:bg-gray-200 border-gray-400'
+                    : 'bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200'
+                }`}
+              >
+                {isGroupSelectMode ? '✓ Group Select' : 'Group Select'}
+              </button>
+              {isGroupSelectMode && selectedPlayerIds.size > 0 && (
+                <>
+                  <span className="text-sm font-semibold text-purple-700">
+                    {selectedPlayerIds.size} selected
+                  </span>
+                  <button
+                    onClick={selectAllPlayers}
+                    className="px-3 py-2 rounded border bg-purple-100 text-purple-900 hover:bg-purple-200 border-purple-300 transition-colors font-medium"
+                  >
+                    Select All
+                  </button>
+                  <button
+                    onClick={clearSelection}
+                    className="px-3 py-2 rounded border bg-gray-100 text-gray-900 hover:bg-gray-200 border-gray-400 transition-colors font-medium"
+                  >
+                    Clear
+                  </button>
+                </>
+              )}
+              <button
+                disabled={!canEdit}
                 onClick={mirrorLeftRight}
                 className={`px-3 py-2 rounded border transition-colors font-medium ${
                   canEdit
@@ -1033,6 +1147,9 @@ export default function PlayEditor() {
                   editable={!!canEdit}
                   showGrid={showGrid}
                   enableSnapping={enableSnapping}
+                  // Group selection props
+                  selectedPlayerIds={selectedPlayerIds}
+                  isGroupSelectMode={isGroupSelectMode}
                   // AI Play Generator props
                   ballMarker={ballMarker}
                   endpointMarker={endpointMarker}

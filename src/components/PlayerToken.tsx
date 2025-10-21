@@ -10,9 +10,11 @@ interface PlayerTokenProps {
   onClick?: () => void;
   editable?: boolean;
   enableSnapping?: boolean;
+  isSelected?: boolean;
+  isGroupSelectMode?: boolean;
 }
 
-export default function PlayerToken({ player, onDrag, onRename, onClick, editable = true, enableSnapping = true }: PlayerTokenProps) {
+export default function PlayerToken({ player, onDrag, onRename, onClick, editable = true, enableSnapping = true, isSelected = false, isGroupSelectMode = false }: PlayerTokenProps) {
   const [isEditing, setIsEditing] = useState(false);
 
   const handleDragEnd = (e: any) => {
@@ -49,6 +51,11 @@ export default function PlayerToken({ player, onDrag, onRename, onClick, editabl
     }
   };
 
+  // Selection colors
+  const selectionColor = isSelected ? '#9333ea' : '#2563eb'; // purple if selected, blue otherwise
+  const strokeColor = isSelected ? '#7e22ce' : '#1e40af';
+  const strokeWidth = isSelected ? 4 : 3;
+
   return (
     <Group
       x={player.x}
@@ -59,21 +66,31 @@ export default function PlayerToken({ player, onDrag, onRename, onClick, editabl
       onDblClick={handleDoubleClick}
       onTap={handleDoubleClick}
     >
-      {/* Outer glow */}
+      {/* Outer glow - larger and more intense when selected */}
       <Circle
-        radius={20}
-        fill="#2563eb"
-        opacity={0.3}
-        shadowBlur={10}
-        shadowColor="#2563eb"
+        radius={isSelected ? 24 : 20}
+        fill={selectionColor}
+        opacity={isSelected ? 0.5 : 0.3}
+        shadowBlur={isSelected ? 15 : 10}
+        shadowColor={selectionColor}
       />
+
+      {/* Selection ring for group select mode */}
+      {isGroupSelectMode && isSelected && (
+        <Circle
+          radius={22}
+          stroke="#9333ea"
+          strokeWidth={2}
+          dash={[4, 4]}
+        />
+      )}
 
       {/* Main token - gradient effect with two circles */}
       <Circle
         radius={18}
-        fill="#3b82f6"
-        stroke="#1e40af"
-        strokeWidth={3}
+        fill={isSelected ? '#a855f7' : '#3b82f6'}
+        stroke={strokeColor}
+        strokeWidth={strokeWidth}
         shadowColor="rgba(0, 0, 0, 0.6)"
         shadowBlur={8}
         shadowOffsetY={3}
@@ -83,7 +100,7 @@ export default function PlayerToken({ player, onDrag, onRename, onClick, editabl
       {/* Inner highlight for 3D effect */}
       <Circle
         radius={15}
-        fill="rgba(147, 197, 253, 0.3)"
+        fill={isSelected ? 'rgba(233, 213, 255, 0.4)' : 'rgba(147, 197, 253, 0.3)'}
         offsetY={-2}
       />
 

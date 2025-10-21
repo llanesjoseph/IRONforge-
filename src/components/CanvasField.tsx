@@ -26,6 +26,9 @@ type CanvasProps = {
   editable?: boolean;
   showGrid?: boolean;
   enableSnapping?: boolean;
+  // Group selection props
+  selectedPlayerIds?: Set<string>;
+  isGroupSelectMode?: boolean;
   // New props for AI features
   ballMarker?: BallMarkerType | null;
   endpointMarker?: EndpointMarkerType | null;
@@ -51,6 +54,8 @@ const CanvasField = forwardRef<CanvasHandle, CanvasProps>(
     editable = true,
     showGrid = false,
     enableSnapping = true,
+    selectedPlayerIds = new Set(),
+    isGroupSelectMode = false,
     ballMarker = null,
     endpointMarker = null,
     defensivePlayers = [],
@@ -281,6 +286,8 @@ const CanvasField = forwardRef<CanvasHandle, CanvasProps>(
               onClick={() => onPlayerClick?.(p.id)}
               editable={editable}
               enableSnapping={enableSnapping}
+              isSelected={selectedPlayerIds.has(p.id)}
+              isGroupSelectMode={isGroupSelectMode}
             />
           ))}
         </Layer>
