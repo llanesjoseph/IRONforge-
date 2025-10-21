@@ -8,6 +8,17 @@
   body {
     @apply bg-gradient-to-br from-iron-950 via-iron-900 to-iron-800 text-white font-sans;
   }
+
+  /* Improve text readability with better shadows */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Make sure all white text has good shadows for readability */
+  .text-white {
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+  }
 }
 
 @layer components {
@@ -38,29 +49,48 @@
     pointer-events: none;
   }
 
-  /* Professional buttons */
+  /* Professional buttons with better contrast */
   .btn-primary {
     @apply bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800
-           text-white font-semibold px-6 py-2.5 rounded-lg shadow-lg
-           hover:shadow-xl transition-all duration-200 hover:scale-105;
+           text-white font-bold px-6 py-2.5 rounded-lg shadow-lg
+           hover:shadow-xl transition-all duration-200 hover:scale-105
+           border-2 border-blue-800;
   }
 
   .btn-secondary {
     @apply bg-gradient-to-r from-iron-700 to-iron-800 hover:from-iron-600 hover:to-iron-700
-           text-white font-semibold px-6 py-2.5 rounded-lg shadow-lg
-           hover:shadow-xl transition-all duration-200;
+           text-white font-bold px-6 py-2.5 rounded-lg shadow-lg
+           hover:shadow-xl transition-all duration-200
+           border-2 border-iron-900;
   }
 
   .btn-success {
     @apply bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800
-           text-white font-semibold px-6 py-2.5 rounded-lg shadow-lg
-           hover:shadow-xl transition-all duration-200;
+           text-white font-bold px-6 py-2.5 rounded-lg shadow-lg
+           hover:shadow-xl transition-all duration-200
+           border-2 border-green-800;
   }
 
   .btn-danger {
     @apply bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800
-           text-white font-semibold px-6 py-2.5 rounded-lg shadow-lg
-           hover:shadow-xl transition-all duration-200;
+           text-white font-bold px-6 py-2.5 rounded-lg shadow-lg
+           hover:shadow-xl transition-all duration-200
+           border-2 border-red-800;
+  }
+
+  /* Light buttons for better visibility */
+  .btn-light {
+    @apply bg-white hover:bg-gray-50
+           text-gray-900 font-bold px-6 py-2.5 rounded-lg shadow-lg
+           hover:shadow-xl transition-all duration-200
+           border-2 border-gray-300;
+  }
+
+  .btn-outline {
+    @apply bg-transparent hover:bg-white/10
+           text-white font-bold px-6 py-2.5 rounded-lg
+           border-2 border-white hover:border-blue-400
+           transition-all duration-200;
   }
 
   /* Card styling */
@@ -95,5 +125,26 @@
 
   .badge-red {
     @apply bg-red-500/20 text-red-300 border border-red-500/30;
+  }
+
+  /* Text visibility utilities */
+  .text-emphasis {
+    @apply text-white font-bold;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 8px rgba(0, 0, 0, 0.5);
+  }
+
+  .text-readable {
+    @apply text-gray-100;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+  }
+
+  .text-subtle {
+    @apply text-gray-300;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+  }
+
+  /* Label styling for better visibility */
+  label {
+    @apply text-emphasis text-sm mb-2 block;
   }
 }
