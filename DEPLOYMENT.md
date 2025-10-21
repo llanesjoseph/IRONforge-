@@ -23,23 +23,23 @@ Add these environment variables in Vercel:
 
 ```bash
 # Firebase Configuration (Frontend)
-VITE_FIREBASE_API_KEY=AIzaSyA1uKZJz1HTdC7AjecxOaHtY13NCJYLZok
-VITE_FIREBASE_AUTH_DOMAIN=gridforge-dc5c5.firebaseapp.com
-VITE_FIREBASE_PROJECT_ID=gridforge-dc5c5
-VITE_FIREBASE_STORAGE_BUCKET=gridforge-dc5c5.firebasestorage.app
-VITE_FIREBASE_MESSAGING_SENDER_ID=864306324243
-VITE_FIREBASE_APP_ID=1:864306324243:web:7c8b37e096d4b52a39b0e6
+VITE_FIREBASE_API_KEY=your_firebase_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your-project-id
+VITE_FIREBASE_STORAGE_BUCKET=your-project.firebasestorage.app
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+VITE_FIREBASE_APP_ID=your_app_id
 
 # AI Provider
 VITE_AI_PROVIDER=gemini
 
 # Gemini API Keys (BOTH versions required!)
-VITE_GEMINI_API_KEY=AIzaSyAKiJISwAo745DcARdvzTvvmfarh_CubIk
-GEMINI_API_KEY=AIzaSyAKiJISwAo745DcARdvzTvvmfarh_CubIk
+VITE_GEMINI_API_KEY=your_gemini_api_key
+GEMINI_API_KEY=your_gemini_api_key
 
 # Optional: Anthropic fallback
-VITE_ANTHROPIC_API_KEY=your_key_here
-ANTHROPIC_API_KEY=your_key_here
+VITE_ANTHROPIC_API_KEY=your_anthropic_key
+ANTHROPIC_API_KEY=your_anthropic_key
 ```
 
 ### Step 3: Deploy
