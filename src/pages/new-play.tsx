@@ -51,14 +51,14 @@ export default function NewPlay() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4">
+    <div className="min-h-screen py-12 px-4">
       <div className="max-w-2xl mx-auto">
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="card p-6">
           <div className="flex items-center justify-between mb-6">
-            <h1 className="text-3xl font-bold text-gray-900">Create New Play</h1>
+            <h1 className="text-3xl font-display font-bold text-white">Create New Play</h1>
             <Link
               to="/"
-              className="px-4 py-2 rounded-md bg-gray-600 text-white hover:bg-gray-700 transition-colors"
+              className="btn-secondary"
             >
               Cancel
             </Link>
@@ -66,12 +66,12 @@ export default function NewPlay() {
 
           <div className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-white mb-2">
                 Play Name (Optional)
               </label>
               <input
                 type="text"
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="input-field w-full"
                 placeholder="Enter play name..."
                 value={playName}
                 onChange={(e) => setPlayName(e.target.value)}
@@ -79,11 +79,11 @@ export default function NewPlay() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-white mb-2">
                 Formation Template
               </label>
               <select
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="input-field w-full"
                 value={formation}
                 onChange={(e) => setFormation(e.target.value as FormationType)}
               >
@@ -93,9 +93,9 @@ export default function NewPlay() {
               </select>
             </div>
 
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <h3 className="font-semibold text-gray-900 mb-2">Formation Details:</h3>
-              <div className="text-sm text-gray-700">
+            <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4">
+              <h3 className="font-semibold text-white mb-2">Formation Details:</h3>
+              <div className="text-sm text-iron-200">
                 {formation === 'trips' && (
                   <p>Trips Right formation with 3 receivers to the right side, single back in the backfield.</p>
                 )}
@@ -111,7 +111,7 @@ export default function NewPlay() {
             <button
               onClick={handleCreate}
               disabled={loading}
-              className="w-full px-4 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full btn-primary py-3 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Creating...' : 'Create Play'}
             </button>

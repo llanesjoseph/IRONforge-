@@ -162,22 +162,25 @@ export default function InviteAccept() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="relative">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-500"></div>
+          <div className="absolute inset-0 rounded-full border-4 border-blue-500/20"></div>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-        <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
-          <div className="text-red-600 text-5xl mb-4">❌</div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Invite Error</h1>
-          <p className="text-gray-600 mb-6">{error}</p>
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <div className="max-w-md w-full card p-8 text-center">
+          <div className="text-red-400 text-5xl mb-4">❌</div>
+          <h1 className="text-2xl font-display font-bold text-white mb-2">Invite Error</h1>
+          <p className="text-iron-300 mb-6">{error}</p>
           <button
             onClick={() => navigate('/')}
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold"
+            className="btn-primary"
           >
             Go to Dashboard
           </button>
@@ -192,21 +195,21 @@ export default function InviteAccept() {
 
   if (needsAuth) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-        <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <div className="max-w-md w-full card p-8">
           <div className="text-center mb-6">
             <div className="text-5xl mb-4">🏈</div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">Team Invitation</h1>
-            <p className="text-gray-600">
-              You've been invited to join as a <span className="font-semibold capitalize">{invite.role}</span>
+            <h1 className="text-2xl font-display font-bold text-white mb-2">Team Invitation</h1>
+            <p className="text-iron-300">
+              You've been invited to join as a <span className="font-semibold capitalize text-blue-300">{invite.role}</span>
             </p>
-            <p className="text-sm text-gray-500 mt-2">by {invite.invitedByEmail}</p>
+            <p className="text-sm text-iron-400 mt-2">by {invite.invitedByEmail}</p>
           </div>
 
           <div className="mb-6 text-center">
             <button
               onClick={() => setIsSignUp(!isSignUp)}
-              className="text-blue-600 hover:text-blue-700 text-sm font-medium"
+              className="text-blue-400 hover:text-blue-300 text-sm font-medium"
             >
               {isSignUp ? 'Already have an account? Sign in' : "Don't have an account? Sign up"}
             </button>
@@ -215,7 +218,7 @@ export default function InviteAccept() {
           <form onSubmit={handleAuth} className="space-y-4">
             {isSignUp && (
               <div>
-                <label htmlFor="displayName" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="displayName" className="block text-sm font-medium text-white mb-2">
                   Name
                 </label>
                 <input
@@ -225,13 +228,13 @@ export default function InviteAccept() {
                   onChange={(e) => setDisplayName(e.target.value)}
                   placeholder="Your name"
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="input-field w-full"
                 />
               </div>
             )}
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="email" className="block text-sm font-medium text-white mb-2">
                 Email
               </label>
               <input
@@ -239,12 +242,12 @@ export default function InviteAccept() {
                 type="email"
                 value={email}
                 readOnly
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600"
+                className="input-field w-full opacity-60 cursor-not-allowed"
               />
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="password" className="block text-sm font-medium text-white mb-2">
                 Password
               </label>
               <input
@@ -255,14 +258,14 @@ export default function InviteAccept() {
                 placeholder={isSignUp ? "Create a password" : "Enter your password"}
                 required
                 minLength={6}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="input-field w-full"
               />
             </div>
 
             <button
               type="submit"
               disabled={processing}
-              className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold disabled:opacity-50"
+              className="w-full btn-primary py-3 disabled:opacity-50"
             >
               {processing ? 'Processing...' : isSignUp ? 'Create Account & Accept' : 'Sign In & Accept'}
             </button>
@@ -272,7 +275,7 @@ export default function InviteAccept() {
             <button
               onClick={handleDecline}
               disabled={processing}
-              className="w-full px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+              className="w-full btn-secondary py-2 disabled:opacity-50"
             >
               Decline Invitation
             </button>
@@ -283,20 +286,20 @@ export default function InviteAccept() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-      <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
+    <div className="min-h-screen flex items-center justify-center p-4">
+      <div className="max-w-md w-full card p-8 text-center">
         <div className="text-5xl mb-4">🏈</div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Team Invitation</h1>
-        <p className="text-gray-600 mb-2">
-          You've been invited to join as a <span className="font-semibold capitalize">{invite.role}</span>
+        <h1 className="text-2xl font-display font-bold text-white mb-2">Team Invitation</h1>
+        <p className="text-iron-300 mb-2">
+          You've been invited to join as a <span className="font-semibold capitalize text-blue-300">{invite.role}</span>
         </p>
-        <p className="text-sm text-gray-500 mb-6">by {invite.invitedByEmail}</p>
+        <p className="text-sm text-iron-400 mb-6">by {invite.invitedByEmail}</p>
 
         <div className="space-y-3">
           <button
             onClick={handleAccept}
             disabled={processing}
-            className="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold disabled:opacity-50"
+            className="w-full btn-primary py-3 disabled:opacity-50"
           >
             {processing ? 'Accepting...' : 'Accept Invitation'}
           </button>
@@ -304,7 +307,7 @@ export default function InviteAccept() {
           <button
             onClick={handleDecline}
             disabled={processing}
-            className="w-full px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+            className="w-full btn-secondary py-2 disabled:opacity-50"
           >
             Decline
           </button>

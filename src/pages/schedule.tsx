@@ -81,61 +81,64 @@ export default function Schedule() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="relative">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-500"></div>
+          <div className="absolute inset-0 rounded-full border-4 border-blue-500/20"></div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       <div className="p-6 max-w-4xl mx-auto">
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="card p-6">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Team Schedule</h1>
-              <p className="text-sm text-gray-600 mt-1">
-                Your role: <span className="font-semibold capitalize">{role}</span>
+              <h1 className="text-3xl font-display font-bold text-white">Team Schedule</h1>
+              <p className="text-sm text-iron-300 mt-1">
+                Your role: <span className="font-semibold capitalize text-blue-300">{role}</span>
               </p>
             </div>
             <Link
               to="/"
-              className="px-4 py-2 rounded-md bg-gray-600 text-white hover:bg-gray-700 transition-colors"
+              className="btn-secondary"
             >
               Back to Dashboard
             </Link>
           </div>
 
           {role === 'coach' && (
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Add Event</h2>
+            <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-6 mb-6">
+              <h2 className="text-lg font-display font-semibold text-white mb-4">Add Event</h2>
               <div className="grid gap-3 md:grid-cols-2">
                 <input
-                  className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="input-field"
                   placeholder="Event Title"
                   value={form.title || ''}
                   onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
                 />
                 <input
-                  className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="input-field"
                   type="date"
                   value={form.date || ''}
                   onChange={e => setForm(f => ({ ...f, date: e.target.value }))}
                 />
                 <input
-                  className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="input-field"
                   type="time"
                   value={form.time || ''}
                   onChange={e => setForm(f => ({ ...f, time: e.target.value }))}
                 />
                 <input
-                  className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="input-field"
                   placeholder="Location"
                   value={form.location || ''}
                   onChange={e => setForm(f => ({ ...f, location: e.target.value }))}
                 />
               </div>
               <textarea
-                className="border border-gray-300 rounded-md px-3 py-2 w-full mt-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="input-field w-full mt-3"
                 placeholder="Notes (optional)"
                 rows={3}
                 value={form.notes || ''}
@@ -143,7 +146,7 @@ export default function Schedule() {
               />
               <button
                 onClick={handleAddEvent}
-                className="mt-3 px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+                className="mt-3 btn-primary"
               >
                 Add Event
               </button>
@@ -151,21 +154,21 @@ export default function Schedule() {
           )}
 
           <div className="space-y-3">
-            <h2 className="text-lg font-semibold text-gray-900">Upcoming Events</h2>
+            <h2 className="text-lg font-display font-semibold text-white">Upcoming Events</h2>
             {events.length === 0 ? (
-              <p className="text-gray-500 py-8 text-center">No events scheduled yet</p>
+              <p className="text-iron-400 py-8 text-center">No events scheduled yet</p>
             ) : (
               <ul className="space-y-3">
                 {events.map(event => (
-                  <li key={event.id} className="bg-white border border-gray-200 rounded-lg p-4">
-                    <div className="font-semibold text-gray-900">{event.title}</div>
-                    <div className="text-sm text-gray-600 mt-1">
+                  <li key={event.id} className="bg-iron-700/30 border border-iron-700 rounded-lg p-4">
+                    <div className="font-semibold text-white">{event.title}</div>
+                    <div className="text-sm text-iron-300 mt-1">
                       {event.date}
                       {event.time && ` at ${event.time}`}
                       {event.location && ` - ${event.location}`}
                     </div>
                     {event.notes && (
-                      <div className="text-sm text-gray-700 mt-2">{event.notes}</div>
+                      <div className="text-sm text-iron-200 mt-2">{event.notes}</div>
                     )}
                   </li>
                 ))}

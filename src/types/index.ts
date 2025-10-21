@@ -106,7 +106,7 @@ export type TeamMember = {
   uid: string;
   email: string;
   displayName?: string;
-  role: 'coach' | 'player';
+  role: 'admin' | 'coach' | 'player';
   joinedAt: any;
 }
 

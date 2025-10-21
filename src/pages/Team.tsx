@@ -142,7 +142,10 @@ export default function Team() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="relative">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-500"></div>
+          <div className="absolute inset-0 rounded-full border-4 border-blue-500/20"></div>
+        </div>
       </div>
     );
   }
@@ -151,8 +154,8 @@ export default function Team() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-600 mb-4">Please sign in to view your team</p>
-          <Link to="/" className="text-blue-600 hover:text-blue-700">
+          <p className="text-iron-300 mb-4">Please sign in to view your team</p>
+          <Link to="/" className="text-blue-400 hover:text-blue-300">
             Back to Dashboard
           </Link>
         </div>
@@ -164,8 +167,8 @@ export default function Team() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-600 mb-4">You haven't joined a team yet</p>
-          <Link to="/" className="text-blue-600 hover:text-blue-700">
+          <p className="text-iron-300 mb-4">You haven't joined a team yet</p>
+          <Link to="/" className="text-blue-400 hover:text-blue-300">
             Back to Dashboard
           </Link>
         </div>
@@ -174,10 +177,10 @@ export default function Team() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-6">
+    <div className="min-h-screen py-6">
       <div className="max-w-6xl mx-auto px-4">
         {/* Header */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+        <div className="card p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
             <div className="flex-1">
               {editingTeamName && canManageTeam ? (
@@ -186,11 +189,11 @@ export default function Team() {
                     type="text"
                     value={teamName}
                     onChange={(e) => setTeamName(e.target.value)}
-                    className="text-3xl font-bold text-gray-900 border-b-2 border-blue-600 focus:outline-none"
+                    className="text-3xl font-bold text-white bg-transparent border-b-2 border-blue-500 focus:outline-none focus:border-blue-400"
                   />
                   <button
                     onClick={handleSaveTeamName}
-                    className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+                    className="btn-primary"
                   >
                     Save
                   </button>
@@ -199,18 +202,18 @@ export default function Team() {
                       setTeamName(team.name);
                       setEditingTeamName(false);
                     }}
-                    className="px-3 py-1 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
+                    className="btn-secondary"
                   >
                     Cancel
                   </button>
                 </div>
               ) : (
                 <div className="flex items-center gap-3">
-                  <h1 className="text-3xl font-bold text-gray-900">{team.name}</h1>
+                  <h1 className="text-3xl font-display font-bold text-white">{team.name}</h1>
                   {canManageTeam && (
                     <button
                       onClick={() => setEditingTeamName(true)}
-                      className="text-gray-500 hover:text-gray-700"
+                      className="text-iron-400 hover:text-iron-200"
                       title="Edit team name"
                     >
                       ✏️
@@ -218,7 +221,7 @@ export default function Team() {
                   )}
                 </div>
               )}
-              <p className="text-gray-600 mt-1">
+              <p className="text-iron-300 mt-1">
                 {members.length} member{members.length !== 1 ? 's' : ''}
                 {profile.role === 'admin' && ' · You are the admin'}
                 {profile.role === 'coach' && ' · You are a coach'}
@@ -227,7 +230,7 @@ export default function Team() {
             </div>
             <Link
               to="/"
-              className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+              className="btn-secondary"
             >
               Back to Dashboard
             </Link>
@@ -236,7 +239,7 @@ export default function Team() {
           {canInvite && (
             <button
               onClick={() => setShowInviteModal(true)}
-              className="w-full sm:w-auto px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold flex items-center justify-center gap-2"
+              className="w-full sm:w-auto btn-primary flex items-center justify-center gap-2"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -248,31 +251,35 @@ export default function Team() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Team Members */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Team Members</h2>
+          <div className="card p-6">
+            <h2 className="text-xl font-display font-bold text-white mb-4">Team Members</h2>
 
             {members.length === 0 ? (
-              <p className="text-gray-500 text-center py-8">No team members yet</p>
+              <p className="text-iron-400 text-center py-8">No team members yet</p>
             ) : (
               <div className="space-y-3">
                 {members.map(member => (
                   <div
                     key={member.uid}
-                    className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
+                    className="flex items-center justify-between p-4 bg-iron-700/30 rounded-lg border border-iron-700"
                   >
                     <div>
-                      <p className="font-semibold text-gray-900">
+                      <p className="font-semibold text-white">
                         {member.displayName || member.email}
                       </p>
-                      <p className="text-sm text-gray-600">{member.email}</p>
-                      <span className="inline-block mt-1 px-2 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded capitalize">
+                      <p className="text-sm text-iron-300">{member.email}</p>
+                      <span className={`inline-block mt-1 px-2 py-1 text-xs font-semibold rounded capitalize ${
+                        member.role === 'admin' ? 'badge-purple' :
+                        member.role === 'coach' ? 'badge-blue' :
+                        'badge-green'
+                      }`}>
                         {member.role}
                       </span>
                     </div>
                     {canManageTeam && member.uid !== auth.currentUser?.uid && (
                       <button
                         onClick={() => handleRemoveMember(member.uid, member.displayName || member.email)}
-                        className="px-3 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors text-sm font-medium"
+                        className="px-3 py-1 bg-red-500/20 text-red-300 border border-red-500/30 rounded hover:bg-red-500/30 transition-colors text-sm font-medium"
                       >
                         Remove
                       </button>
@@ -285,30 +292,30 @@ export default function Team() {
 
           {/* Pending Invites */}
           {canInvite && (
-            <div className="bg-white rounded-lg shadow-sm p-6">
-              <h2 className="text-xl font-bold text-gray-900 mb-4">Pending Invites</h2>
+            <div className="card p-6">
+              <h2 className="text-xl font-display font-bold text-white mb-4">Pending Invites</h2>
 
               {pendingInvites.length === 0 ? (
-                <p className="text-gray-500 text-center py-8">No pending invites</p>
+                <p className="text-iron-400 text-center py-8">No pending invites</p>
               ) : (
                 <div className="space-y-3">
                   {pendingInvites.map(invite => (
                     <div
                       key={invite.id}
-                      className="flex items-center justify-between p-4 bg-yellow-50 rounded-lg border border-yellow-200"
+                      className="flex items-center justify-between p-4 bg-yellow-500/10 rounded-lg border border-yellow-500/30"
                     >
                       <div>
-                        <p className="font-semibold text-gray-900">{invite.email}</p>
-                        <p className="text-sm text-gray-600">
-                          Invited as <span className="capitalize font-medium">{invite.role}</span>
+                        <p className="font-semibold text-white">{invite.email}</p>
+                        <p className="text-sm text-iron-300">
+                          Invited as <span className="capitalize font-medium text-yellow-300">{invite.role}</span>
                         </p>
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-xs text-iron-400 mt-1">
                           Expires: {new Date(invite.expiresAt).toLocaleDateString()}
                         </p>
                       </div>
                       <button
                         onClick={() => handleCancelInvite(invite.id)}
-                        className="px-3 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors text-sm font-medium"
+                        className="px-3 py-1 bg-iron-700 text-iron-200 border border-iron-600 rounded hover:bg-iron-600 transition-colors text-sm font-medium"
                       >
                         Cancel
                       </button>
@@ -323,15 +330,15 @@ export default function Team() {
 
       {/* Invite Modal */}
       {showInviteModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50">
+          <div className="card max-w-md w-full p-6">
+            <h3 className="text-2xl font-display font-bold text-white mb-4">
               Invite {profile.role === 'admin' ? 'Coach' : 'Player'}
             </h3>
 
             <form onSubmit={handleSendInvite} className="space-y-4">
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="email" className="block text-sm font-medium text-white mb-2">
                   Email Address
                 </label>
                 <input
@@ -341,20 +348,20 @@ export default function Team() {
                   onChange={(e) => setInviteEmail(e.target.value)}
                   placeholder="coach@example.com"
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="input-field w-full"
                 />
               </div>
 
               {profile.role === 'admin' && (
                 <div>
-                  <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="role" className="block text-sm font-medium text-white mb-2">
                     Role
                   </label>
                   <select
                     id="role"
                     value={inviteRole}
                     onChange={(e) => setInviteRole(e.target.value as 'coach' | 'player')}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="input-field w-full"
                   >
                     <option value="coach">Coach</option>
                     <option value="player">Player</option>
@@ -366,7 +373,7 @@ export default function Team() {
                 <button
                   type="submit"
                   disabled={sending}
-                  className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold disabled:opacity-50"
+                  className="flex-1 btn-primary disabled:opacity-50"
                 >
                   {sending ? 'Sending...' : 'Send Invite'}
                 </button>
@@ -377,7 +384,7 @@ export default function Team() {
                     setInviteEmail('');
                     setInviteRole('player');
                   }}
-                  className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors font-semibold"
+                  className="btn-secondary"
                 >
                   Cancel
                 </button>
