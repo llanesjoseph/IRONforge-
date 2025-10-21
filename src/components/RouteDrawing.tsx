@@ -1,6 +1,7 @@
 import React from 'react';
-import { Line, Arrow, Circle, Group } from 'react-konva';
+import { Line, Arrow, Circle, Group, Text, Rect } from 'react-konva';
 import { Route } from '../types';
+import { calculateRouteYardage } from '../lib/formations';
 
 type RouteDrawingProps = {
   routes: Route[];
@@ -33,12 +34,26 @@ const RouteDrawing: React.FC<RouteDrawingProps> = ({
     ];
   };
 
+  // Get the position for the yardage label (at the end of the route)
+  const getLabelPosition = (route: Route): { x: number; y: number } | null => {
+    if (route.points.length < 2) return null;
+
+    // Position label near the end point
+    const endPoint = route.points[route.points.length - 1];
+    return {
+      x: endPoint.x + 10,
+      y: endPoint.y - 10
+    };
+  };
+
   return (
     <>
       {/* Render completed routes */}
       {routes.map((route) => {
         const linePoints = getLinePoints(route);
         const arrowPoints = getArrowPoints(route);
+        const labelPos = getLabelPosition(route);
+        const yardage = route.yardage ?? calculateRouteYardage(route);
 
         return (
           <Group
@@ -80,6 +95,32 @@ const RouteDrawing: React.FC<RouteDrawingProps> = ({
                 strokeWidth={1}
               />
             ))}
+
+            {/* Yardage label */}
+            {labelPos && yardage > 0 && (
+              <Group x={labelPos.x} y={labelPos.y}>
+                {/* Background rectangle for better readability */}
+                <Rect
+                  x={-5}
+                  y={-12}
+                  width={yardage >= 10 ? 38 : 32}
+                  height={18}
+                  fill="#000"
+                  opacity={0.7}
+                  cornerRadius={4}
+                />
+                {/* Yardage text */}
+                <Text
+                  text={`${yardage}y`}
+                  fontSize={12}
+                  fontFamily="Inter, Arial, sans-serif"
+                  fontStyle="bold"
+                  fill="#fff"
+                  align="center"
+                  verticalAlign="middle"
+                />
+              </Group>
+            )}
           </Group>
         );
       })}
@@ -110,6 +151,35 @@ const RouteDrawing: React.FC<RouteDrawingProps> = ({
               strokeWidth={2}
             />
           ))}
+
+          {/* Show yardage for current route */}
+          {currentRoute.points.length >= 2 && (() => {
+            const labelPos = getLabelPosition(currentRoute);
+            const yardage = calculateRouteYardage(currentRoute);
+
+            return labelPos && yardage > 0 ? (
+              <Group x={labelPos.x} y={labelPos.y}>
+                <Rect
+                  x={-5}
+                  y={-12}
+                  width={yardage >= 10 ? 38 : 32}
+                  height={18}
+                  fill="#000"
+                  opacity={0.7}
+                  cornerRadius={4}
+                />
+                <Text
+                  text={`${yardage}y`}
+                  fontSize={12}
+                  fontFamily="Inter, Arial, sans-serif"
+                  fontStyle="bold"
+                  fill="#4ECDC4"
+                  align="center"
+                  verticalAlign="middle"
+                />
+              </Group>
+            ) : null;
+          })()}
         </Group>
       )}
     </>

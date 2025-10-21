@@ -1,7 +1,8 @@
-import { Slide, PlayerPosition } from '../types';
+import { Slide, PlayerPosition, Route, RoutePoint } from '../types';
 
 export const FIELD = { width: 700, height: 400 };
 export const GRID_SIZE = 20; // Grid size in pixels for snap-to-grid feature
+export const PIXELS_PER_YARD = 6.67; // Conversion factor: ~400px = 60 yards (half field)
 
 function clonePositions(arr: PlayerPosition[]): PlayerPosition[] {
   return JSON.parse(JSON.stringify(arr));
@@ -54,6 +55,40 @@ export function snapToLOS(positions: PlayerPosition[]): PlayerPosition[] {
     const snapped = snapToGrid(player.x, player.y);
     return { ...player, x: snapped.x, y: snapped.y };
   });
+}
+
+/**
+ * Calculate the distance between two points
+ * @param p1 - First point
+ * @param p2 - Second point
+ * @returns Distance in pixels
+ */
+function calculateDistance(p1: RoutePoint, p2: RoutePoint): number {
+  const dx = p2.x - p1.x;
+  const dy = p2.y - p1.y;
+  return Math.sqrt(dx * dx + dy * dy);
+}
+
+/**
+ * Calculate the total yardage of a route
+ * @param route - Route object or array of route points
+ * @returns Total distance in yards, rounded to 1 decimal place
+ */
+export function calculateRouteYardage(route: Route | RoutePoint[]): number {
+  const points = Array.isArray(route) ? route : route.points;
+
+  if (points.length < 2) {
+    return 0;
+  }
+
+  let totalPixels = 0;
+  for (let i = 0; i < points.length - 1; i++) {
+    totalPixels += calculateDistance(points[i], points[i + 1]);
+  }
+
+  // Convert pixels to yards and round to 1 decimal place
+  const yards = totalPixels / PIXELS_PER_YARD;
+  return Math.round(yards * 10) / 10;
 }
 
 export function tripsRightTemplate(): Slide[] {

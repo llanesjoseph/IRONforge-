@@ -15,6 +15,7 @@ export type Route = {
   playerId: string;
   points: RoutePoint[];
   color?: string;
+  yardage?: number; // Distance of the route in yards
 }
 
 export type Slide = {

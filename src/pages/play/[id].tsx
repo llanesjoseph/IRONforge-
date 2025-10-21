@@ -20,7 +20,7 @@ import {
   GeneratedPlay,
   DefensivePlayer
 } from '../../types';
-import { FIELD, snapToGrid, snapToLOS } from '../../lib/formations';
+import { FIELD, snapToGrid, snapToLOS, calculateRouteYardage } from '../../lib/formations';
 import { getOrCreateUserProfile } from '../../lib/user';
 import { generatePlayFromEndpoint, challengePlayWithRedTeam } from '../../lib/ai';
 
@@ -293,6 +293,10 @@ export default function PlayEditor() {
       return;
     }
 
+    // Calculate yardage for the route
+    const yardage = calculateRouteYardage(currentRoute);
+    const routeWithYardage = { ...currentRoute, yardage };
+
     // Add route to current slide
     const updatedSlides = play.slides.map(s => {
       if (s.index === slideIndex) {
@@ -301,7 +305,7 @@ export default function PlayEditor() {
         const filteredRoutes = existingRoutes.filter(r => r.playerId !== currentRoute.playerId);
         return {
           ...s,
-          routes: [...filteredRoutes, currentRoute]
+          routes: [...filteredRoutes, routeWithYardage]
         };
       }
       return s;
@@ -777,82 +781,156 @@ export default function PlayEditor() {
 
             {/* Route Drawing Controls & AI Features */}
             {canEdit && (
-              <div className="flex gap-2 flex-wrap items-center border-t pt-3">
+              <div className="border-t pt-3">
                 {!isDrawingRoute && !isGeneratorMode ? (
-                  <>
-                    <button
-                      onClick={startDrawingRoute}
-                      className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
-                    >
-                      Draw Route
-                    </button>
-                    <button
-                      onClick={startAIPlayGenerator}
-                      className="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded hover:from-purple-700 hover:to-indigo-700 transition-all flex items-center gap-2"
-                    >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                      </svg>
-                      AI Play Generator
-                    </button>
-                    {current?.routes && current.routes.length > 0 && (
+                  <div className="space-y-3">
+                    {/* Main Actions */}
+                    <div className="flex gap-3 flex-wrap items-center">
                       <button
-                        onClick={clearAllRoutes}
-                        className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+                        onClick={startDrawingRoute}
+                        className="btn-primary flex items-center gap-2"
                       >
-                        Clear All Routes
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                        </svg>
+                        Draw Route
                       </button>
-                    )}
-                    <div className="flex items-center gap-2">
-                      <label htmlFor="routeColor" className="text-sm text-gray-700">
-                        Route Color:
-                      </label>
-                      <input
-                        id="routeColor"
-                        type="color"
-                        value={routeColor}
-                        onChange={(e) => setRouteColor(e.target.value)}
-                        className="w-10 h-10 rounded cursor-pointer"
-                      />
+                      <button
+                        onClick={startAIPlayGenerator}
+                        className="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:from-purple-700 hover:to-indigo-700 transition-all flex items-center gap-2 font-bold shadow-lg border-2 border-purple-800"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                        AI Play Generator
+                      </button>
+                      {current?.routes && current.routes.length > 0 && (
+                        <button
+                          onClick={clearAllRoutes}
+                          className="btn-danger flex items-center gap-2"
+                        >
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                          Clear All Routes
+                        </button>
+                      )}
                     </div>
-                  </>
+
+                    {/* Route Settings */}
+                    <div className="flex gap-4 items-center bg-iron-800/30 rounded-lg p-3 border border-iron-700">
+                      <div className="flex items-center gap-2">
+                        <label htmlFor="routeColor" className="text-sm font-semibold text-white">
+                          Route Color:
+                        </label>
+                        <input
+                          id="routeColor"
+                          type="color"
+                          value={routeColor}
+                          onChange={(e) => setRouteColor(e.target.value)}
+                          className="w-10 h-10 rounded cursor-pointer border-2 border-iron-600"
+                        />
+                      </div>
+                      {current?.routes && current.routes.length > 0 && (
+                        <div className="flex items-center gap-2 text-sm">
+                          <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                          </svg>
+                          <span className="font-semibold text-white">{current.routes.length} route{current.routes.length !== 1 ? 's' : ''}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 ) : isGeneratorMode ? (
-                  <div className="flex gap-2 items-center">
-                    <span className="text-sm font-medium text-purple-600">
-                      {generatorStep === 'place-ball'
-                        ? "Click on the field to place the ball starting position"
-                        : generatorStep === 'place-endpoint'
-                        ? "Click where you want the ball to end up"
-                        : "Select play type in the modal"}
-                    </span>
-                    <button
-                      onClick={cancelAIPlayGenerator}
-                      className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors"
-                    >
-                      Cancel
-                    </button>
+                  <div className="bg-purple-100 border-2 border-purple-300 rounded-lg p-4">
+                    <div className="flex gap-3 items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <svg className="w-6 h-6 text-purple-600 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                        <span className="text-sm font-semibold text-purple-800">
+                          {generatorStep === 'place-ball'
+                            ? "Step 1: Click on the field to place the ball starting position"
+                            : generatorStep === 'place-endpoint'
+                            ? "Step 2: Click where you want the ball to end up"
+                            : "Step 3: Select play type in the modal"}
+                        </span>
+                      </div>
+                      <button
+                        onClick={cancelAIPlayGenerator}
+                        className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors font-semibold"
+                      >
+                        Cancel
+                      </button>
+                    </div>
                   </div>
                 ) : (
-                  <div className="flex gap-2 items-center">
-                    <span className="text-sm font-medium text-blue-600">
-                      {!selectedPlayerId
-                        ? "Click on a player to start drawing a route"
-                        : "Click on the field to add route points"}
-                    </span>
-                    {currentRoute && currentRoute.points.length > 1 && (
-                      <button
-                        onClick={finishRoute}
-                        className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
-                      >
-                        Finish Route
-                      </button>
-                    )}
-                    <button
-                      onClick={stopDrawingRoute}
-                      className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors"
-                    >
-                      Cancel
-                    </button>
+                  <div className="bg-blue-100 border-2 border-blue-300 rounded-lg p-4">
+                    <div className="space-y-3">
+                      {/* Step Indicator */}
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${!selectedPlayerId ? 'bg-blue-600 text-white' : 'bg-green-600 text-white'}`}>
+                            {!selectedPlayerId ? '1' : '✓'}
+                          </div>
+                          <span className={`text-sm font-semibold ${!selectedPlayerId ? 'text-blue-800' : 'text-gray-600'}`}>
+                            Select Player
+                          </span>
+                        </div>
+                        <div className="h-0.5 w-8 bg-blue-300"></div>
+                        <div className="flex items-center gap-2">
+                          <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${selectedPlayerId && (!currentRoute || currentRoute.points.length < 2) ? 'bg-blue-600 text-white' : selectedPlayerId ? 'bg-green-600 text-white' : 'bg-gray-300 text-gray-500'}`}>
+                            {selectedPlayerId && currentRoute && currentRoute.points.length >= 2 ? '✓' : '2'}
+                          </div>
+                          <span className={`text-sm font-semibold ${selectedPlayerId && (!currentRoute || currentRoute.points.length < 2) ? 'text-blue-800' : 'text-gray-600'}`}>
+                            Draw Path
+                          </span>
+                        </div>
+                        <div className="h-0.5 w-8 bg-blue-300"></div>
+                        <div className="flex items-center gap-2">
+                          <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${currentRoute && currentRoute.points.length >= 2 ? 'bg-blue-600 text-white' : 'bg-gray-300 text-gray-500'}`}>
+                            3
+                          </div>
+                          <span className={`text-sm font-semibold ${currentRoute && currentRoute.points.length >= 2 ? 'text-blue-800' : 'text-gray-600'}`}>
+                            Finish
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Instructions */}
+                      <div className="flex items-center gap-2">
+                        <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span className="text-sm font-medium text-blue-800">
+                          {!selectedPlayerId
+                            ? "Click on a player on the field to start drawing their route"
+                            : "Click on the field to add waypoints to the route"}
+                        </span>
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div className="flex gap-2 items-center">
+                        {currentRoute && currentRoute.points.length > 1 && (
+                          <button
+                            onClick={finishRoute}
+                            className="btn-success flex items-center gap-2"
+                          >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                            Finish Route
+                            {currentRoute && <span className="text-xs opacity-80">({Math.round(calculateRouteYardage(currentRoute) * 10) / 10}y)</span>}
+                          </button>
+                        )}
+                        <button
+                          onClick={stopDrawingRoute}
+                          className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors font-semibold"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>
