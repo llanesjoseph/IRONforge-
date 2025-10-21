@@ -8,6 +8,7 @@ import AITest from './pages/ai-test';
 import Team from './pages/Team';
 import InviteAccept from './pages/InviteAccept';
 import ProtectedRoute from './components/ProtectedRoute';
+import BugReport from './components/BugReport';
 
 export default function App() {
   return (
@@ -65,6 +66,7 @@ export default function App() {
         />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      <BugReport />
     </BrowserRouter>
   );
 }
