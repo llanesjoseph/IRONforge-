@@ -70,6 +70,11 @@ export default function PlayEditor() {
   // Movement visualization state
   const [showMovementPaths, setShowMovementPaths] = useState(true);
 
+  // Animation state
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [animationProgress, setAnimationProgress] = useState(0);
+  const [animatedPositions, setAnimatedPositions] = useState<PlayerPosition[]>([]);
+
   // Allow anyone who owns the play to edit it (both coaches and players)
   const canEdit = auth.currentUser && play && play.createdBy === auth.currentUser.uid;
 
@@ -390,13 +395,29 @@ export default function PlayEditor() {
 
       if (!prevPlayer || !currPlayer) return;
 
-      // Start a new movement route from previous position to current
-      const newMovementRoute: Route = {
-        id: `movement-route-${Date.now()}`,
-        playerId: playerId,
-        points: [{ x: prevPlayer.x, y: prevPlayer.y }],
-        color: movementRouteColor
-      };
+      // Check if there's an existing movement route for this player
+      const existingRoute = current.movementRoutes?.find(r => r.playerId === playerId);
+
+      let newMovementRoute: Route;
+      if (existingRoute) {
+        // Load the existing route for editing
+        newMovementRoute = {
+          ...existingRoute,
+          id: existingRoute.id
+        };
+        setMovementRouteColor(existingRoute.color || '#10b981');
+      } else {
+        // Create a default route with start and end points
+        newMovementRoute = {
+          id: `movement-route-${Date.now()}`,
+          playerId: playerId,
+          points: [
+            { x: prevPlayer.x, y: prevPlayer.y },
+            { x: currPlayer.x, y: currPlayer.y }
+          ],
+          color: movementRouteColor
+        };
+      }
 
       setCurrentMovementRoute(newMovementRoute);
       setSelectedPlayerId(playerId);
@@ -731,6 +752,102 @@ export default function PlayEditor() {
     if (!play || slideIndex === 1) return null;
     return play.slides.find(s => s.index === slideIndex - 1) || null;
   }, [play, slideIndex]);
+
+  // Helper function to calculate position along a path at a given progress (0-1)
+  const getPositionAlongPath = (points: { x: number; y: number }[], progress: number) => {
+    if (points.length === 0) return null;
+    if (points.length === 1) return points[0];
+    if (progress <= 0) return points[0];
+    if (progress >= 1) return points[points.length - 1];
+
+    // Calculate total path length
+    let totalLength = 0;
+    const segmentLengths: number[] = [];
+    for (let i = 0; i < points.length - 1; i++) {
+      const dx = points[i + 1].x - points[i].x;
+      const dy = points[i + 1].y - points[i].y;
+      const length = Math.sqrt(dx * dx + dy * dy);
+      segmentLengths.push(length);
+      totalLength += length;
+    }
+
+    // Find the target distance along the path
+    const targetDistance = totalLength * progress;
+    let currentDistance = 0;
+
+    // Find which segment we're in
+    for (let i = 0; i < segmentLengths.length; i++) {
+      if (currentDistance + segmentLengths[i] >= targetDistance) {
+        // We're in this segment
+        const segmentProgress = (targetDistance - currentDistance) / segmentLengths[i];
+        return {
+          x: points[i].x + (points[i + 1].x - points[i].x) * segmentProgress,
+          y: points[i].y + (points[i + 1].y - points[i].y) * segmentProgress
+        };
+      }
+      currentDistance += segmentLengths[i];
+    }
+
+    return points[points.length - 1];
+  };
+
+  // Animation handler
+  const playAnimation = () => {
+    if (!previous || !current || slideIndex === 1) return;
+
+    setIsAnimating(true);
+    setAnimationProgress(0);
+
+    const duration = 2000; // 2 seconds
+    const startTime = Date.now();
+
+    const animate = () => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      setAnimationProgress(progress);
+
+      // Calculate positions for all players
+      const newPositions = current.positions.map(player => {
+        const prevPos = previous.positions.find(p => p.id === player.id);
+        if (!prevPos) return player;
+
+        // Check if there's a custom movement route
+        const movementRoute = current.movementRoutes?.find(r => r.playerId === player.id);
+
+        if (movementRoute && movementRoute.points.length > 0) {
+          // Animate along the custom path
+          const pos = getPositionAlongPath(movementRoute.points, progress);
+          return pos ? { ...player, x: pos.x, y: pos.y } : player;
+        } else {
+          // Animate along straight line
+          return {
+            ...player,
+            x: prevPos.x + (player.x - prevPos.x) * progress,
+            y: prevPos.y + (player.y - prevPos.y) * progress
+          };
+        }
+      });
+
+      setAnimatedPositions(newPositions);
+
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        setIsAnimating(false);
+        setAnimationProgress(0);
+        setAnimatedPositions([]);
+      }
+    };
+
+    requestAnimationFrame(animate);
+  };
+
+  const stopAnimation = () => {
+    setIsAnimating(false);
+    setAnimationProgress(0);
+    setAnimatedPositions([]);
+  };
 
   // AI Assistant handlers
   const handleApplyFormation = async (positions: PlayerPosition[]) => {
@@ -1122,6 +1239,28 @@ export default function PlayEditor() {
                     <span className="text-xs sm:text-sm font-medium text-gray-700">Show Movement</span>
                   </label>
                 )}
+                {slideIndex > 1 && !isAnimating && (
+                  <button
+                    onClick={playAnimation}
+                    className="px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all flex items-center gap-2 font-bold text-xs sm:text-sm"
+                  >
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                    Play
+                  </button>
+                )}
+                {isAnimating && (
+                  <button
+                    onClick={stopAnimation}
+                    className="px-3 py-1.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all flex items-center gap-2 font-bold text-xs sm:text-sm"
+                  >
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
+                    </svg>
+                    Stop
+                  </button>
+                )}
               </div>
             </div>
 
@@ -1391,7 +1530,7 @@ export default function PlayEditor() {
               <div className="lg:col-span-2 border border-gray-200 rounded-lg p-4 bg-gray-50">
                 <CanvasField
                   ref={canvasRef}
-                  players={current.positions}
+                  players={isAnimating ? animatedPositions : current.positions}
                   routes={current.routes || []}
                   currentRoute={currentRoute}
                   isDrawing={isDrawingRoute}
@@ -1400,7 +1539,7 @@ export default function PlayEditor() {
                   onCanvasClick={isGeneratorMode ? handleGeneratorCanvasClick : handleCanvasClick}
                   onPlayerClick={handlePlayerClick}
                   onRouteClick={deleteRoute}
-                  editable={!!canEdit}
+                  editable={!!canEdit && !isAnimating}
                   showGrid={showGrid}
                   enableSnapping={enableSnapping}
                   // Group selection props
@@ -1408,7 +1547,7 @@ export default function PlayEditor() {
                   isGroupSelectMode={isGroupSelectMode}
                   // Movement visualization props
                   previousPositions={previous?.positions}
-                  showMovementPaths={showMovementPaths}
+                  showMovementPaths={showMovementPaths && !isAnimating}
                   movementRoutes={current.movementRoutes || []}
                   currentMovementRoute={currentMovementRoute}
                   isDrawingMovementRoute={isDrawingMovementRoute}
