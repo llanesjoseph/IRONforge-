@@ -54,6 +54,10 @@ export default function PlayEditor() {
   const [isLoadingDefense, setIsLoadingDefense] = useState(false);
   const [showDefensiveAssignments, setShowDefensiveAssignments] = useState(true);
 
+  // Play notes state
+  const [playNotes, setPlayNotes] = useState('');
+  const [isEditingNotes, setIsEditingNotes] = useState(false);
+
   // Allow anyone who owns the play to edit it (both coaches and players)
   const canEdit = auth.currentUser && play && play.createdBy === auth.currentUser.uid;
 
@@ -68,6 +72,7 @@ export default function PlayEditor() {
           const playData = { id: snap.id, ...(snap.data() as Omit<Play, 'id'>) } as Play;
           setPlay(playData);
           setPlayName(playData.name);
+          setPlayNotes(playData.notes || '');
         } else {
           alert('Play not found');
           navigate('/');
@@ -181,11 +186,16 @@ export default function PlayEditor() {
   const handleSnapToLOS = async () => {
     if (!play || !canEdit) return;
 
-    // Apply snapToLOS to all slides
-    const updated = play.slides.map(s => ({
-      ...s,
-      positions: snapToLOS(s.positions)
-    }));
+    // Apply snapToLOS to current slide only
+    const updated = play.slides.map(s => {
+      if (s.index === slideIndex) {
+        return {
+          ...s,
+          positions: snapToLOS(s.positions)
+        };
+      }
+      return s;
+    });
 
     const np = { ...play, slides: updated };
     setPlay(np);
@@ -193,8 +203,26 @@ export default function PlayEditor() {
     try {
       setSaving(true);
       await updateDoc(doc(db, 'plays', play.id), { slides: updated });
+      alert('Players aligned to Line of Scrimmage!');
     } catch (error) {
       console.error('Error snapping to LOS:', error);
+      alert('Failed to snap to LOS');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleSaveNotes = async () => {
+    if (!play || !canEdit) return;
+
+    try {
+      setSaving(true);
+      await updateDoc(doc(db, 'plays', play.id), { notes: playNotes });
+      setPlay({ ...play, notes: playNotes });
+      setIsEditingNotes(false);
+    } catch (error) {
+      console.error('Error saving notes:', error);
+      alert('Failed to save notes');
     } finally {
       setSaving(false);
     }
@@ -987,31 +1015,109 @@ export default function PlayEditor() {
               </div>
             )}
 
-            <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
-              <CanvasField
-                ref={canvasRef}
-                players={current.positions}
-                routes={current.routes || []}
-                currentRoute={currentRoute}
-                isDrawing={isDrawingRoute}
-                onDrag={updatePosition}
-                onRename={renamePosition}
-                onCanvasClick={isGeneratorMode ? handleGeneratorCanvasClick : handleCanvasClick}
-                onPlayerClick={handlePlayerClick}
-                onRouteClick={deleteRoute}
-                editable={!!canEdit}
-                showGrid={showGrid}
-                enableSnapping={enableSnapping}
-                // AI Play Generator props
-                ballMarker={ballMarker}
-                endpointMarker={endpointMarker}
-                onBallMarkerDrag={(x, y) => setBallMarker({ x, y })}
-                onEndpointMarkerDrag={(x, y) => setEndpointMarker({ x, y })}
-                // Red Team Challenge props
-                defensivePlayers={defensiveScheme?.players || []}
-                defensiveRoutes={defensiveScheme?.routes || []}
-                showDefensiveAssignments={showDefensiveAssignments}
-              />
+            {/* Main Canvas and Notes Side-by-Side */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              {/* Canvas Field - Takes 2/3 of space */}
+              <div className="lg:col-span-2 border border-gray-200 rounded-lg p-4 bg-gray-50">
+                <CanvasField
+                  ref={canvasRef}
+                  players={current.positions}
+                  routes={current.routes || []}
+                  currentRoute={currentRoute}
+                  isDrawing={isDrawingRoute}
+                  onDrag={updatePosition}
+                  onRename={renamePosition}
+                  onCanvasClick={isGeneratorMode ? handleGeneratorCanvasClick : handleCanvasClick}
+                  onPlayerClick={handlePlayerClick}
+                  onRouteClick={deleteRoute}
+                  editable={!!canEdit}
+                  showGrid={showGrid}
+                  enableSnapping={enableSnapping}
+                  // AI Play Generator props
+                  ballMarker={ballMarker}
+                  endpointMarker={endpointMarker}
+                  onBallMarkerDrag={(x, y) => setBallMarker({ x, y })}
+                  onEndpointMarkerDrag={(x, y) => setEndpointMarker({ x, y })}
+                  // Red Team Challenge props
+                  defensivePlayers={defensiveScheme?.players || []}
+                  defensiveRoutes={defensiveScheme?.routes || []}
+                  showDefensiveAssignments={showDefensiveAssignments}
+                />
+              </div>
+
+              {/* Play Notes Section - Takes 1/3 of space */}
+              <div className="border border-gray-200 rounded-lg p-4 bg-white">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-lg font-bold text-gray-900">Play Notes</h3>
+                  {canEdit && !isEditingNotes && (
+                    <button
+                      onClick={() => setIsEditingNotes(true)}
+                      className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                    >
+                      ✏️ Edit
+                    </button>
+                  )}
+                </div>
+
+                {isEditingNotes && canEdit ? (
+                  <div className="space-y-3">
+                    <textarea
+                      value={playNotes}
+                      onChange={(e) => setPlayNotes(e.target.value)}
+                      placeholder="Add notes about this play: objectives, key reads, coaching points, etc."
+                      className="w-full h-64 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                    />
+                    <div className="flex gap-2">
+                      <button
+                        onClick={handleSaveNotes}
+                        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm font-medium"
+                      >
+                        Save Notes
+                      </button>
+                      <button
+                        onClick={() => {
+                          setPlayNotes(play.notes || '');
+                          setIsEditingNotes(false);
+                        }}
+                        className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-colors text-sm font-medium"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="prose prose-sm max-w-none">
+                    {playNotes ? (
+                      <p className="text-gray-700 whitespace-pre-wrap">{playNotes}</p>
+                    ) : (
+                      <p className="text-gray-400 italic">No notes added yet. Click Edit to add play notes.</p>
+                    )}
+                  </div>
+                )}
+
+                {/* Quick Stats */}
+                <div className="mt-6 pt-4 border-t border-gray-200">
+                  <h4 className="text-sm font-bold text-gray-900 mb-2">Quick Stats</h4>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Total Slides:</span>
+                      <span className="font-semibold text-gray-900">{play.slides.length}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Routes (this slide):</span>
+                      <span className="font-semibold text-gray-900">{current.routes?.length || 0}</span>
+                    </div>
+                    {play.formation && (
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Formation:</span>
+                        <span className="font-semibold text-gray-900 capitalize">
+                          {play.formation === 'trips' ? 'Trips Right' : play.formation === 'doubles' ? 'Doubles' : 'Empty'}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Slide Controls with Thumbnails and Animation - Below Canvas */}

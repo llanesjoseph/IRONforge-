@@ -32,6 +32,7 @@ export type Play = {
   slides: Slide[];
   createdAt: any;
   formation?: 'trips' | 'doubles' | 'empty'; // Formation template used
+  notes?: string; // Play notes/description
 }
 
 export type UserProfile = {
