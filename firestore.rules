@@ -1,0 +1,87 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isCoach() {
+      return isAuthenticated() &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'coach';
+    }
+
+    function isOwner(ownerId) {
+      return isAuthenticated() && request.auth.uid == ownerId;
+    }
+
+    function belongsToTeam(teamId) {
+      return isAuthenticated() && teamId == 'team-1'; // Simplified for MVP
+    }
+
+    function validPlayData() {
+      return request.resource.data.name is string &&
+        request.resource.data.name.size() > 0 &&
+        request.resource.data.name.size() <= 100 &&
+        request.resource.data.slides is list &&
+        request.resource.data.slides.size() == 3 &&
+        request.resource.data.teamId is string &&
+        request.resource.data.createdBy is string;
+    }
+
+    // Plays collection
+    match /plays/{playId} {
+      // Read: Must be authenticated and belong to same team
+      allow read: if isAuthenticated() && belongsToTeam(resource.data.teamId);
+
+      // Create: Any authenticated user can create plays (for now)
+      allow create: if isAuthenticated() &&
+        validPlayData() &&
+        request.resource.data.createdBy == request.auth.uid &&
+        belongsToTeam(request.resource.data.teamId);
+
+      // Update: Must be owner (players can edit their own plays)
+      allow update: if isOwner(resource.data.createdBy) &&
+        validPlayData() &&
+        request.resource.data.createdBy == resource.data.createdBy &&
+        request.resource.data.teamId == resource.data.teamId;
+
+      // Delete: Must be owner (players can delete their own plays)
+      allow delete: if isOwner(resource.data.createdBy);
+    }
+
+    // Users collection
+    match /users/{userId} {
+      // Users can read their own profile
+      allow read: if isAuthenticated() && request.auth.uid == userId;
+
+      // Users can create their profile
+      allow create: if isAuthenticated() && request.auth.uid == userId;
+
+      // Users can update their profile but NOT change role
+      allow update: if isAuthenticated() &&
+        request.auth.uid == userId &&
+        (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['role']));
+    }
+
+    // Schedule collection
+    match /schedule/{eventId} {
+      function validEventData() {
+        return request.resource.data.title is string &&
+          request.resource.data.title.size() > 0 &&
+          request.resource.data.title.size() <= 100 &&
+          request.resource.data.date is string;
+      }
+
+      // Anyone can read schedule (public events)
+      allow read: if true;
+
+      // Any authenticated user can create/modify schedule (for now)
+      allow create, update: if isAuthenticated() && validEventData();
+
+      // Any authenticated user can delete events
+      allow delete: if isAuthenticated();
+    }
+  }
+}

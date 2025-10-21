@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install)",
+      "Bash(npm run dev:*)",
+      "Bash(firebase --version:*)",
+      "Bash(firebase projects:list:*)",
+      "Bash(firebase use:*)",
+      "Bash(firebase deploy:*)",
+      "Bash(cat:*)",
+      "Bash(npm install:*)",
+      "Bash(npm ls:*)",
+      "Bash(curl:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npm run build:*)",
+      "Bash(dir C:Usersbigpefootball-play-mvpsrccomponents)",
+      "Bash(git init:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nInitial commit: Football Play Designer MVP\n\nComplete football play designer application with:\n- React + Vite + TypeScript + Firebase + Konva\n- Drag-and-drop play design with multi-slide system\n- Formation templates (Trips Right, Doubles, Empty)\n- Role-based access (Coach/Player)\n- AI-powered features using Google Gemini API\n  - Play generation from ball-to-endpoint\n  - Red team defensive challenge\n  - Formation suggestions\n  - Route generation\n  - Play analysis\n- Grid snapping and snap-to-LOS features\n- Export to PNG/SVG\n- Schedule management\n- Configured for Vercel deployment\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
