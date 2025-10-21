@@ -32,6 +32,9 @@ type CanvasProps = {
   // Movement visualization props
   previousPositions?: PlayerPosition[];
   showMovementPaths?: boolean;
+  movementRoutes?: Route[];
+  currentMovementRoute?: Route | null;
+  isDrawingMovementRoute?: boolean;
   // New props for AI features
   ballMarker?: BallMarkerType | null;
   endpointMarker?: EndpointMarkerType | null;
@@ -61,6 +64,9 @@ const CanvasField = forwardRef<CanvasHandle, CanvasProps>(
     isGroupSelectMode = false,
     previousPositions = [],
     showMovementPaths = false,
+    movementRoutes = [],
+    currentMovementRoute = null,
+    isDrawingMovementRoute = false,
     ballMarker = null,
     endpointMarker = null,
     defensivePlayers = [],
@@ -230,6 +236,9 @@ const CanvasField = forwardRef<CanvasHandle, CanvasProps>(
                 const currentPlayer = players.find(p => p.id === prevPlayer.id);
                 if (!currentPlayer) return null;
 
+                // Check if there's a custom movement route for this player
+                const customMovementRoute = movementRoutes.find(r => r.playerId === prevPlayer.id);
+
                 return (
                   <React.Fragment key={`ghost-${prevPlayer.id}`}>
                     {/* Ghost circle */}
@@ -244,22 +253,51 @@ const CanvasField = forwardRef<CanvasHandle, CanvasProps>(
                       dash={[5, 5]}
                       listening={false}
                     />
-                    {/* Movement arrow */}
-                    <Arrow
-                      points={[prevPlayer.x, prevPlayer.y, currentPlayer.x, currentPlayer.y]}
-                      stroke="#10b981"
-                      strokeWidth={3}
-                      fill="#10b981"
-                      pointerLength={10}
-                      pointerWidth={10}
-                      opacity={0.7}
-                      listening={false}
-                      dash={[8, 4]}
-                    />
+                    {/* Movement arrow or custom route */}
+                    {customMovementRoute ? (
+                      // Draw custom route with waypoints
+                      <Line
+                        points={customMovementRoute.points.flatMap(p => [p.x, p.y])}
+                        stroke={customMovementRoute.color || '#10b981'}
+                        strokeWidth={3}
+                        opacity={0.8}
+                        listening={false}
+                        dash={[8, 4]}
+                        lineCap="round"
+                        lineJoin="round"
+                      />
+                    ) : (
+                      // Default straight arrow
+                      <Arrow
+                        points={[prevPlayer.x, prevPlayer.y, currentPlayer.x, currentPlayer.y]}
+                        stroke="#10b981"
+                        strokeWidth={3}
+                        fill="#10b981"
+                        pointerLength={10}
+                        pointerWidth={10}
+                        opacity={0.7}
+                        listening={false}
+                        dash={[8, 4]}
+                      />
+                    )}
                   </React.Fragment>
                 );
               })}
             </>
+          )}
+
+          {/* Current Movement Route Being Drawn */}
+          {isDrawingMovementRoute && currentMovementRoute && currentMovementRoute.points.length > 0 && (
+            <Line
+              points={currentMovementRoute.points.flatMap(p => [p.x, p.y])}
+              stroke={currentMovementRoute.color || '#10b981'}
+              strokeWidth={4}
+              opacity={0.9}
+              listening={false}
+              dash={[8, 4]}
+              lineCap="round"
+              lineJoin="round"
+            />
           )}
 
           {/* Routes Layer - drawn before players so they appear behind */}

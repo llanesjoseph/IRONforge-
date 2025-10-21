@@ -41,6 +41,11 @@ export default function PlayEditor() {
   const [enableSnapping, setEnableSnapping] = useState(true);
   const canvasRef = useRef<CanvasHandle>(null);
 
+  // Movement route editing state
+  const [isDrawingMovementRoute, setIsDrawingMovementRoute] = useState(false);
+  const [currentMovementRoute, setCurrentMovementRoute] = useState<Route | null>(null);
+  const [movementRouteColor, setMovementRouteColor] = useState('#10b981'); // Green by default
+
   // AI Play Generator states
   const [isGeneratorMode, setIsGeneratorMode] = useState(false);
   const [ballMarker, setBallMarker] = useState<BallMarker | null>(null);
@@ -375,6 +380,29 @@ export default function PlayEditor() {
       return;
     }
 
+    // Movement route drawing mode
+    if (isDrawingMovementRoute && canEdit) {
+      // Find the player's previous position
+      if (!previous) return;
+
+      const prevPlayer = previous.positions.find(p => p.id === playerId);
+      const currPlayer = current?.positions.find(p => p.id === playerId);
+
+      if (!prevPlayer || !currPlayer) return;
+
+      // Start a new movement route from previous position to current
+      const newMovementRoute: Route = {
+        id: `movement-route-${Date.now()}`,
+        playerId: playerId,
+        points: [{ x: prevPlayer.x, y: prevPlayer.y }],
+        color: movementRouteColor
+      };
+
+      setCurrentMovementRoute(newMovementRoute);
+      setSelectedPlayerId(playerId);
+      return;
+    }
+
     // Route drawing mode
     if (!isDrawingRoute || !canEdit) return;
 
@@ -402,9 +430,10 @@ export default function PlayEditor() {
     if (isGroupSelectMode) {
       setSelectedPlayerIds(new Set());
     }
-    // Exit route drawing mode when entering group select mode
-    if (!isGroupSelectMode && isDrawingRoute) {
-      stopDrawingRoute();
+    // Exit route drawing modes when entering group select mode
+    if (!isGroupSelectMode) {
+      if (isDrawingRoute) stopDrawingRoute();
+      if (isDrawingMovementRoute) stopDrawingMovementRoute();
     }
   };
 
@@ -418,6 +447,27 @@ export default function PlayEditor() {
   };
 
   const handleCanvasClick = (x: number, y: number) => {
+    // Movement route drawing mode
+    if (isDrawingMovementRoute && currentMovementRoute && canEdit) {
+      // Snap route points to grid if snapping is enabled
+      let clickX = x;
+      let clickY = y;
+      if (enableSnapping) {
+        const snapped = snapToGrid(x, y);
+        clickX = snapped.x;
+        clickY = snapped.y;
+      }
+
+      // Add point to current movement route
+      const updatedRoute = {
+        ...currentMovementRoute,
+        points: [...currentMovementRoute.points, { x: clickX, y: clickY }]
+      };
+      setCurrentMovementRoute(updatedRoute);
+      return;
+    }
+
+    // Regular route drawing mode
     if (!isDrawingRoute || !currentRoute || !canEdit) return;
 
     // Snap route points to grid if snapping is enabled
@@ -522,6 +572,90 @@ export default function PlayEditor() {
         await updateDoc(doc(db, 'plays', play.id), { slides: updatedSlides });
       } catch (error) {
         console.error('Error clearing routes:', error);
+      } finally {
+        setSaving(false);
+      }
+    }
+  };
+
+  // Movement Route Drawing Functions
+  const startDrawingMovementRoute = () => {
+    if (!canEdit || !previous || slideIndex === 1) return;
+    setIsDrawingMovementRoute(true);
+    setSelectedPlayerId(null);
+    setCurrentMovementRoute(null);
+  };
+
+  const stopDrawingMovementRoute = () => {
+    setIsDrawingMovementRoute(false);
+    setSelectedPlayerId(null);
+    setCurrentMovementRoute(null);
+  };
+
+  const finishMovementRoute = async () => {
+    if (!currentMovementRoute || !play || !canEdit || currentMovementRoute.points.length < 2) {
+      stopDrawingMovementRoute();
+      return;
+    }
+
+    // Find the current player position to make sure the route ends there
+    const currPlayer = current?.positions.find(p => p.id === currentMovementRoute.playerId);
+    if (currPlayer) {
+      // Add the current player position as the final point if not already there
+      const lastPoint = currentMovementRoute.points[currentMovementRoute.points.length - 1];
+      if (lastPoint.x !== currPlayer.x || lastPoint.y !== currPlayer.y) {
+        currentMovementRoute.points.push({ x: currPlayer.x, y: currPlayer.y });
+      }
+    }
+
+    // Add movement route to current slide
+    const updatedSlides = play.slides.map(s => {
+      if (s.index === slideIndex) {
+        const existingMovementRoutes = s.movementRoutes || [];
+        // Remove any existing movement route for this player
+        const filteredRoutes = existingMovementRoutes.filter(r => r.playerId !== currentMovementRoute.playerId);
+        return {
+          ...s,
+          movementRoutes: [...filteredRoutes, currentMovementRoute]
+        };
+      }
+      return s;
+    });
+
+    const newPlay = { ...play, slides: updatedSlides };
+    setPlay(newPlay);
+
+    // Save to Firestore
+    try {
+      setSaving(true);
+      await updateDoc(doc(db, 'plays', play.id), { slides: updatedSlides });
+    } catch (error) {
+      console.error('Error saving movement route:', error);
+    } finally {
+      setSaving(false);
+      stopDrawingMovementRoute();
+    }
+  };
+
+  const clearAllMovementRoutes = async () => {
+    if (!play || !canEdit) return;
+
+    if (confirm('Clear all movement routes for this slide?')) {
+      const updatedSlides = play.slides.map(s => {
+        if (s.index === slideIndex) {
+          return { ...s, movementRoutes: [] };
+        }
+        return s;
+      });
+
+      const newPlay = { ...play, slides: updatedSlides };
+      setPlay(newPlay);
+
+      try {
+        setSaving(true);
+        await updateDoc(doc(db, 'plays', play.id), { slides: updatedSlides });
+      } catch (error) {
+        console.error('Error clearing movement routes:', error);
       } finally {
         setSaving(false);
       }
@@ -994,7 +1128,7 @@ export default function PlayEditor() {
             {/* Route Drawing Controls & AI Features */}
             {canEdit && (
               <div className="border-t pt-3">
-                {!isDrawingRoute && !isGeneratorMode ? (
+                {!isDrawingRoute && !isGeneratorMode && !isDrawingMovementRoute ? (
                   <div className="space-y-3">
                     {/* Main Actions */}
                     <div className="flex gap-3 flex-wrap items-center">
@@ -1007,6 +1141,17 @@ export default function PlayEditor() {
                         </svg>
                         Draw Route
                       </button>
+                      {slideIndex > 1 && (
+                        <button
+                          onClick={startDrawingMovementRoute}
+                          className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all flex items-center gap-2 font-bold"
+                        >
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 11l5-5m0 0l5 5m-5-5v12" />
+                          </svg>
+                          Edit Movement Path
+                        </button>
+                      )}
                       <button
                         onClick={startAIPlayGenerator}
                         className="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:from-purple-700 hover:to-indigo-700 transition-all flex items-center gap-2 font-bold shadow-lg border-2 border-purple-800"
@@ -1025,6 +1170,17 @@ export default function PlayEditor() {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                           </svg>
                           Clear All Routes
+                        </button>
+                      )}
+                      {current?.movementRoutes && current.movementRoutes.length > 0 && slideIndex > 1 && (
+                        <button
+                          onClick={clearAllMovementRoutes}
+                          className="btn-danger flex items-center gap-2"
+                        >
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                          Clear Movement Routes
                         </button>
                       )}
                     </div>
@@ -1074,6 +1230,87 @@ export default function PlayEditor() {
                       >
                         Cancel
                       </button>
+                    </div>
+                  </div>
+                ) : isDrawingMovementRoute ? (
+                  <div className="bg-green-100 border-2 border-green-300 rounded-lg p-4">
+                    <div className="space-y-3">
+                      {/* Step Indicator */}
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${!selectedPlayerId ? 'bg-green-600 text-white' : 'bg-green-700 text-white'}`}>
+                            {!selectedPlayerId ? '1' : '✓'}
+                          </div>
+                          <span className={`text-sm font-semibold ${!selectedPlayerId ? 'text-green-800' : 'text-gray-600'}`}>
+                            Select Player
+                          </span>
+                        </div>
+                        <div className="h-0.5 w-8 bg-green-300"></div>
+                        <div className="flex items-center gap-2">
+                          <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${selectedPlayerId && (!currentMovementRoute || currentMovementRoute.points.length < 2) ? 'bg-green-600 text-white' : selectedPlayerId ? 'bg-green-700 text-white' : 'bg-gray-300 text-gray-500'}`}>
+                            {selectedPlayerId && currentMovementRoute && currentMovementRoute.points.length >= 2 ? '✓' : '2'}
+                          </div>
+                          <span className={`text-sm font-semibold ${selectedPlayerId && (!currentMovementRoute || currentMovementRoute.points.length < 2) ? 'text-green-800' : 'text-gray-600'}`}>
+                            Draw Movement
+                          </span>
+                        </div>
+                        <div className="h-0.5 w-8 bg-green-300"></div>
+                        <div className="flex items-center gap-2">
+                          <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${currentMovementRoute && currentMovementRoute.points.length >= 2 ? 'bg-green-600 text-white' : 'bg-gray-300 text-gray-500'}`}>
+                            3
+                          </div>
+                          <span className={`text-sm font-semibold ${currentMovementRoute && currentMovementRoute.points.length >= 2 ? 'text-green-800' : 'text-gray-600'}`}>
+                            Finish
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Instructions */}
+                      <div className="flex items-center gap-2">
+                        <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span className="text-sm font-medium text-green-800">
+                          {!selectedPlayerId
+                            ? "Click on a player to edit their movement path from the previous slide"
+                            : "Click on the field to add waypoints to the movement path"}
+                        </span>
+                      </div>
+
+                      {/* Color Picker */}
+                      <div className="flex items-center gap-2">
+                        <label htmlFor="movementRouteColor" className="text-sm font-semibold text-green-800">
+                          Path Color:
+                        </label>
+                        <input
+                          id="movementRouteColor"
+                          type="color"
+                          value={movementRouteColor}
+                          onChange={(e) => setMovementRouteColor(e.target.value)}
+                          className="w-10 h-10 rounded cursor-pointer border-2 border-green-600"
+                        />
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div className="flex gap-2 items-center">
+                        {currentMovementRoute && currentMovementRoute.points.length > 1 && (
+                          <button
+                            onClick={finishMovementRoute}
+                            className="btn-success flex items-center gap-2"
+                          >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                            Finish Movement Path
+                          </button>
+                        )}
+                        <button
+                          onClick={stopDrawingMovementRoute}
+                          className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors font-semibold"
+                        >
+                          Cancel
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ) : (
@@ -1172,6 +1409,9 @@ export default function PlayEditor() {
                   // Movement visualization props
                   previousPositions={previous?.positions}
                   showMovementPaths={showMovementPaths}
+                  movementRoutes={current.movementRoutes || []}
+                  currentMovementRoute={currentMovementRoute}
+                  isDrawingMovementRoute={isDrawingMovementRoute}
                   // AI Play Generator props
                   ballMarker={ballMarker}
                   endpointMarker={endpointMarker}
