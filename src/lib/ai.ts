@@ -57,88 +57,48 @@ function getAIConfig(): AIConfig {
   };
 }
 
-// Call Anthropic Claude API
+// Call Anthropic Claude API via serverless function
 async function callAnthropicAI(prompt: string): Promise<string> {
-  const apiKey = import.meta.env.VITE_ANTHROPIC_API_KEY;
-
-  if (!apiKey) {
-    throw new Error('Anthropic API key not configured. Please add VITE_ANTHROPIC_API_KEY to your .env.local file');
-  }
-
-  const response = await fetch(ANTHROPIC_API_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01'
-    },
-    body: JSON.stringify({
-      model: ANTHROPIC_MODEL,
-      max_tokens: 1024,
-      messages: [
-        {
-          role: 'user',
-          content: prompt
-        }
-      ]
-    })
-  });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`Anthropic API error: ${response.statusText} - ${errorText}`);
-  }
-
-  const data = await response.json();
-  return data.content[0].text;
-}
-
-// Call Google Gemini API
-async function callGeminiAI(prompt: string): Promise<string> {
-  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-
-  if (!apiKey) {
-    throw new Error('Gemini API key not configured. Please add VITE_GEMINI_API_KEY to your .env.local file');
-  }
-
-  const response = await fetch(`${GEMINI_API_URL}?key=${apiKey}`, {
+  const response = await fetch('/api/ai', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      contents: [{
-        parts: [{
-          text: prompt
-        }]
-      }],
-      generationConfig: {
-        temperature: 0.7,
-        topK: 40,
-        topP: 0.95,
-        maxOutputTokens: 1024
-      },
-      safetySettings: [
-        {
-          category: "HARM_CATEGORY_DANGEROUS_CONTENT",
-          threshold: "BLOCK_NONE"
-        }
-      ]
+      prompt,
+      provider: 'anthropic'
     })
   });
 
   if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`Gemini API error: ${response.statusText} - ${errorText}`);
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.error || `API error: ${response.statusText}`);
   }
 
   const data = await response.json();
+  return data.text;
+}
 
-  if (data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
-    return data.candidates[0].content.parts[0].text;
-  } else {
-    throw new Error('Invalid response format from Gemini API');
+// Call Google Gemini API via serverless function
+async function callGeminiAI(prompt: string): Promise<string> {
+  const response = await fetch('/api/ai', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      prompt,
+      provider: 'gemini'
+    })
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.error || `API error: ${response.statusText}`);
   }
+
+  const data = await response.json();
+  return data.text;
 }
 
 // Main AI call function with provider selection and fallback
