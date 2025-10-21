@@ -74,6 +74,8 @@ export default function PlayEditor() {
   const [isAnimating, setIsAnimating] = useState(false);
   const [animationProgress, setAnimationProgress] = useState(0);
   const [animatedPositions, setAnimatedPositions] = useState<PlayerPosition[]>([]);
+  const [autoAnimate, setAutoAnimate] = useState(true);
+  const [previousSlideIndex, setPreviousSlideIndex] = useState(slideIndex);
 
   // Allow anyone who owns the play to edit it (both coaches and players)
   const canEdit = auth.currentUser && play && play.createdBy === auth.currentUser.uid;
@@ -111,6 +113,24 @@ export default function PlayEditor() {
 
     fetchData();
   }, [id, navigate]);
+
+  // Auto-animate when slide changes
+  useEffect(() => {
+    // Only animate if:
+    // 1. Auto-animate is enabled
+    // 2. We're moving to a slide > 1 (there's a previous slide to animate from)
+    // 3. The slide actually changed
+    // 4. Not currently in edit mode
+    if (autoAnimate && slideIndex > 1 && slideIndex !== previousSlideIndex && !isDrawingRoute && !isDrawingMovementRoute && !isGroupSelectMode) {
+      // Small delay to let the slide render
+      const timer = setTimeout(() => {
+        playAnimation();
+      }, 100);
+
+      return () => clearTimeout(timer);
+    }
+    setPreviousSlideIndex(slideIndex);
+  }, [slideIndex]);
 
   const updatePosition = async (playerId: string, x: number, y: number) => {
     if (!play || !canEdit) return;
@@ -467,7 +487,20 @@ export default function PlayEditor() {
     setSelectedPlayerIds(new Set());
   };
 
-  const handleCanvasClick = (x: number, y: number) => {
+  const handleWaypointClick = (index: number) => {
+    if (!isDrawingMovementRoute || !currentMovementRoute || !canEdit) return;
+
+    // Don't delete first or last point
+    if (index > 0 && index < currentMovementRoute.points.length - 1) {
+      const updatedPoints = currentMovementRoute.points.filter((_, i) => i !== index);
+      setCurrentMovementRoute({
+        ...currentMovementRoute,
+        points: updatedPoints
+      });
+    }
+  };
+
+  const handleCanvasClick = (x: number, y: number, e?: any) => {
     // Movement route drawing mode
     if (isDrawingMovementRoute && currentMovementRoute && canEdit) {
       // Snap route points to grid if snapping is enabled
@@ -479,7 +512,40 @@ export default function PlayEditor() {
         clickY = snapped.y;
       }
 
-      // Add point to current movement route
+      // Check if clicking near the path line to insert a waypoint
+      const INSERTION_THRESHOLD = 10; // pixels from line
+      for (let i = 0; i < currentMovementRoute.points.length - 1; i++) {
+        const p1 = currentMovementRoute.points[i];
+        const p2 = currentMovementRoute.points[i + 1];
+
+        // Calculate distance from point to line segment
+        const lineLength = Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
+        const distance = Math.abs(
+          ((p2.y - p1.y) * clickX - (p2.x - p1.x) * clickY + p2.x * p1.y - p2.y * p1.x) / lineLength
+        );
+
+        // Check if the click is within the segment bounds
+        const minX = Math.min(p1.x, p2.x) - INSERTION_THRESHOLD;
+        const maxX = Math.max(p1.x, p2.x) + INSERTION_THRESHOLD;
+        const minY = Math.min(p1.y, p2.y) - INSERTION_THRESHOLD;
+        const maxY = Math.max(p1.y, p2.y) + INSERTION_THRESHOLD;
+
+        if (distance < INSERTION_THRESHOLD && clickX >= minX && clickX <= maxX && clickY >= minY && clickY <= maxY) {
+          // Insert the point between i and i+1
+          const newPoints = [
+            ...currentMovementRoute.points.slice(0, i + 1),
+            { x: clickX, y: clickY },
+            ...currentMovementRoute.points.slice(i + 1)
+          ];
+          setCurrentMovementRoute({
+            ...currentMovementRoute,
+            points: newPoints
+          });
+          return;
+        }
+      }
+
+      // If not near existing path, add point to end
       const updatedRoute = {
         ...currentMovementRoute,
         points: [...currentMovementRoute.points, { x: clickX, y: clickY }]
@@ -1229,15 +1295,26 @@ export default function PlayEditor() {
                   <span className="text-xs sm:text-sm font-medium text-gray-700">Snap to Grid</span>
                 </label>
                 {slideIndex > 1 && (
-                  <label className="flex items-center gap-1 sm:gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={showMovementPaths}
-                      onChange={(e) => setShowMovementPaths(e.target.checked)}
-                      className="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500"
-                    />
-                    <span className="text-xs sm:text-sm font-medium text-gray-700">Show Movement</span>
-                  </label>
+                  <>
+                    <label className="flex items-center gap-1 sm:gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={showMovementPaths}
+                        onChange={(e) => setShowMovementPaths(e.target.checked)}
+                        className="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500"
+                      />
+                      <span className="text-xs sm:text-sm font-medium text-gray-700">Show Movement</span>
+                    </label>
+                    <label className="flex items-center gap-1 sm:gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={autoAnimate}
+                        onChange={(e) => setAutoAnimate(e.target.checked)}
+                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                      />
+                      <span className="text-xs sm:text-sm font-medium text-gray-700">Auto-Animate</span>
+                    </label>
+                  </>
                 )}
                 {slideIndex > 1 && !isAnimating && (
                   <button
@@ -1405,15 +1482,24 @@ export default function PlayEditor() {
                       </div>
 
                       {/* Instructions */}
-                      <div className="flex items-center gap-2">
-                        <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <span className="text-sm font-medium text-green-800">
-                          {!selectedPlayerId
-                            ? "Click on a player to edit their movement path from the previous slide"
-                            : "Click on the field to add waypoints to the movement path"}
-                        </span>
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2">
+                          <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          <span className="text-sm font-medium text-green-800">
+                            {!selectedPlayerId
+                              ? "Click on a player to edit their movement path from the previous slide"
+                              : "Path editing tips:"}
+                          </span>
+                        </div>
+                        {selectedPlayerId && (
+                          <ul className="text-xs text-green-700 ml-7 space-y-1">
+                            <li>• Tap/Click on the line to insert a waypoint</li>
+                            <li>• Tap/Click a numbered waypoint with red dot to delete it</li>
+                            <li>• Tap/Click anywhere else to add waypoint at the end</li>
+                          </ul>
+                        )}
                       </div>
 
                       {/* Color Picker */}
@@ -1539,6 +1625,7 @@ export default function PlayEditor() {
                   onCanvasClick={isGeneratorMode ? handleGeneratorCanvasClick : handleCanvasClick}
                   onPlayerClick={handlePlayerClick}
                   onRouteClick={deleteRoute}
+                  onWaypointClick={handleWaypointClick}
                   editable={!!canEdit && !isAnimating}
                   showGrid={showGrid}
                   enableSnapping={enableSnapping}

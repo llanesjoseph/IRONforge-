@@ -1,5 +1,5 @@
 import React, { forwardRef, useImperativeHandle, useRef } from 'react';
-import { Stage, Layer, Rect, Line, Text as KText, Circle, Arrow } from 'react-konva';
+import { Stage, Layer, Rect, Line, Text as KText, Circle, Arrow, Group } from 'react-konva';
 import Konva from 'konva';
 import PlayerToken from './PlayerToken';
 import RouteDrawing from './RouteDrawing';
@@ -20,9 +20,10 @@ type CanvasProps = {
   isDrawing?: boolean;
   onDrag: (id: string, x: number, y: number) => void;
   onRename?: (id: string, label: string) => void;
-  onCanvasClick?: (x: number, y: number) => void;
+  onCanvasClick?: (x: number, y: number, e?: any) => void;
   onPlayerClick?: (playerId: string) => void;
   onRouteClick?: (routeId: string) => void;
+  onWaypointClick?: (waypointIndex: number) => void;
   editable?: boolean;
   showGrid?: boolean;
   enableSnapping?: boolean;
@@ -57,6 +58,7 @@ const CanvasField = forwardRef<CanvasHandle, CanvasProps>(
     onCanvasClick,
     onPlayerClick,
     onRouteClick,
+    onWaypointClick,
     editable = true,
     showGrid = false,
     enableSnapping = true,
@@ -120,7 +122,7 @@ const CanvasField = forwardRef<CanvasHandle, CanvasProps>(
       if (e.target === e.target.getStage() || e.target.className === 'Rect') {
         const pos = e.target.getStage()?.getPointerPosition();
         if (pos && onCanvasClick) {
-          onCanvasClick(pos.x, pos.y);
+          onCanvasClick(pos.x, pos.y, e);
         }
       }
     };
@@ -288,16 +290,74 @@ const CanvasField = forwardRef<CanvasHandle, CanvasProps>(
 
           {/* Current Movement Route Being Drawn */}
           {isDrawingMovementRoute && currentMovementRoute && currentMovementRoute.points.length > 0 && (
-            <Line
-              points={currentMovementRoute.points.flatMap(p => [p.x, p.y])}
-              stroke={currentMovementRoute.color || '#10b981'}
-              strokeWidth={4}
-              opacity={0.9}
-              listening={false}
-              dash={[8, 4]}
-              lineCap="round"
-              lineJoin="round"
-            />
+            <>
+              {/* Draw the path line */}
+              <Line
+                points={currentMovementRoute.points.flatMap(p => [p.x, p.y])}
+                stroke={currentMovementRoute.color || '#10b981'}
+                strokeWidth={4}
+                opacity={0.9}
+                listening={false}
+                dash={[8, 4]}
+                lineCap="round"
+                lineJoin="round"
+              />
+              {/* Draw waypoint markers */}
+              {currentMovementRoute.points.map((point, index) => {
+                // First and last waypoints can't be deleted
+                const isDeletable = index > 0 && index < currentMovementRoute.points.length - 1;
+
+                return (
+                  <Group
+                    key={`waypoint-${index}`}
+                    x={point.x}
+                    y={point.y}
+                    onClick={(e) => {
+                      e.cancelBubble = true;
+                      if (isDeletable && onWaypointClick) {
+                        onWaypointClick(index);
+                      }
+                    }}
+                    onTap={(e) => {
+                      e.cancelBubble = true;
+                      if (isDeletable && onWaypointClick) {
+                        onWaypointClick(index);
+                      }
+                    }}
+                  >
+                    {/* Waypoint circle */}
+                    <Circle
+                      radius={10}
+                      fill={currentMovementRoute.color || '#10b981'}
+                      stroke="#ffffff"
+                      strokeWidth={2}
+                      opacity={isDeletable ? 1 : 0.7}
+                    />
+                    {/* Delete indicator for deletable waypoints */}
+                    {isDeletable && (
+                      <Circle
+                        radius={4}
+                        fill="#ef4444"
+                        stroke="#ffffff"
+                        strokeWidth={1}
+                        offsetX={-6}
+                        offsetY={-6}
+                      />
+                    )}
+                    {/* Waypoint number */}
+                    <KText
+                      x={-5}
+                      y={-6}
+                      text={`${index + 1}`}
+                      fontSize={10}
+                      fontStyle="bold"
+                      fill="#ffffff"
+                      listening={false}
+                    />
+                  </Group>
+                );
+              })}
+            </>
           )}
 
           {/* Routes Layer - drawn before players so they appear behind */}
