@@ -388,10 +388,10 @@ export default function PlayEditor() {
     // Movement route drawing mode
     if (isDrawingMovementRoute && canEdit) {
       // Find the player's previous position
-      if (!previous) return;
+      if (!previous || !current) return;
 
       const prevPlayer = previous.positions.find(p => p.id === playerId);
-      const currPlayer = current?.positions.find(p => p.id === playerId);
+      const currPlayer = current.positions.find(p => p.id === playerId);
 
       if (!prevPlayer || !currPlayer) return;
 
