@@ -62,6 +62,9 @@ export default function PlayEditor() {
   const [isGroupSelectMode, setIsGroupSelectMode] = useState(false);
   const [selectedPlayerIds, setSelectedPlayerIds] = useState<Set<string>>(new Set());
 
+  // Movement visualization state
+  const [showMovementPaths, setShowMovementPaths] = useState(true);
+
   // Allow anyone who owns the play to edit it (both coaches and players)
   const canEdit = auth.currentUser && play && play.createdBy === auth.currentUser.uid;
 
@@ -590,6 +593,11 @@ export default function PlayEditor() {
 
   const current = useMemo(() => play?.slides.find(s => s.index === slideIndex) || null, [play, slideIndex]);
 
+  const previous = useMemo(() => {
+    if (!play || slideIndex === 1) return null;
+    return play.slides.find(s => s.index === slideIndex - 1) || null;
+  }, [play, slideIndex]);
+
   // AI Assistant handlers
   const handleApplyFormation = async (positions: PlayerPosition[]) => {
     if (!play || !canEdit) return;
@@ -950,7 +958,7 @@ export default function PlayEditor() {
               />
 
               {/* Grid Controls */}
-              <div className="flex gap-2 sm:gap-3 items-center sm:ml-auto sm:border-l sm:pl-3 w-full sm:w-auto justify-center sm:justify-start">
+              <div className="flex gap-2 sm:gap-3 items-center sm:ml-auto sm:border-l sm:pl-3 w-full sm:w-auto justify-center sm:justify-start flex-wrap">
                 <label className="flex items-center gap-1 sm:gap-2 cursor-pointer">
                   <input
                     type="checkbox"
@@ -969,6 +977,17 @@ export default function PlayEditor() {
                   />
                   <span className="text-xs sm:text-sm font-medium text-gray-700">Snap to Grid</span>
                 </label>
+                {slideIndex > 1 && (
+                  <label className="flex items-center gap-1 sm:gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={showMovementPaths}
+                      onChange={(e) => setShowMovementPaths(e.target.checked)}
+                      className="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500"
+                    />
+                    <span className="text-xs sm:text-sm font-medium text-gray-700">Show Movement</span>
+                  </label>
+                )}
               </div>
             </div>
 
@@ -1150,6 +1169,9 @@ export default function PlayEditor() {
                   // Group selection props
                   selectedPlayerIds={selectedPlayerIds}
                   isGroupSelectMode={isGroupSelectMode}
+                  // Movement visualization props
+                  previousPositions={previous?.positions}
+                  showMovementPaths={showMovementPaths}
                   // AI Play Generator props
                   ballMarker={ballMarker}
                   endpointMarker={endpointMarker}

@@ -21,7 +21,8 @@ export type Route = {
 export type Slide = {
   index: number; // Changed to support dynamic number of slides
   positions: PlayerPosition[];
-  routes?: Route[];
+  routes?: Route[]; // Routes for passing plays, etc.
+  movementRoutes?: Route[]; // Routes showing movement from previous slide
 }
 
 export type Play = {

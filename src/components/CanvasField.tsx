@@ -1,5 +1,5 @@
-import { forwardRef, useImperativeHandle, useRef } from 'react';
-import { Stage, Layer, Rect, Line, Text as KText } from 'react-konva';
+import React, { forwardRef, useImperativeHandle, useRef } from 'react';
+import { Stage, Layer, Rect, Line, Text as KText, Circle, Arrow } from 'react-konva';
 import Konva from 'konva';
 import PlayerToken from './PlayerToken';
 import RouteDrawing from './RouteDrawing';
@@ -29,6 +29,9 @@ type CanvasProps = {
   // Group selection props
   selectedPlayerIds?: Set<string>;
   isGroupSelectMode?: boolean;
+  // Movement visualization props
+  previousPositions?: PlayerPosition[];
+  showMovementPaths?: boolean;
   // New props for AI features
   ballMarker?: BallMarkerType | null;
   endpointMarker?: EndpointMarkerType | null;
@@ -56,6 +59,8 @@ const CanvasField = forwardRef<CanvasHandle, CanvasProps>(
     enableSnapping = true,
     selectedPlayerIds = new Set(),
     isGroupSelectMode = false,
+    previousPositions = [],
+    showMovementPaths = false,
     ballMarker = null,
     endpointMarker = null,
     defensivePlayers = [],
@@ -216,6 +221,46 @@ const CanvasField = forwardRef<CanvasHandle, CanvasProps>(
             shadowColor="#000000"
             shadowOpacity={0.8}
           />
+
+          {/* Movement Paths from Previous Slide */}
+          {showMovementPaths && previousPositions && previousPositions.length > 0 && (
+            <>
+              {/* Ghost positions from previous slide */}
+              {previousPositions.map(prevPlayer => {
+                const currentPlayer = players.find(p => p.id === prevPlayer.id);
+                if (!currentPlayer) return null;
+
+                return (
+                  <React.Fragment key={`ghost-${prevPlayer.id}`}>
+                    {/* Ghost circle */}
+                    <Circle
+                      x={prevPlayer.x}
+                      y={prevPlayer.y}
+                      radius={18}
+                      fill="#9ca3af"
+                      opacity={0.3}
+                      stroke="#6b7280"
+                      strokeWidth={1}
+                      dash={[5, 5]}
+                      listening={false}
+                    />
+                    {/* Movement arrow */}
+                    <Arrow
+                      points={[prevPlayer.x, prevPlayer.y, currentPlayer.x, currentPlayer.y]}
+                      stroke="#10b981"
+                      strokeWidth={3}
+                      fill="#10b981"
+                      pointerLength={10}
+                      pointerWidth={10}
+                      opacity={0.7}
+                      listening={false}
+                      dash={[8, 4]}
+                    />
+                  </React.Fragment>
+                );
+              })}
+            </>
+          )}
 
           {/* Routes Layer - drawn before players so they appear behind */}
           <RouteDrawing
