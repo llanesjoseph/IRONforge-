@@ -12,6 +12,7 @@ import {
   updateTeamName
 } from '../lib/team';
 import { Team as TeamType, Invite, TeamMember, UserProfile } from '../types';
+import CoachWhitelist from '../components/CoachWhitelist';
 
 export default function Team() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
@@ -248,6 +249,11 @@ export default function Team() {
             </button>
           )}
         </div>
+
+        {/* Coach Whitelist - Admin Only */}
+        {canManageTeam && (
+          <CoachWhitelist />
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Team Members */}

@@ -1,7 +1,7 @@
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { auth, db } from './firebase';
 import { UserProfile } from '../types';
-import { isAdminEmail } from './admin';
+import { isAdminEmail, isCoachEmail } from './admin';
 
 export async function getOrCreateUserProfile(): Promise<UserProfile> {
   const user = auth.currentUser;
@@ -15,7 +15,12 @@ export async function getOrCreateUserProfile(): Promise<UserProfile> {
   }
 
   // Determine role based on email
-  const role = isAdminEmail(user.email) ? 'admin' : 'player';
+  let role: 'admin' | 'coach' | 'player' = 'player';
+  if (isAdminEmail(user.email)) {
+    role = 'admin';
+  } else if (isCoachEmail(user.email)) {
+    role = 'coach';
+  }
 
   // Create new user profile
   const newProfile: UserProfile = {
