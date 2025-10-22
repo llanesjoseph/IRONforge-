@@ -6,7 +6,9 @@ export default function CoachWhitelist() {
   const [coaches, setCoaches] = useState<string[]>(getCoachEmails());
   const [copied, setCopied] = useState(false);
 
-  const loginUrl = window.location.origin + '/login';
+  // Use production URL if available, otherwise fall back to current origin
+  const productionUrl = import.meta.env.VITE_APP_URL || window.location.origin;
+  const loginUrl = productionUrl;
 
   const handleAddCoach = () => {
     if (!newEmail.trim()) {
