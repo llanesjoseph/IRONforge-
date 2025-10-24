@@ -208,7 +208,14 @@ Ensure all positions are within field bounds (0-700 width, 0-400 height) and ali
   try {
     const response = await callAI(prompt);
     // Clean JSON response (Gemini sometimes adds markdown formatting)
-    const cleanedResponse = response.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+    let cleanedResponse = response.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+
+    // Extract JSON if there's text before or after it
+    const jsonMatch = cleanedResponse.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      cleanedResponse = jsonMatch[0];
+    }
+
     const parsed = JSON.parse(cleanedResponse);
     return parsed as FormationSuggestion;
   } catch (error) {
@@ -263,7 +270,14 @@ Ensure all points are within field bounds (0-700 width, 0-400 height).`;
 
   try {
     const response = await callAI(prompt);
-    const cleanedResponse = response.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+    let cleanedResponse = response.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+
+    // Extract JSON if there's text before or after it
+    const jsonMatch = cleanedResponse.match(/[\[\{][\s\S]*[\]\}]/);
+    if (jsonMatch) {
+      cleanedResponse = jsonMatch[0];
+    }
+
     const parsed = JSON.parse(cleanedResponse);
     return parsed as RouteSuggestion[];
   } catch (error) {
@@ -305,7 +319,14 @@ Rating should be 1-10 scale where 10 is perfect.`;
 
   try {
     const response = await callAI(prompt);
-    const cleanedResponse = response.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+    let cleanedResponse = response.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+
+    // Extract JSON if there's text before or after it
+    const jsonMatch = cleanedResponse.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      cleanedResponse = jsonMatch[0];
+    }
+
     const parsed = JSON.parse(cleanedResponse);
     return parsed as PlayAnalysis;
   } catch (error) {
@@ -336,7 +357,14 @@ Return as JSON array of strings:
 
   try {
     const response = await callAI(prompt);
-    const cleanedResponse = response.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+    let cleanedResponse = response.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+
+    // Extract JSON if there's text before or after it
+    const jsonMatch = cleanedResponse.match(/\[[\s\S]*\]/);
+    if (jsonMatch) {
+      cleanedResponse = jsonMatch[0];
+    }
+
     const parsed = JSON.parse(cleanedResponse);
     return parsed as string[];
   } catch (error) {
@@ -375,7 +403,14 @@ Ensure all positions are within bounds (0-700 width, 0-400 height) and aligned t
 
   try {
     const response = await callAI(prompt);
-    const cleanedResponse = response.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+    let cleanedResponse = response.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+
+    // Extract JSON if there's text before or after it
+    const jsonMatch = cleanedResponse.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      cleanedResponse = jsonMatch[0];
+    }
+
     const parsed = JSON.parse(cleanedResponse);
     return parsed as Slide;
   } catch (error) {
@@ -465,7 +500,14 @@ The primary ball carrier or target receiver should have a route that reaches the
 
   try {
     const response = await callAI(prompt);
-    const cleanedResponse = response.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+    let cleanedResponse = response.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+
+    // Extract JSON if there's text before or after it
+    const jsonMatch = cleanedResponse.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      cleanedResponse = jsonMatch[0];
+    }
+
     const parsed = JSON.parse(cleanedResponse);
 
     // Ensure all required fields are present
@@ -560,7 +602,19 @@ Ensure assignments are specific and tactically sound.`;
 
   try {
     const response = await callAI(prompt);
-    const cleanedResponse = response.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+
+    // Clean JSON response - handle various AI formatting patterns
+    let cleanedResponse = response
+      .replace(/```json\n?/g, '')
+      .replace(/```\n?/g, '')
+      .trim();
+
+    // Extract JSON if there's text before or after it
+    const jsonMatch = cleanedResponse.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      cleanedResponse = jsonMatch[0];
+    }
+
     const parsed = JSON.parse(cleanedResponse);
 
     // Validate response structure

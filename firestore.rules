@@ -42,7 +42,8 @@ service cloud.firestore {
         request.resource.data.name.size() > 0 &&
         request.resource.data.name.size() <= 100 &&
         request.resource.data.slides is list &&
-        request.resource.data.slides.size() == 3 &&
+        request.resource.data.slides.size() >= 1 &&
+        request.resource.data.slides.size() <= 10 &&
         request.resource.data.teamId is string &&
         request.resource.data.createdBy is string;
     }
@@ -144,6 +145,41 @@ service cloud.firestore {
       // Only the creator or admin can delete invites
       allow delete: if isAuthenticated() &&
         (resource.data.invitedBy == request.auth.uid || isAdmin());
+    }
+
+    // AI Play Drafts collection
+    match /play_drafts/{draftId} {
+      // Users can read their own drafts
+      allow read: if isAuthenticated() &&
+        (resource.data.createdBy == request.auth.uid || isAdmin());
+
+      // Users can create drafts
+      allow create: if isAuthenticated() &&
+        request.resource.data.createdBy == request.auth.uid;
+
+      // Users can update their own drafts
+      allow update: if isAuthenticated() &&
+        (resource.data.createdBy == request.auth.uid || isAdmin());
+
+      // Users can delete their own drafts
+      allow delete: if isAuthenticated() &&
+        (resource.data.createdBy == request.auth.uid || isAdmin());
+
+      // Tokens subcollection
+      match /tokens/{tokenId} {
+        allow read, write: if isAuthenticated();
+      }
+
+      // Routes subcollection
+      match /routes/{routeId} {
+        allow read, write: if isAuthenticated();
+      }
+
+      // History subcollection
+      match /history/{entryId} {
+        allow read: if isAuthenticated();
+        allow write: if isAuthenticated();
+      }
     }
   }
 }

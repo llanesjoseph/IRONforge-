@@ -7,6 +7,9 @@ import Schedule from './pages/schedule';
 import AITest from './pages/ai-test';
 import Team from './pages/Team';
 import InviteAccept from './pages/InviteAccept';
+import NewDraft from './pages/ai/new-draft';
+import DraftEditor from './pages/ai/draft/[id]';
+import BulkImport from './pages/ai/bulk-import';
 import ProtectedRoute from './components/ProtectedRoute';
 import BugReport from './components/BugReport';
 
@@ -61,6 +64,30 @@ export default function App() {
           element={
             <ProtectedRoute>
               <AITest />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/ai/new"
+          element={
+            <ProtectedRoute>
+              <NewDraft />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/ai/draft/:id"
+          element={
+            <ProtectedRoute>
+              <DraftEditor />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/ai/bulk"
+          element={
+            <ProtectedRoute>
+              <BulkImport />
             </ProtectedRoute>
           }
         />

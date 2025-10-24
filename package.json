@@ -16,7 +16,8 @@
     "react-dom": "^18.2.0",
     "react-konva": "^18.2.14",
     "react-router-dom": "^6.30.1",
-    "resend": "^6.2.2"
+    "resend": "^6.2.2",
+    "use-image": "^1.1.4"
   },
   "devDependencies": {
     "@types/node": "^24.9.0",
