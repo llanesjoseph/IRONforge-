@@ -19,7 +19,7 @@ import {
   GeneratedPlay,
   DefensivePlayer
 } from '../../types';
-import { FIELD, snapToGrid, snapToLOS, calculateRouteYardage, tripsRightTemplate, doublesTemplate, emptyTemplate } from '../../lib/formations';
+import { FIELD, snapToGrid, snapToLOS, calculateRouteYardage, simplifyPath, smoothPath, tripsRightTemplate, doublesTemplate, emptyTemplate } from '../../lib/formations';
 import { getOrCreateUserProfile } from '../../lib/user';
 import { generatePlayFromEndpoint, challengePlayWithRedTeam } from '../../lib/ai';
 
@@ -39,6 +39,8 @@ export default function PlayEditor() {
   const [routeColor, setRouteColor] = useState('#FF6B6B');
   const [showGrid, setShowGrid] = useState(true);
   const [enableSnapping, setEnableSnapping] = useState(true);
+  const [routeDrawingMode, setRouteDrawingMode] = useState<'click' | 'freehand'>('freehand');
+  const [isFreehandDrawing, setIsFreehandDrawing] = useState(false);
   const canvasRef = useRef<CanvasHandle>(null);
 
   // Movement route editing state
@@ -501,6 +503,11 @@ export default function PlayEditor() {
   };
 
   const handleCanvasClick = (x: number, y: number, e?: any) => {
+    // Freehand mode uses mouse down/move/up instead of click
+    if (routeDrawingMode === 'freehand') {
+      return;
+    }
+
     // Check for double-click to finish route
     if (e && e.evt && e.evt.detail === 2) {
       if (isDrawingRoute && currentRoute && currentRoute.points.length >= 2) {
@@ -647,6 +654,65 @@ export default function PlayEditor() {
     } finally {
       setSaving(false);
       stopDrawingRoute();
+    }
+  };
+
+  // Freehand drawing handlers
+  const handleCanvasMouseDown = (x: number, y: number, e?: any) => {
+    if (routeDrawingMode !== 'freehand' || !isDrawingRoute || !canEdit) return;
+
+    // Start freehand drawing
+    setIsFreehandDrawing(true);
+
+    // Start new route from this point
+    if (!currentRoute && selectedPlayerId) {
+      const newRoute: Route = {
+        id: `route-${Date.now()}`,
+        playerId: selectedPlayerId,
+        points: [{ x, y }],
+        color: routeColor
+      };
+      setCurrentRoute(newRoute);
+    } else if (currentRoute) {
+      // Continue current route
+      setCurrentRoute({
+        ...currentRoute,
+        points: [...currentRoute.points, { x, y }]
+      });
+    }
+  };
+
+  const handleCanvasMouseMove = (x: number, y: number, e?: any) => {
+    if (routeDrawingMode !== 'freehand' || !isFreehandDrawing || !currentRoute) return;
+
+    // Add point to route while dragging
+    const updatedRoute = {
+      ...currentRoute,
+      points: [...currentRoute.points, { x, y }]
+    };
+    setCurrentRoute(updatedRoute);
+  };
+
+  const handleCanvasMouseUp = async () => {
+    if (routeDrawingMode !== 'freehand' || !isFreehandDrawing || !currentRoute) return;
+
+    setIsFreehandDrawing(false);
+
+    // Simplify and smooth the hand-drawn path
+    if (currentRoute.points.length > 2) {
+      const simplified = simplifyPath(currentRoute.points, 8); // Higher tolerance for cleaner result
+      const smoothed = smoothPath(simplified, 5);
+
+      const cleanedRoute = {
+        ...currentRoute,
+        points: smoothed
+      };
+      setCurrentRoute(cleanedRoute);
+
+      // Auto-finish the route
+      setTimeout(() => {
+        finishRoute();
+      }, 100);
     }
   };
 
@@ -1458,6 +1524,42 @@ export default function PlayEditor() {
                   <div className="space-y-3">
                     {/* Main Actions */}
                     <div className="flex gap-3 flex-wrap items-center">
+                      {/* Drawing Mode Toggle */}
+                      <div className="flex items-center gap-2 bg-iron-800 rounded-lg p-1 border border-iron-700">
+                        <button
+                          onClick={() => setRouteDrawingMode('click')}
+                          className={`px-3 py-1.5 rounded text-sm font-medium transition-all ${
+                            routeDrawingMode === 'click'
+                              ? 'bg-purple-600 text-white shadow-lg'
+                              : 'text-iron-300 hover:text-white'
+                          }`}
+                          title="Click to place waypoints one by one"
+                        >
+                          <span className="flex items-center gap-1">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+                            </svg>
+                            Click
+                          </span>
+                        </button>
+                        <button
+                          onClick={() => setRouteDrawingMode('freehand')}
+                          className={`px-3 py-1.5 rounded text-sm font-medium transition-all ${
+                            routeDrawingMode === 'freehand'
+                              ? 'bg-purple-600 text-white shadow-lg'
+                              : 'text-iron-300 hover:text-white'
+                          }`}
+                          title="Draw routes by dragging your mouse"
+                        >
+                          <span className="flex items-center gap-1">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                            </svg>
+                            Freehand
+                          </span>
+                        </button>
+                      </div>
+
                       <button
                         onClick={startDrawingRoute}
                         className="btn-primary flex items-center gap-2"
@@ -1738,6 +1840,9 @@ export default function PlayEditor() {
                   onWaypointClick={handleWaypointClick}
                   onWaypointDrag={handleWaypointDrag}
                   onCurrentWaypointDrag={handleCurrentWaypointDrag}
+                  onCanvasMouseDown={handleCanvasMouseDown}
+                  onCanvasMouseMove={handleCanvasMouseMove}
+                  onCanvasMouseUp={handleCanvasMouseUp}
                   editable={!!canEdit && !isAnimating}
                   showGrid={showGrid}
                   enableSnapping={enableSnapping}

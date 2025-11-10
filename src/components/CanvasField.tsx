@@ -21,6 +21,9 @@ type CanvasProps = {
   onDrag: (id: string, x: number, y: number) => void;
   onRename?: (id: string, label: string) => void;
   onCanvasClick?: (x: number, y: number, e?: any) => void;
+  onCanvasMouseDown?: (x: number, y: number, e?: any) => void;
+  onCanvasMouseMove?: (x: number, y: number, e?: any) => void;
+  onCanvasMouseUp?: () => void;
   onPlayerClick?: (playerId: string) => void;
   onRouteClick?: (routeId: string) => void;
   onWaypointClick?: (waypointIndex: number) => void;
@@ -58,6 +61,9 @@ const CanvasField = forwardRef<CanvasHandle, CanvasProps>(
     onDrag,
     onRename,
     onCanvasClick,
+    onCanvasMouseDown,
+    onCanvasMouseMove,
+    onCanvasMouseUp,
     onPlayerClick,
     onRouteClick,
     onWaypointClick,
@@ -131,6 +137,28 @@ const CanvasField = forwardRef<CanvasHandle, CanvasProps>(
       }
     };
 
+    const handleStageMouseDown = (e: Konva.KonvaEventObject<MouseEvent>) => {
+      if (e.target === e.target.getStage() || e.target.className === 'Rect') {
+        const pos = e.target.getStage()?.getPointerPosition();
+        if (pos && onCanvasMouseDown) {
+          onCanvasMouseDown(pos.x, pos.y, e);
+        }
+      }
+    };
+
+    const handleStageMouseMove = (e: Konva.KonvaEventObject<MouseEvent>) => {
+      const pos = e.target.getStage()?.getPointerPosition();
+      if (pos && onCanvasMouseMove) {
+        onCanvasMouseMove(pos.x, pos.y, e);
+      }
+    };
+
+    const handleStageMouseUp = () => {
+      if (onCanvasMouseUp) {
+        onCanvasMouseUp();
+      }
+    };
+
     return (
       <Stage
         ref={stageRef}
@@ -139,6 +167,9 @@ const CanvasField = forwardRef<CanvasHandle, CanvasProps>(
         className="rounded-xl shadow-field"
         onClick={handleStageClick}
         onDblClick={handleStageClick}
+        onMouseDown={handleStageMouseDown}
+        onMouseMove={handleStageMouseMove}
+        onMouseUp={handleStageMouseUp}
       >
         <Layer>
           {/* Solid grass field - clean and simple */}

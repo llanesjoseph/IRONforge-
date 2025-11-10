@@ -70,6 +70,81 @@ function calculateDistance(p1: RoutePoint, p2: RoutePoint): number {
 }
 
 /**
+ * Calculate perpendicular distance from point to line segment
+ */
+function perpendicularDistance(point: RoutePoint, lineStart: RoutePoint, lineEnd: RoutePoint): number {
+  const dx = lineEnd.x - lineStart.x;
+  const dy = lineEnd.y - lineStart.y;
+
+  if (dx === 0 && dy === 0) {
+    return Math.sqrt(Math.pow(point.x - lineStart.x, 2) + Math.pow(point.y - lineStart.y, 2));
+  }
+
+  const numerator = Math.abs(dy * point.x - dx * point.y + lineEnd.x * lineStart.y - lineEnd.y * lineStart.x);
+  const denominator = Math.sqrt(dx * dx + dy * dy);
+
+  return numerator / denominator;
+}
+
+/**
+ * Simplify path using Ramer-Douglas-Peucker algorithm
+ * Reduces number of points while maintaining shape
+ * @param points - Array of route points
+ * @param tolerance - Maximum distance a point can be from the simplified line (default: 5px)
+ * @returns Simplified array of points
+ */
+export function simplifyPath(points: RoutePoint[], tolerance: number = 5): RoutePoint[] {
+  if (points.length <= 2) return points;
+
+  let maxDistance = 0;
+  let maxIndex = 0;
+  const end = points.length - 1;
+
+  for (let i = 1; i < end; i++) {
+    const distance = perpendicularDistance(points[i], points[0], points[end]);
+    if (distance > maxDistance) {
+      maxDistance = distance;
+      maxIndex = i;
+    }
+  }
+
+  if (maxDistance > tolerance) {
+    const left = simplifyPath(points.slice(0, maxIndex + 1), tolerance);
+    const right = simplifyPath(points.slice(maxIndex), tolerance);
+    return [...left.slice(0, -1), ...right];
+  } else {
+    return [points[0], points[end]];
+  }
+}
+
+/**
+ * Smooth path using moving average
+ * Makes hand-drawn routes look cleaner
+ * @param points - Array of route points
+ * @param windowSize - Size of averaging window (default: 3)
+ * @returns Smoothed array of points
+ */
+export function smoothPath(points: RoutePoint[], windowSize: number = 3): RoutePoint[] {
+  if (points.length <= 2) return points;
+
+  const smoothed: RoutePoint[] = [points[0]]; // Keep first point
+
+  for (let i = 1; i < points.length - 1; i++) {
+    const start = Math.max(0, i - Math.floor(windowSize / 2));
+    const end = Math.min(points.length, i + Math.ceil(windowSize / 2));
+    const window = points.slice(start, end);
+
+    const avgX = window.reduce((sum, p) => sum + p.x, 0) / window.length;
+    const avgY = window.reduce((sum, p) => sum + p.y, 0) / window.length;
+
+    smoothed.push({ x: avgX, y: avgY });
+  }
+
+  smoothed.push(points[points.length - 1]); // Keep last point
+  return smoothed;
+}
+
+/**
  * Calculate the total yardage of a route
  * @param route - Route object or array of route points
  * @returns Total distance in yards, rounded to 1 decimal place
