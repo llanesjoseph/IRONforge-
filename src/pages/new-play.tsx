@@ -98,7 +98,7 @@ export default function NewPlay() {
         teamId: 'team-1',
         createdBy: user.uid,
         slides,
-        formation: undefined, // AI-generated, no specific template
+        // formation field omitted for AI-generated plays (no specific template)
         notes: `AI Generated: ${playDescription}\n\n${generatedPlay.explanation}`,
         createdAt: serverTimestamp(),
       });
