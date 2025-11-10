@@ -1,0 +1,904 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "unit": "yards",
+    "created": "2025-11-10T23:58:00.530Z"
+  },
+  "plays": {
+    "run": [
+      {
+        "name": "Inside Zone Right",
+        "concept": "Run",
+        "formation": "Shotgun 2x2",
+        "hash": "middle",
+        "motions": [],
+        "qb": {
+          "path": [
+            {
+              "t": 0,
+              "x": -4,
+              "y": 0
+            },
+            {
+              "t": 0.5,
+              "x": -3,
+              "y": 0
+            }
+          ],
+          "handoff_time": 0.5
+        },
+        "run_paths": {
+          "RB": [
+            {
+              "t": 0,
+              "x": -6,
+              "y": -3
+            },
+            {
+              "t": 0.2,
+              "x": -5,
+              "y": -2
+            },
+            {
+              "t": 0.4,
+              "x": -3,
+              "y": 0
+            },
+            {
+              "t": 0.6,
+              "x": 0,
+              "y": 2
+            },
+            {
+              "t": 0.8,
+              "x": 2,
+              "y": 3
+            },
+            {
+              "t": 1,
+              "x": 4,
+              "y": 4
+            }
+          ]
+        },
+        "offensive_line": [
+          {
+            "pos": "LT",
+            "x": -1,
+            "y": -2,
+            "block": "base"
+          },
+          {
+            "pos": "LG",
+            "x": -1,
+            "y": -1,
+            "block": "base"
+          },
+          {
+            "pos": "C",
+            "x": -1,
+            "y": 0,
+            "block": "base"
+          },
+          {
+            "pos": "RG",
+            "x": -1,
+            "y": 1,
+            "block": "base"
+          },
+          {
+            "pos": "RT",
+            "x": -1,
+            "y": 2,
+            "block": "base"
+          }
+        ],
+        "timing_summary": {
+          "snap_to_mesh": 0.5,
+          "play_length": 4
+        },
+        "learning_notes": "RB presses play side and cuts off first down lineman past center."
+      },
+      {
+        "name": "Power Right",
+        "concept": "Run",
+        "formation": "I-Pro Right",
+        "hash": "middle",
+        "motions": [],
+        "qb": {
+          "path": [
+            {
+              "t": 0,
+              "x": -2,
+              "y": 0
+            },
+            {
+              "t": 0.5,
+              "x": -1,
+              "y": 0
+            }
+          ],
+          "handoff_time": 0.5
+        },
+        "run_paths": {
+          "RB": [
+            {
+              "t": 0,
+              "x": -6,
+              "y": 0
+            },
+            {
+              "t": 0.3,
+              "x": -4,
+              "y": 0
+            },
+            {
+              "t": 0.6,
+              "x": -2,
+              "y": 1
+            },
+            {
+              "t": 0.8,
+              "x": 0,
+              "y": 2
+            },
+            {
+              "t": 1,
+              "x": 2,
+              "y": 3
+            }
+          ]
+        },
+        "offensive_line": [
+          {
+            "pos": "LT",
+            "x": -1,
+            "y": -2,
+            "block": "base"
+          },
+          {
+            "pos": "LG",
+            "x": -1,
+            "y": -1,
+            "block": "base"
+          },
+          {
+            "pos": "C",
+            "x": -1,
+            "y": 0,
+            "block": "base"
+          },
+          {
+            "pos": "RG",
+            "x": -1,
+            "y": 1,
+            "block": "base"
+          },
+          {
+            "pos": "RT",
+            "x": -1,
+            "y": 2,
+            "block": "base"
+          }
+        ],
+        "timing_summary": {
+          "snap_to_mesh": 0.5,
+          "play_length": 3.8
+        },
+        "learning_notes": "Backside guard pulls and kicks EMOL; FB wraps through B-gap."
+      },
+      {
+        "name": "Jet Sweep Right",
+        "concept": "Run",
+        "formation": "Trips Right",
+        "hash": "right",
+        "motions": [
+          {
+            "who": "SL_Z",
+            "type": "fast_jet",
+            "start": -0.5,
+            "end": 0
+          }
+        ],
+        "qb": {
+          "path": [
+            {
+              "t": 0,
+              "x": -4,
+              "y": 0
+            },
+            {
+              "t": 0.5,
+              "x": -3,
+              "y": 0
+            }
+          ],
+          "handoff_time": 0
+        },
+        "run_paths": {
+          "SL_Z": [
+            {
+              "t": -0.5,
+              "x": 0,
+              "y": 14
+            },
+            {
+              "t": 0,
+              "x": 0,
+              "y": 7
+            },
+            {
+              "t": 0.4,
+              "x": 3,
+              "y": 12
+            },
+            {
+              "t": 0.8,
+              "x": 6,
+              "y": 18
+            },
+            {
+              "t": 1.2,
+              "x": 8,
+              "y": 24
+            }
+          ]
+        },
+        "offensive_line": [
+          {
+            "pos": "LT",
+            "x": -1,
+            "y": -2,
+            "block": "base"
+          },
+          {
+            "pos": "LG",
+            "x": -1,
+            "y": -1,
+            "block": "base"
+          },
+          {
+            "pos": "C",
+            "x": -1,
+            "y": 0,
+            "block": "base"
+          },
+          {
+            "pos": "RG",
+            "x": -1,
+            "y": 1,
+            "block": "base"
+          },
+          {
+            "pos": "RT",
+            "x": -1,
+            "y": 2,
+            "block": "base"
+          }
+        ],
+        "timing_summary": {
+          "snap_to_mesh": 0,
+          "play_length": 3.5
+        },
+        "learning_notes": "Timing snap as motion crosses QB."
+      }
+    ],
+    "pass": [
+      {
+        "name": "Slant-Flat 2x2",
+        "concept": "Pass",
+        "formation": "Shotgun 2x2",
+        "hash": "middle",
+        "motions": [],
+        "qb": {
+          "path": [
+            {
+              "t": 0,
+              "x": -4,
+              "y": 0
+            },
+            {
+              "t": 0.3,
+              "x": -5,
+              "y": 0
+            }
+          ],
+          "release_point": {
+            "t": 1.3,
+            "x": -5,
+            "y": 0
+          }
+        },
+        "routes": {
+          "WR_Z": [
+            {
+              "t": 0,
+              "x": 0,
+              "y": 22
+            },
+            {
+              "t": 0.2,
+              "x": 1,
+              "y": 23
+            },
+            {
+              "t": 0.6,
+              "x": 3,
+              "y": 26
+            },
+            {
+              "t": 1,
+              "x": 4,
+              "y": 28
+            }
+          ],
+          "SL_Z": [
+            {
+              "t": 0,
+              "x": 0,
+              "y": 10
+            },
+            {
+              "t": 0.4,
+              "x": 3,
+              "y": 8
+            },
+            {
+              "t": 0.8,
+              "x": 7,
+              "y": 4
+            }
+          ],
+          "SL_X": [
+            {
+              "t": 0,
+              "x": 0,
+              "y": -10
+            },
+            {
+              "t": 0.4,
+              "x": 3,
+              "y": -12
+            },
+            {
+              "t": 0.8,
+              "x": 7,
+              "y": -15
+            }
+          ],
+          "WR_X": [
+            {
+              "t": 0,
+              "x": 0,
+              "y": -22
+            },
+            {
+              "t": 0.2,
+              "x": 1,
+              "y": -23
+            },
+            {
+              "t": 0.6,
+              "x": 3,
+              "y": -26
+            },
+            {
+              "t": 1,
+              "x": 4,
+              "y": -28
+            }
+          ],
+          "RB": [
+            {
+              "t": 0,
+              "x": -6,
+              "y": -3
+            },
+            {
+              "t": 0.4,
+              "x": 0,
+              "y": 3
+            }
+          ]
+        },
+        "offensive_line": [
+          {
+            "pos": "LT",
+            "x": -1,
+            "y": -2,
+            "block": "base"
+          },
+          {
+            "pos": "LG",
+            "x": -1,
+            "y": -1,
+            "block": "base"
+          },
+          {
+            "pos": "C",
+            "x": -1,
+            "y": 0,
+            "block": "base"
+          },
+          {
+            "pos": "RG",
+            "x": -1,
+            "y": 1,
+            "block": "base"
+          },
+          {
+            "pos": "RT",
+            "x": -1,
+            "y": 2,
+            "block": "base"
+          }
+        ],
+        "timing_summary": {
+          "snap_to_throw": 1.3
+        },
+        "learning_notes": "Read flat defender; ball out in under 1.5 s."
+      },
+      {
+        "name": "Four Verticals",
+        "concept": "Pass",
+        "formation": "Shotgun 2x2",
+        "hash": "right",
+        "qb": {
+          "path": [
+            {
+              "t": 0,
+              "x": -4,
+              "y": 0
+            },
+            {
+              "t": 0.5,
+              "x": -6,
+              "y": 0
+            }
+          ],
+          "release_point": {
+            "t": 2.2,
+            "x": -6,
+            "y": 0
+          }
+        },
+        "routes": {
+          "WR_Z": [
+            {
+              "t": 0,
+              "x": 0,
+              "y": 22
+            },
+            {
+              "t": 2,
+              "x": 22,
+              "y": 35
+            }
+          ],
+          "SL_Z": [
+            {
+              "t": 0,
+              "x": 0,
+              "y": 10
+            },
+            {
+              "t": 2,
+              "x": 10,
+              "y": 35
+            }
+          ],
+          "SL_X": [
+            {
+              "t": 0,
+              "x": 0,
+              "y": -10
+            },
+            {
+              "t": 2,
+              "x": -10,
+              "y": 35
+            }
+          ],
+          "WR_X": [
+            {
+              "t": 0,
+              "x": 0,
+              "y": -22
+            },
+            {
+              "t": 2,
+              "x": -22,
+              "y": 35
+            }
+          ],
+          "RB": [
+            {
+              "t": 0,
+              "x": -6,
+              "y": -3
+            },
+            {
+              "t": 0.4,
+              "x": -3,
+              "y": 3
+            }
+          ]
+        },
+        "offensive_line": [
+          {
+            "pos": "LT",
+            "x": -1,
+            "y": -2,
+            "block": "base"
+          },
+          {
+            "pos": "LG",
+            "x": -1,
+            "y": -1,
+            "block": "base"
+          },
+          {
+            "pos": "C",
+            "x": -1,
+            "y": 0,
+            "block": "base"
+          },
+          {
+            "pos": "RG",
+            "x": -1,
+            "y": 1,
+            "block": "base"
+          },
+          {
+            "pos": "RT",
+            "x": -1,
+            "y": 2,
+            "block": "base"
+          }
+        ],
+        "timing_summary": {
+          "snap_to_throw": 2.2
+        },
+        "learning_notes": "Hit seam vs split safeties."
+      }
+    ],
+    "play_action": [
+      {
+        "name": "Flood Boot Right",
+        "concept": "Play-Action",
+        "formation": "Singleback TE Right",
+        "hash": "right",
+        "qb": {
+          "path": [
+            {
+              "t": 0,
+              "x": -2,
+              "y": 0
+            },
+            {
+              "t": 0.4,
+              "x": 0,
+              "y": 1
+            },
+            {
+              "t": 0.8,
+              "x": 2,
+              "y": 2
+            }
+          ],
+          "release_point": {
+            "t": 2,
+            "x": 3,
+            "y": 2
+          }
+        },
+        "routes": {
+          "TE": [
+            {
+              "t": 0,
+              "x": 0,
+              "y": 7
+            },
+            {
+              "t": 0.8,
+              "x": 5,
+              "y": 10
+            }
+          ],
+          "WR_Z": [
+            {
+              "t": 0,
+              "x": 0,
+              "y": 18
+            },
+            {
+              "t": 1.5,
+              "x": 10,
+              "y": 18
+            }
+          ],
+          "WR_X": [
+            {
+              "t": 0,
+              "x": 0,
+              "y": -22
+            },
+            {
+              "t": 1.8,
+              "x": 15,
+              "y": 5
+            }
+          ],
+          "RB": [
+            {
+              "t": 0,
+              "x": -6,
+              "y": 0
+            },
+            {
+              "t": 0.6,
+              "x": -3,
+              "y": -3
+            }
+          ]
+        },
+        "offensive_line": [
+          {
+            "pos": "LT",
+            "x": -1,
+            "y": -2,
+            "block": "base"
+          },
+          {
+            "pos": "LG",
+            "x": -1,
+            "y": -1,
+            "block": "base"
+          },
+          {
+            "pos": "C",
+            "x": -1,
+            "y": 0,
+            "block": "base"
+          },
+          {
+            "pos": "RG",
+            "x": -1,
+            "y": 1,
+            "block": "base"
+          },
+          {
+            "pos": "RT",
+            "x": -1,
+            "y": 2,
+            "block": "base"
+          }
+        ],
+        "timing_summary": {
+          "snap_to_throw": 2
+        },
+        "learning_notes": "Bootleg off outside-zone fake; three-level flood."
+      }
+    ],
+    "rpo_and_trick": [
+      {
+        "name": "Bubble RPO",
+        "concept": "RPO",
+        "formation": "Trips Right",
+        "hash": "right",
+        "read_key": "apex_LB",
+        "qb": {
+          "path": [
+            {
+              "t": 0,
+              "x": -4,
+              "y": 0
+            },
+            {
+              "t": 0.5,
+              "x": -3,
+              "y": 0
+            }
+          ],
+          "release_point": {
+            "t": 1,
+            "x": -3,
+            "y": 0
+          }
+        },
+        "routes": {
+          "SL_Z": [
+            {
+              "t": 0,
+              "x": 0,
+              "y": 14
+            },
+            {
+              "t": 0.4,
+              "x": -1,
+              "y": 18
+            }
+          ],
+          "WR_Z": [
+            {
+              "t": 0,
+              "x": 0,
+              "y": 22
+            },
+            {
+              "t": 0.4,
+              "x": 5,
+              "y": 24
+            }
+          ],
+          "WR_X": [
+            {
+              "t": 0,
+              "x": 0,
+              "y": -22
+            },
+            {
+              "t": 1,
+              "x": 8,
+              "y": -5
+            }
+          ]
+        },
+        "run_paths": {
+          "RB": [
+            {
+              "t": 0,
+              "x": -6,
+              "y": -3
+            },
+            {
+              "t": 0.4,
+              "x": -2,
+              "y": 1
+            }
+          ]
+        },
+        "offensive_line": [
+          {
+            "pos": "LT",
+            "x": -1,
+            "y": -2,
+            "block": "base"
+          },
+          {
+            "pos": "LG",
+            "x": -1,
+            "y": -1,
+            "block": "base"
+          },
+          {
+            "pos": "C",
+            "x": -1,
+            "y": 0,
+            "block": "base"
+          },
+          {
+            "pos": "RG",
+            "x": -1,
+            "y": 1,
+            "block": "base"
+          },
+          {
+            "pos": "RT",
+            "x": -1,
+            "y": 2,
+            "block": "base"
+          }
+        ],
+        "timing_summary": {
+          "decision_window": 1
+        },
+        "learning_notes": "If apex widens, handoff; if he fits, throw bubble."
+      },
+      {
+        "name": "Flea Flicker",
+        "concept": "Trick",
+        "formation": "Singleback",
+        "hash": "middle",
+        "qb": {
+          "path": [
+            {
+              "t": 0,
+              "x": -2,
+              "y": 0
+            },
+            {
+              "t": 0.4,
+              "x": -1,
+              "y": 0
+            },
+            {
+              "t": 1,
+              "x": -2,
+              "y": 0
+            }
+          ],
+          "release_point": {
+            "t": 2,
+            "x": -2,
+            "y": 0
+          }
+        },
+        "routes": {
+          "WR_Z": [
+            {
+              "t": 0,
+              "x": 0,
+              "y": 18
+            },
+            {
+              "t": 2,
+              "x": 10,
+              "y": 25
+            }
+          ],
+          "WR_X": [
+            {
+              "t": 0,
+              "x": 0,
+              "y": -22
+            },
+            {
+              "t": 2,
+              "x": -22,
+              "y": 35
+            }
+          ],
+          "TE": [
+            {
+              "t": 0,
+              "x": 0,
+              "y": 7
+            },
+            {
+              "t": 1.5,
+              "x": 12,
+              "y": 15
+            }
+          ]
+        },
+        "offensive_line": [
+          {
+            "pos": "LT",
+            "x": -1,
+            "y": -2,
+            "block": "base"
+          },
+          {
+            "pos": "LG",
+            "x": -1,
+            "y": -1,
+            "block": "base"
+          },
+          {
+            "pos": "C",
+            "x": -1,
+            "y": 0,
+            "block": "base"
+          },
+          {
+            "pos": "RG",
+            "x": -1,
+            "y": 1,
+            "block": "base"
+          },
+          {
+            "pos": "RT",
+            "x": -1,
+            "y": 2,
+            "block": "base"
+          }
+        ],
+        "timing_summary": {
+          "snap_to_throw": 2
+        },
+        "learning_notes": "Sell run; RB pitches back; QB launches deep."
+      }
+    ]
+  }
+}

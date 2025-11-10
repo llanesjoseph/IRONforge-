@@ -1,0 +1,3292 @@
+{
+  "metadata": {
+    "version": "2.0",
+    "format": "slide-based",
+    "converted": "2025-11-10T23:58:00.640Z",
+    "original": {
+      "version": "1.0",
+      "unit": "yards",
+      "created": "2025-11-10T23:58:00.530Z"
+    }
+  },
+  "plays": [
+    {
+      "name": "Inside Zone Right",
+      "formation": "doubles",
+      "notes": "RB presses play side and cuts off first down lineman past center.\n\nConcept: Run\nFormation: Shotgun 2x2\nCategory: run",
+      "slides": [
+        {
+          "index": 1,
+          "positions": [
+            {
+              "id": "LT",
+              "label": "LT",
+              "x": 260,
+              "y": 300
+            },
+            {
+              "id": "LG",
+              "label": "LG",
+              "x": 300,
+              "y": 300
+            },
+            {
+              "id": "C",
+              "label": "C",
+              "x": 340,
+              "y": 300
+            },
+            {
+              "id": "RG",
+              "label": "RG",
+              "x": 380,
+              "y": 300
+            },
+            {
+              "id": "RT",
+              "label": "RT",
+              "x": 420,
+              "y": 300
+            },
+            {
+              "id": "QB",
+              "label": "QB",
+              "x": 340,
+              "y": 326.68
+            },
+            {
+              "id": "RB",
+              "label": "RB",
+              "x": 319.99,
+              "y": 340.02
+            },
+            {
+              "id": "X",
+              "label": "X",
+              "x": 220,
+              "y": 200
+            },
+            {
+              "id": "SL_X",
+              "label": "SL",
+              "x": 260,
+              "y": 180
+            },
+            {
+              "id": "Y",
+              "label": "Y",
+              "x": 420,
+              "y": 200
+            },
+            {
+              "id": "SL_Z",
+              "label": "SL",
+              "x": 460,
+              "y": 180
+            }
+          ],
+          "routes": [
+            {
+              "id": "rb-route",
+              "playerId": "RB",
+              "points": [
+                {
+                  "x": 319.99,
+                  "y": 340.02
+                },
+                {
+                  "x": 326.66,
+                  "y": 333.35
+                },
+                {
+                  "x": 340,
+                  "y": 320.01
+                },
+                {
+                  "x": 353.34,
+                  "y": 300
+                },
+                {
+                  "x": 360.01,
+                  "y": 286.66
+                },
+                {
+                  "x": 366.68,
+                  "y": 273.32
+                }
+              ],
+              "color": "#10b981"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "positions": [
+            {
+              "id": "LT",
+              "label": "LT",
+              "x": 260,
+              "y": 300
+            },
+            {
+              "id": "LG",
+              "label": "LG",
+              "x": 300,
+              "y": 300
+            },
+            {
+              "id": "C",
+              "label": "C",
+              "x": 340,
+              "y": 300
+            },
+            {
+              "id": "RG",
+              "label": "RG",
+              "x": 380,
+              "y": 300
+            },
+            {
+              "id": "RT",
+              "label": "RT",
+              "x": 420,
+              "y": 300
+            },
+            {
+              "id": "QB",
+              "label": "QB",
+              "x": 340,
+              "y": 320.01
+            },
+            {
+              "id": "RB",
+              "label": "RB",
+              "x": 354.17375,
+              "y": 298.3325
+            },
+            {
+              "id": "X",
+              "label": "X",
+              "x": 220,
+              "y": 200
+            },
+            {
+              "id": "SL_X",
+              "label": "SL",
+              "x": 260,
+              "y": 180
+            },
+            {
+              "id": "Y",
+              "label": "Y",
+              "x": 420,
+              "y": 200
+            },
+            {
+              "id": "SL_Z",
+              "label": "SL",
+              "x": 460,
+              "y": 180
+            }
+          ],
+          "routes": []
+        },
+        {
+          "index": 3,
+          "positions": [
+            {
+              "id": "LT",
+              "label": "LT",
+              "x": 260,
+              "y": 300
+            },
+            {
+              "id": "LG",
+              "label": "LG",
+              "x": 300,
+              "y": 300
+            },
+            {
+              "id": "C",
+              "label": "C",
+              "x": 340,
+              "y": 300
+            },
+            {
+              "id": "RG",
+              "label": "RG",
+              "x": 380,
+              "y": 300
+            },
+            {
+              "id": "RT",
+              "label": "RT",
+              "x": 420,
+              "y": 300
+            },
+            {
+              "id": "QB",
+              "label": "QB",
+              "x": 340,
+              "y": 320.01
+            },
+            {
+              "id": "RB",
+              "label": "RB",
+              "x": 366.68,
+              "y": 273.32
+            },
+            {
+              "id": "X",
+              "label": "X",
+              "x": 220,
+              "y": 200
+            },
+            {
+              "id": "SL_X",
+              "label": "SL",
+              "x": 260,
+              "y": 180
+            },
+            {
+              "id": "Y",
+              "label": "Y",
+              "x": 420,
+              "y": 200
+            },
+            {
+              "id": "SL_Z",
+              "label": "SL",
+              "x": 460,
+              "y": 180
+            }
+          ],
+          "routes": []
+        },
+        {
+          "index": 4,
+          "positions": [
+            {
+              "id": "LT",
+              "label": "LT",
+              "x": 260,
+              "y": 300
+            },
+            {
+              "id": "LG",
+              "label": "LG",
+              "x": 300,
+              "y": 300
+            },
+            {
+              "id": "C",
+              "label": "C",
+              "x": 340,
+              "y": 300
+            },
+            {
+              "id": "RG",
+              "label": "RG",
+              "x": 380,
+              "y": 300
+            },
+            {
+              "id": "RT",
+              "label": "RT",
+              "x": 420,
+              "y": 300
+            },
+            {
+              "id": "QB",
+              "label": "QB",
+              "x": 340,
+              "y": 320.01
+            },
+            {
+              "id": "RB",
+              "label": "RB",
+              "x": 366.68,
+              "y": 273.32
+            },
+            {
+              "id": "X",
+              "label": "X",
+              "x": 220,
+              "y": 200
+            },
+            {
+              "id": "SL_X",
+              "label": "SL",
+              "x": 260,
+              "y": 180
+            },
+            {
+              "id": "Y",
+              "label": "Y",
+              "x": 420,
+              "y": 200
+            },
+            {
+              "id": "SL_Z",
+              "label": "SL",
+              "x": 460,
+              "y": 180
+            }
+          ],
+          "routes": []
+        },
+        {
+          "index": 5,
+          "positions": [
+            {
+              "id": "LT",
+              "label": "LT",
+              "x": 260,
+              "y": 300
+            },
+            {
+              "id": "LG",
+              "label": "LG",
+              "x": 300,
+              "y": 300
+            },
+            {
+              "id": "C",
+              "label": "C",
+              "x": 340,
+              "y": 300
+            },
+            {
+              "id": "RG",
+              "label": "RG",
+              "x": 380,
+              "y": 300
+            },
+            {
+              "id": "RT",
+              "label": "RT",
+              "x": 420,
+              "y": 300
+            },
+            {
+              "id": "QB",
+              "label": "QB",
+              "x": 340,
+              "y": 320.01
+            },
+            {
+              "id": "RB",
+              "label": "RB",
+              "x": 366.68,
+              "y": 273.32
+            },
+            {
+              "id": "X",
+              "label": "X",
+              "x": 220,
+              "y": 200
+            },
+            {
+              "id": "SL_X",
+              "label": "SL",
+              "x": 260,
+              "y": 180
+            },
+            {
+              "id": "Y",
+              "label": "Y",
+              "x": 420,
+              "y": 200
+            },
+            {
+              "id": "SL_Z",
+              "label": "SL",
+              "x": 460,
+              "y": 180
+            }
+          ],
+          "routes": []
+        }
+      ]
+    },
+    {
+      "name": "Power Right",
+      "formation": "trips",
+      "notes": "Backside guard pulls and kicks EMOL; FB wraps through B-gap.\n\nConcept: Run\nFormation: I-Pro Right\nCategory: run",
+      "slides": [
+        {
+          "index": 1,
+          "positions": [
+            {
+              "id": "LT",
+              "label": "LT",
+              "x": 260,
+              "y": 300
+            },
+            {
+              "id": "LG",
+              "label": "LG",
+              "x": 300,
+              "y": 300
+            },
+            {
+              "id": "C",
+              "label": "C",
+              "x": 340,
+              "y": 300
+            },
+            {
+              "id": "RG",
+              "label": "RG",
+              "x": 380,
+              "y": 300
+            },
+            {
+              "id": "RT",
+              "label": "RT",
+              "x": 420,
+              "y": 300
+            },
+            {
+              "id": "QB",
+              "label": "QB",
+              "x": 340,
+              "y": 313.34
+            },
+            {
+              "id": "RB",
+              "label": "RB",
+              "x": 340,
+              "y": 340.02
+            },
+            {
+              "id": "TE",
+              "label": "TE",
+              "x": 460,
+              "y": 300
+            },
+            {
+              "id": "WR_X",
+              "label": "X",
+              "x": 220,
+              "y": 200
+            },
+            {
+              "id": "WR_Z",
+              "label": "Z",
+              "x": 500,
+              "y": 200
+            }
+          ],
+          "routes": [
+            {
+              "id": "rb-route",
+              "playerId": "RB",
+              "points": [
+                {
+                  "x": 340,
+                  "y": 340.02
+                },
+                {
+                  "x": 340,
+                  "y": 326.68
+                },
+                {
+                  "x": 346.67,
+                  "y": 313.34
+                },
+                {
+                  "x": 353.34,
+                  "y": 300
+                },
+                {
+                  "x": 360.01,
+                  "y": 286.66
+                }
+              ],
+              "color": "#10b981"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "positions": [
+            {
+              "id": "LT",
+              "label": "LT",
+              "x": 260,
+              "y": 300
+            },
+            {
+              "id": "LG",
+              "label": "LG",
+              "x": 300,
+              "y": 300
+            },
+            {
+              "id": "C",
+              "label": "C",
+              "x": 340,
+              "y": 300
+            },
+            {
+              "id": "RG",
+              "label": "RG",
+              "x": 380,
+              "y": 300
+            },
+            {
+              "id": "RT",
+              "label": "RT",
+              "x": 420,
+              "y": 300
+            },
+            {
+              "id": "QB",
+              "label": "QB",
+              "x": 340,
+              "y": 306.67
+            },
+            {
+              "id": "RB",
+              "label": "RB",
+              "x": 347.50375,
+              "y": 311.6725
+            },
+            {
+              "id": "TE",
+              "label": "TE",
+              "x": 460,
+              "y": 300
+            },
+            {
+              "id": "WR_X",
+              "label": "X",
+              "x": 220,
+              "y": 200
+            },
+            {
+              "id": "WR_Z",
+              "label": "Z",
+              "x": 500,
+              "y": 200
+            }
+          ],
+          "routes": []
+        },
+        {
+          "index": 3,
+          "positions": [
+            {
+              "id": "LT",
+              "label": "LT",
+              "x": 260,
+              "y": 300
+            },
+            {
+              "id": "LG",
+              "label": "LG",
+              "x": 300,
+              "y": 300
+            },
+            {
+              "id": "C",
+              "label": "C",
+              "x": 340,
+              "y": 300
+            },
+            {
+              "id": "RG",
+              "label": "RG",
+              "x": 380,
+              "y": 300
+            },
+            {
+              "id": "RT",
+              "label": "RT",
+              "x": 420,
+              "y": 300
+            },
+            {
+              "id": "QB",
+              "label": "QB",
+              "x": 340,
+              "y": 306.67
+            },
+            {
+              "id": "RB",
+              "label": "RB",
+              "x": 360.01,
+              "y": 286.66
+            },
+            {
+              "id": "TE",
+              "label": "TE",
+              "x": 460,
+              "y": 300
+            },
+            {
+              "id": "WR_X",
+              "label": "X",
+              "x": 220,
+              "y": 200
+            },
+            {
+              "id": "WR_Z",
+              "label": "Z",
+              "x": 500,
+              "y": 200
+            }
+          ],
+          "routes": []
+        },
+        {
+          "index": 4,
+          "positions": [
+            {
+              "id": "LT",
+              "label": "LT",
+              "x": 260,
+              "y": 300
+            },
+            {
+              "id": "LG",
+              "label": "LG",
+              "x": 300,
+              "y": 300
+            },
+            {
+              "id": "C",
+              "label": "C",
+              "x": 340,
+              "y": 300
+            },
+            {
+              "id": "RG",
+              "label": "RG",
+              "x": 380,
+              "y": 300
+            },
+            {
+              "id": "RT",
+              "label": "RT",
+              "x": 420,
+              "y": 300
+            },
+            {
+              "id": "QB",
+              "label": "QB",
+              "x": 340,
+              "y": 306.67
+            },
+            {
+              "id": "RB",
+              "label": "RB",
+              "x": 360.01,
+              "y": 286.66
+            },
+            {
+              "id": "TE",
+              "label": "TE",
+              "x": 460,
+              "y": 300
+            },
+            {
+              "id": "WR_X",
+              "label": "X",
+              "x": 220,
+              "y": 200
+            },
+            {
+              "id": "WR_Z",
+              "label": "Z",
+              "x": 500,
+              "y": 200
+            }
+          ],
+          "routes": []
+        },
+        {
+          "index": 5,
+          "positions": [
+            {
+              "id": "LT",
+              "label": "LT",
+              "x": 260,
+              "y": 300
+            },
+            {
+              "id": "LG",
+              "label": "LG",
+              "x": 300,
+              "y": 300
+            },
+            {
+              "id": "C",
+              "label": "C",
+              "x": 340,
+              "y": 300
+            },
+            {
+              "id": "RG",
+              "label": "RG",
+              "x": 380,
+              "y": 300
+            },
+            {
+              "id": "RT",
+              "label": "RT",
+              "x": 420,
+              "y": 300
+            },
+            {
+              "id": "QB",
+              "label": "QB",
+              "x": 340,
+              "y": 306.67
+            },
+            {
+              "id": "RB",
+              "label": "RB",
+              "x": 360.01,
+              "y": 286.66
+            },
+            {
+              "id": "TE",
+              "label": "TE",
+              "x": 460,
+              "y": 300
+            },
+            {
+              "id": "WR_X",
+              "label": "X",
+              "x": 220,
+              "y": 200
+            },
+            {
+              "id": "WR_Z",
+              "label": "Z",
+              "x": 500,
+              "y": 200
+            }
+          ],
+          "routes": []
+        }
+      ]
+    },
+    {
+      "name": "Jet Sweep Right",
+      "formation": "trips",
+      "notes": "Timing snap as motion crosses QB.\n\nConcept: Run\nFormation: Trips Right\nCategory: run",
+      "slides": [
+        {
+          "index": 1,
+          "positions": [
+            {
+              "id": "LT",
+              "label": "LT",
+              "x": 260,
+              "y": 300
+            },
+            {
+              "id": "LG",
+              "label": "LG",
+              "x": 300,
+              "y": 300
+            },
+            {
+              "id": "C",
+              "label": "C",
+              "x": 340,
+              "y": 300
+            },
+            {
+              "id": "RG",
+              "label": "RG",
+              "x": 380,
+              "y": 300
+            },
+            {
+              "id": "RT",
+              "label": "RT",
+              "x": 420,
+              "y": 300
+            },
+            {
+              "id": "QB",
+              "label": "QB",
+              "x": 340,
+              "y": 326.68
+            },
+            {
+              "id": "RB",
+              "label": "RB",
+              "x": 400,
+              "y": 340
+            },
+            {
+              "id": "TE",
+              "label": "TE",
+              "x": 460,
+              "y": 300
+            },
+            {
+              "id": "WR_X",
+              "label": "X",
+              "x": 200,
+              "y": 200
+            },
+            {
+              "id": "WR_Z",
+              "label": "Z",
+              "x": 540,
+              "y": 200
+            },
+            {
+              "id": "SL_Z",
+              "label": "SL",
+              "x": 386.69,
+              "y": 300
+            }
+          ],
+          "routes": [
+            {
+              "id": "sl_z-route",
+              "playerId": "SL_Z",
+              "points": [
+                {
+                  "x": 433.38,
+                  "y": 300
+                },
+                {
+                  "x": 386.69,
+                  "y": 300
+                },
+                {
+                  "x": 420.03999999999996,
+                  "y": 279.99
+                },
+                {
+                  "x": 460.06,
+                  "y": 259.98
+                },
+                {
+                  "x": 500.08,
+                  "y": 246.64
+                }
+              ],
+              "color": "#10b981"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "positions": [
+            {
+              "id": "LT",
+              "label": "LT",
+              "x": 260,
+              "y": 300
+            },
+            {
+              "id": "LG",
+              "label": "LG",
+              "x": 300,
+              "y": 300
+            },
+            {
+              "id": "C",
+              "label": "C",
+              "x": 340,
+              "y": 300
+            },
+            {
+              "id": "RG",
+              "label": "RG",
+              "x": 380,
+              "y": 300
+            },
+            {
+              "id": "RT",
+              "label": "RT",
+              "x": 420,
+              "y": 300
+            },
+            {
+              "id": "QB",
+              "label": "QB",
+              "x": 340,
+              "y": 320.01
+            },
+            {
+              "id": "RB",
+              "label": "RB",
+              "x": 400,
+              "y": 340
+            },
+            {
+              "id": "TE",
+              "label": "TE",
+              "x": 460,
+              "y": 300
+            },
+            {
+              "id": "WR_X",
+              "label": "X",
+              "x": 200,
+              "y": 200
+            },
+            {
+              "id": "WR_Z",
+              "label": "Z",
+              "x": 540,
+              "y": 200
+            },
+            {
+              "id": "SL_Z",
+              "label": "SL",
+              "x": 442.55125,
+              "y": 268.734375
+            }
+          ],
+          "routes": []
+        },
+        {
+          "index": 3,
+          "positions": [
+            {
+              "id": "LT",
+              "label": "LT",
+              "x": 260,
+              "y": 300
+            },
+            {
+              "id": "LG",
+              "label": "LG",
+              "x": 300,
+              "y": 300
+            },
+            {
+              "id": "C",
+              "label": "C",
+              "x": 340,
+              "y": 300
+            },
+            {
+              "id": "RG",
+              "label": "RG",
+              "x": 380,
+              "y": 300
+            },
+            {
+              "id": "RT",
+              "label": "RT",
+              "x": 420,
+              "y": 300
+            },
+            {
+              "id": "QB",
+              "label": "QB",
+              "x": 340,
+              "y": 320.01
+            },
+            {
+              "id": "RB",
+              "label": "RB",
+              "x": 400,
+              "y": 340
+            },
+            {
+              "id": "TE",
+              "label": "TE",
+              "x": 460,
+              "y": 300
+            },
+            {
+              "id": "WR_X",
+              "label": "X",
+              "x": 200,
+              "y": 200
+            },
+            {
+              "id": "WR_Z",
+              "label": "Z",
+              "x": 540,
+              "y": 200
+            },
+            {
+              "id": "SL_Z",
+              "label": "SL",
+              "x": 500.08,
+              "y": 246.64
+            }
+          ],
+          "routes": []
+        },
+        {
+          "index": 4,
+          "positions": [
+            {
+              "id": "LT",
+              "label": "LT",
+              "x": 260,
+              "y": 300
+            },
+            {
+              "id": "LG",
+              "label": "LG",
+              "x": 300,
+              "y": 300
+            },
+            {
+              "id": "C",
+              "label": "C",
+              "x": 340,
+              "y": 300
+            },
+            {
+              "id": "RG",
+              "label": "RG",
+              "x": 380,
+              "y": 300
+            },
+            {
+              "id": "RT",
+              "label": "RT",
+              "x": 420,
+              "y": 300
+            },
+            {
+              "id": "QB",
+              "label": "QB",
+              "x": 340,
+              "y": 320.01
+            },
+            {
+              "id": "RB",
+              "label": "RB",
+              "x": 400,
+              "y": 340
+            },
+            {
+              "id": "TE",
+              "label": "TE",
+              "x": 460,
+              "y": 300
+            },
+            {
+              "id": "WR_X",
+              "label": "X",
+              "x": 200,
+              "y": 200
+            },
+            {
+              "id": "WR_Z",
+              "label": "Z",
+              "x": 540,
+              "y": 200
+            },
+            {
+              "id": "SL_Z",
+              "label": "SL",
+              "x": 500.08,
+              "y": 246.64
+            }
+          ],
+          "routes": []
+        },
+        {
+          "index": 5,
+          "positions": [
+            {
+              "id": "LT",
+              "label": "LT",
+              "x": 260,
+              "y": 300
+            },
+            {
+              "id": "LG",
+              "label": "LG",
+              "x": 300,
+              "y": 300
+            },
+            {
+              "id": "C",
+              "label": "C",
+              "x": 340,
+              "y": 300
+            },
+            {
+              "id": "RG",
+              "label": "RG",
+              "x": 380,
+              "y": 300
+            },
+            {
+              "id": "RT",
+              "label": "RT",
+              "x": 420,
+              "y": 300
+            },
+            {
+              "id": "QB",
+              "label": "QB",
+              "x": 340,
+              "y": 320.01
+            },
+            {
+              "id": "RB",
+              "label": "RB",
+              "x": 400,
+              "y": 340
+            },
+            {
+              "id": "TE",
+              "label": "TE",
+              "x": 460,
+              "y": 300
+            },
+            {
+              "id": "WR_X",
+              "label": "X",
+              "x": 200,
+              "y": 200
+            },
+            {
+              "id": "WR_Z",
+              "label": "Z",
+              "x": 540,
+              "y": 200
+            },
+            {
+              "id": "SL_Z",
+              "label": "SL",
+              "x": 500.08,
+              "y": 246.64
+            }
+          ],
+          "routes": []
+        }
+      ]
+    },
+    {
+      "name": "Slant-Flat 2x2",
+      "formation": "doubles",
+      "notes": "Read flat defender; ball out in under 1.5 s.\n\nConcept: Pass\nFormation: Shotgun 2x2\nCategory: pass",
+      "slides": [
+        {
+          "index": 1,
+          "positions": [
+            {
+              "id": "LT",
+              "label": "LT",
+              "x": 260,
+              "y": 300
+            },
+            {
+              "id": "LG",
+              "label": "LG",
+              "x": 300,
+              "y": 300
+            },
+            {
+              "id": "C",
+              "label": "C",
+              "x": 340,
+              "y": 300
+            },
+            {
+              "id": "RG",
+              "label": "RG",
+              "x": 380,
+              "y": 300
+            },
+            {
+              "id": "RT",
+              "label": "RT",
+              "x": 420,
+              "y": 300
+            },
+            {
+              "id": "QB",
+              "label": "QB",
+              "x": 340,
+              "y": 326.68
+            },
+            {
+              "id": "RB",
+              "label": "RB",
+              "x": 319.99,
+              "y": 340.02
+            },
+            {
+              "id": "X",
+              "label": "X",
+              "x": 220,
+              "y": 200
+            },
+            {
+              "id": "SL_X",
+              "label": "SL",
+              "x": 273.3,
+              "y": 300
+            },
+            {
+              "id": "Y",
+              "label": "Y",
+              "x": 420,
+              "y": 200
+            },
+            {
+              "id": "SL_Z",
+              "label": "SL",
+              "x": 406.7,
+              "y": 300
+            }
+          ],
+          "routes": [
+            {
+              "id": "wr_z-route",
+              "playerId": "WR_Z",
+              "points": [
+                {
+                  "x": 486.74,
+                  "y": 300
+                },
+                {
+                  "x": 493.40999999999997,
+                  "y": 293.33
+                },
+                {
+                  "x": 513.42,
+                  "y": 279.99
+                },
+                {
+                  "x": 526.76,
+                  "y": 273.32
+                }
+              ],
+              "color": "#3b82f6"
+            },
+            {
+              "id": "sl_z-route",
+              "playerId": "SL_Z",
+              "points": [
+                {
+                  "x": 406.7,
+                  "y": 300
+                },
+                {
+                  "x": 393.36,
+                  "y": 279.99
+                },
+                {
+                  "x": 366.68,
+                  "y": 253.31
+                }
+              ],
+              "color": "#3b82f6"
+            },
+            {
+              "id": "sl_x-route",
+              "playerId": "SL_X",
+              "points": [
+                {
+                  "x": 273.3,
+                  "y": 300
+                },
+                {
+                  "x": 259.96000000000004,
+                  "y": 279.99
+                },
+                {
+                  "x": 239.95,
+                  "y": 253.31
+                }
+              ],
+              "color": "#3b82f6"
+            },
+            {
+              "id": "wr_x-route",
+              "playerId": "WR_X",
+              "points": [
+                {
+                  "x": 193.26,
+                  "y": 300
+                },
+                {
+                  "x": 186.59,
+                  "y": 293.33
+                },
+                {
+                  "x": 166.58,
+                  "y": 279.99
+                },
+                {
+                  "x": 153.24,
+                  "y": 273.32
+                }
+              ],
+              "color": "#3b82f6"
+            },
+            {
+              "id": "rb-route",
+              "playerId": "RB",
+              "points": [
+                {
+                  "x": 319.99,
+                  "y": 340.02
+                },
+                {
+                  "x": 360.01,
+                  "y": 300
+                }
+              ],
+              "color": "#3b82f6"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "positions": [
+            {
+              "id": "LT",
+              "label": "LT",
+              "x": 260,
+              "y": 300
+            },
+            {
+              "id": "LG",
+              "label": "LG",
+              "x": 300,
+              "y": 300
+            },
+            {
+              "id": "C",
+              "label": "C",
+              "x": 340,
+              "y": 300
+            },
+            {
+              "id": "RG",
+              "label": "RG",
+              "x": 380,
+              "y": 300
+            },
+            {
+              "id": "RT",
+              "label": "RT",
+              "x": 420,
+              "y": 300
+            },
+            {
+              "id": "QB",
+              "label": "QB",
+              "x": 340,
+              "y": 333.35
+            },
+            {
+              "id": "RB",
+              "label": "RB",
+              "x": 360.01,
+              "y": 300
+            },
+            {
+              "id": "X",
+              "label": "X",
+              "x": 220,
+              "y": 200
+            },
+            {
+              "id": "SL_X",
+              "label": "SL",
+              "x": 248.704375,
+              "y": 264.9825
+            },
+            {
+              "id": "Y",
+              "label": "Y",
+              "x": 420,
+              "y": 200
+            },
+            {
+              "id": "SL_Z",
+              "label": "SL",
+              "x": 378.3525,
+              "y": 264.9825
+            }
+          ],
+          "routes": []
+        },
+        {
+          "index": 3,
+          "positions": [
+            {
+              "id": "LT",
+              "label": "LT",
+              "x": 260,
+              "y": 300
+            },
+            {
+              "id": "LG",
+              "label": "LG",
+              "x": 300,
+              "y": 300
+            },
+            {
+              "id": "C",
+              "label": "C",
+              "x": 340,
+              "y": 300
+            },
+            {
+              "id": "RG",
+              "label": "RG",
+              "x": 380,
+              "y": 300
+            },
+            {
+              "id": "RT",
+              "label": "RT",
+              "x": 420,
+              "y": 300
+            },
+            {
+              "id": "QB",
+              "label": "QB",
+              "x": 340,
+              "y": 333.35
+            },
+            {
+              "id": "RB",
+              "label": "RB",
+              "x": 360.01,
+              "y": 300
+            },
+            {
+              "id": "X",
+              "label": "X",
+              "x": 220,
+              "y": 200
+            },
+            {
+              "id": "SL_X",
+              "label": "SL",
+              "x": 239.95,
+              "y": 253.31
+            },
+            {
+              "id": "Y",
+              "label": "Y",
+              "x": 420,
+              "y": 200
+            },
+            {
+              "id": "SL_Z",
+              "label": "SL",
+              "x": 366.68,
+              "y": 253.31
+            }
+          ],
+          "routes": []
+        },
+        {
+          "index": 4,
+          "positions": [
+            {
+              "id": "LT",
+              "label": "LT",
+              "x": 260,
+              "y": 300
+            },
+            {
+              "id": "LG",
+              "label": "LG",
+              "x": 300,
+              "y": 300
+            },
+            {
+              "id": "C",
+              "label": "C",
+              "x": 340,
+              "y": 300
+            },
+            {
+              "id": "RG",
+              "label": "RG",
+              "x": 380,
+              "y": 300
+            },
+            {
+              "id": "RT",
+              "label": "RT",
+              "x": 420,
+              "y": 300
+            },
+            {
+              "id": "QB",
+              "label": "QB",
+              "x": 340,
+              "y": 333.35
+            },
+            {
+              "id": "RB",
+              "label": "RB",
+              "x": 360.01,
+              "y": 300
+            },
+            {
+              "id": "X",
+              "label": "X",
+              "x": 220,
+              "y": 200
+            },
+            {
+              "id": "SL_X",
+              "label": "SL",
+              "x": 239.95,
+              "y": 253.31
+            },
+            {
+              "id": "Y",
+              "label": "Y",
+              "x": 420,
+              "y": 200
+            },
+            {
+              "id": "SL_Z",
+              "label": "SL",
+              "x": 366.68,
+              "y": 253.31
+            }
+          ],
+          "routes": []
+        },
+        {
+          "index": 5,
+          "positions": [
+            {
+              "id": "LT",
+              "label": "LT",
+              "x": 260,
+              "y": 300
+            },
+            {
+              "id": "LG",
+              "label": "LG",
+              "x": 300,
+              "y": 300
+            },
+            {
+              "id": "C",
+              "label": "C",
+              "x": 340,
+              "y": 300
+            },
+            {
+              "id": "RG",
+              "label": "RG",
+              "x": 380,
+              "y": 300
+            },
+            {
+              "id": "RT",
+              "label": "RT",
+              "x": 420,
+              "y": 300
+            },
+            {
+              "id": "QB",
+              "label": "QB",
+              "x": 340,
+              "y": 333.35
+            },
+            {
+              "id": "RB",
+              "label": "RB",
+              "x": 360.01,
+              "y": 300
+            },
+            {
+              "id": "X",
+              "label": "X",
+              "x": 220,
+              "y": 200
+            },
+            {
+              "id": "SL_X",
+              "label": "SL",
+              "x": 239.95,
+              "y": 253.31
+            },
+            {
+              "id": "Y",
+              "label": "Y",
+              "x": 420,
+              "y": 200
+            },
+            {
+              "id": "SL_Z",
+              "label": "SL",
+              "x": 366.68,
+              "y": 253.31
+            }
+          ],
+          "routes": []
+        }
+      ]
+    },
+    {
+      "name": "Four Verticals",
+      "formation": "doubles",
+      "notes": "Hit seam vs split safeties.\n\nConcept: Pass\nFormation: Shotgun 2x2\nCategory: pass",
+      "slides": [
+        {
+          "index": 1,
+          "positions": [
+            {
+              "id": "LT",
+              "label": "LT",
+              "x": 260,
+              "y": 300
+            },
+            {
+              "id": "LG",
+              "label": "LG",
+              "x": 300,
+              "y": 300
+            },
+            {
+              "id": "C",
+              "label": "C",
+              "x": 340,
+              "y": 300
+            },
+            {
+              "id": "RG",
+              "label": "RG",
+              "x": 380,
+              "y": 300
+            },
+            {
+              "id": "RT",
+              "label": "RT",
+              "x": 420,
+              "y": 300
+            },
+            {
+              "id": "QB",
+              "label": "QB",
+              "x": 340,
+              "y": 326.68
+            },
+            {
+              "id": "RB",
+              "label": "RB",
+              "x": 319.99,
+              "y": 340.02
+            },
+            {
+              "id": "X",
+              "label": "X",
+              "x": 220,
+              "y": 200
+            },
+            {
+              "id": "SL_X",
+              "label": "SL",
+              "x": 273.3,
+              "y": 300
+            },
+            {
+              "id": "Y",
+              "label": "Y",
+              "x": 420,
+              "y": 200
+            },
+            {
+              "id": "SL_Z",
+              "label": "SL",
+              "x": 406.7,
+              "y": 300
+            }
+          ],
+          "routes": [
+            {
+              "id": "wr_z-route",
+              "playerId": "WR_Z",
+              "points": [
+                {
+                  "x": 486.74,
+                  "y": 300
+                },
+                {
+                  "x": 573.45,
+                  "y": 153.26
+                }
+              ],
+              "color": "#3b82f6"
+            },
+            {
+              "id": "sl_z-route",
+              "playerId": "SL_Z",
+              "points": [
+                {
+                  "x": 406.7,
+                  "y": 300
+                },
+                {
+                  "x": 573.45,
+                  "y": 233.3
+                }
+              ],
+              "color": "#3b82f6"
+            },
+            {
+              "id": "sl_x-route",
+              "playerId": "SL_X",
+              "points": [
+                {
+                  "x": 273.3,
+                  "y": 300
+                },
+                {
+                  "x": 573.45,
+                  "y": 366.7
+                }
+              ],
+              "color": "#3b82f6"
+            },
+            {
+              "id": "wr_x-route",
+              "playerId": "WR_X",
+              "points": [
+                {
+                  "x": 193.26,
+                  "y": 300
+                },
+                {
+                  "x": 573.45,
+                  "y": 446.74
+                }
+              ],
+              "color": "#3b82f6"
+            },
+            {
+              "id": "rb-route",
+              "playerId": "RB",
+              "points": [
+                {
+                  "x": 319.99,
+                  "y": 340.02
+                },
+                {
+                  "x": 360.01,
+                  "y": 320.01
+                }
+              ],
+              "color": "#3b82f6"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "positions": [
+            {
+              "id": "LT",
+              "label": "LT",
+              "x": 260,
+              "y": 300
+            },
+            {
+              "id": "LG",
+              "label": "LG",
+              "x": 300,
+              "y": 300
+            },
+            {
+              "id": "C",
+              "label": "C",
+              "x": 340,
+              "y": 300
+            },
+            {
+              "id": "RG",
+              "label": "RG",
+              "x": 380,
+              "y": 300
+            },
+            {
+              "id": "RT",
+              "label": "RT",
+              "x": 420,
+              "y": 300
+            },
+            {
+              "id": "QB",
+              "label": "QB",
+              "x": 340,
+              "y": 340.02
+            },
+            {
+              "id": "RB",
+              "label": "RB",
+              "x": 360.01,
+              "y": 320.01
+            },
+            {
+              "id": "X",
+              "label": "X",
+              "x": 220,
+              "y": 200
+            },
+            {
+              "id": "SL_X",
+              "label": "SL",
+              "x": 367.096875,
+              "y": 320.84375
+            },
+            {
+              "id": "Y",
+              "label": "Y",
+              "x": 420,
+              "y": 200
+            },
+            {
+              "id": "SL_Z",
+              "label": "SL",
+              "x": 458.809375,
+              "y": 279.15625
+            }
+          ],
+          "routes": []
+        },
+        {
+          "index": 3,
+          "positions": [
+            {
+              "id": "LT",
+              "label": "LT",
+              "x": 260,
+              "y": 300
+            },
+            {
+              "id": "LG",
+              "label": "LG",
+              "x": 300,
+              "y": 300
+            },
+            {
+              "id": "C",
+              "label": "C",
+              "x": 340,
+              "y": 300
+            },
+            {
+              "id": "RG",
+              "label": "RG",
+              "x": 380,
+              "y": 300
+            },
+            {
+              "id": "RT",
+              "label": "RT",
+              "x": 420,
+              "y": 300
+            },
+            {
+              "id": "QB",
+              "label": "QB",
+              "x": 340,
+              "y": 340.02
+            },
+            {
+              "id": "RB",
+              "label": "RB",
+              "x": 360.01,
+              "y": 320.01
+            },
+            {
+              "id": "X",
+              "label": "X",
+              "x": 220,
+              "y": 200
+            },
+            {
+              "id": "SL_X",
+              "label": "SL",
+              "x": 460.89375,
+              "y": 341.6875
+            },
+            {
+              "id": "Y",
+              "label": "Y",
+              "x": 420,
+              "y": 200
+            },
+            {
+              "id": "SL_Z",
+              "label": "SL",
+              "x": 510.91875,
+              "y": 258.3125
+            }
+          ],
+          "routes": []
+        },
+        {
+          "index": 4,
+          "positions": [
+            {
+              "id": "LT",
+              "label": "LT",
+              "x": 260,
+              "y": 300
+            },
+            {
+              "id": "LG",
+              "label": "LG",
+              "x": 300,
+              "y": 300
+            },
+            {
+              "id": "C",
+              "label": "C",
+              "x": 340,
+              "y": 300
+            },
+            {
+              "id": "RG",
+              "label": "RG",
+              "x": 380,
+              "y": 300
+            },
+            {
+              "id": "RT",
+              "label": "RT",
+              "x": 420,
+              "y": 300
+            },
+            {
+              "id": "QB",
+              "label": "QB",
+              "x": 340,
+              "y": 340.02
+            },
+            {
+              "id": "RB",
+              "label": "RB",
+              "x": 360.01,
+              "y": 320.01
+            },
+            {
+              "id": "X",
+              "label": "X",
+              "x": 220,
+              "y": 200
+            },
+            {
+              "id": "SL_X",
+              "label": "SL",
+              "x": 554.690625,
+              "y": 362.53125
+            },
+            {
+              "id": "Y",
+              "label": "Y",
+              "x": 420,
+              "y": 200
+            },
+            {
+              "id": "SL_Z",
+              "label": "SL",
+              "x": 563.028125,
+              "y": 237.46875
+            }
+          ],
+          "routes": []
+        },
+        {
+          "index": 5,
+          "positions": [
+            {
+              "id": "LT",
+              "label": "LT",
+              "x": 260,
+              "y": 300
+            },
+            {
+              "id": "LG",
+              "label": "LG",
+              "x": 300,
+              "y": 300
+            },
+            {
+              "id": "C",
+              "label": "C",
+              "x": 340,
+              "y": 300
+            },
+            {
+              "id": "RG",
+              "label": "RG",
+              "x": 380,
+              "y": 300
+            },
+            {
+              "id": "RT",
+              "label": "RT",
+              "x": 420,
+              "y": 300
+            },
+            {
+              "id": "QB",
+              "label": "QB",
+              "x": 340,
+              "y": 340.02
+            },
+            {
+              "id": "RB",
+              "label": "RB",
+              "x": 360.01,
+              "y": 320.01
+            },
+            {
+              "id": "X",
+              "label": "X",
+              "x": 220,
+              "y": 200
+            },
+            {
+              "id": "SL_X",
+              "label": "SL",
+              "x": 573.45,
+              "y": 366.7
+            },
+            {
+              "id": "Y",
+              "label": "Y",
+              "x": 420,
+              "y": 200
+            },
+            {
+              "id": "SL_Z",
+              "label": "SL",
+              "x": 573.45,
+              "y": 233.3
+            }
+          ],
+          "routes": []
+        }
+      ]
+    },
+    {
+      "name": "Flood Boot Right",
+      "formation": "trips",
+      "notes": "Bootleg off outside-zone fake; three-level flood.\n\nConcept: Play-Action\nFormation: Singleback TE Right\nCategory: play_action",
+      "slides": [
+        {
+          "index": 1,
+          "positions": [
+            {
+              "id": "LT",
+              "label": "LT",
+              "x": 260,
+              "y": 300
+            },
+            {
+              "id": "LG",
+              "label": "LG",
+              "x": 300,
+              "y": 300
+            },
+            {
+              "id": "C",
+              "label": "C",
+              "x": 340,
+              "y": 300
+            },
+            {
+              "id": "RG",
+              "label": "RG",
+              "x": 380,
+              "y": 300
+            },
+            {
+              "id": "RT",
+              "label": "RT",
+              "x": 420,
+              "y": 300
+            },
+            {
+              "id": "QB",
+              "label": "QB",
+              "x": 340,
+              "y": 313.34
+            },
+            {
+              "id": "RB",
+              "label": "RB",
+              "x": 340,
+              "y": 340.02
+            },
+            {
+              "id": "TE",
+              "label": "TE",
+              "x": 386.69,
+              "y": 300
+            },
+            {
+              "id": "WR_X",
+              "label": "X",
+              "x": 193.26,
+              "y": 300
+            },
+            {
+              "id": "WR_Z",
+              "label": "Z",
+              "x": 460.06,
+              "y": 300
+            }
+          ],
+          "routes": [
+            {
+              "id": "te-route",
+              "playerId": "TE",
+              "points": [
+                {
+                  "x": 386.69,
+                  "y": 300
+                },
+                {
+                  "x": 406.7,
+                  "y": 266.65
+                }
+              ],
+              "color": "#3b82f6"
+            },
+            {
+              "id": "wr_z-route",
+              "playerId": "WR_Z",
+              "points": [
+                {
+                  "x": 460.06,
+                  "y": 300
+                },
+                {
+                  "x": 460.06,
+                  "y": 233.3
+                }
+              ],
+              "color": "#3b82f6"
+            },
+            {
+              "id": "wr_x-route",
+              "playerId": "WR_X",
+              "points": [
+                {
+                  "x": 193.26,
+                  "y": 300
+                },
+                {
+                  "x": 373.35,
+                  "y": 199.95
+                }
+              ],
+              "color": "#3b82f6"
+            },
+            {
+              "id": "rb-route",
+              "playerId": "RB",
+              "points": [
+                {
+                  "x": 340,
+                  "y": 340.02
+                },
+                {
+                  "x": 319.99,
+                  "y": 320.01
+                }
+              ],
+              "color": "#3b82f6"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "positions": [
+            {
+              "id": "LT",
+              "label": "LT",
+              "x": 260,
+              "y": 300
+            },
+            {
+              "id": "LG",
+              "label": "LG",
+              "x": 300,
+              "y": 300
+            },
+            {
+              "id": "C",
+              "label": "C",
+              "x": 340,
+              "y": 300
+            },
+            {
+              "id": "RG",
+              "label": "RG",
+              "x": 380,
+              "y": 300
+            },
+            {
+              "id": "RT",
+              "label": "RT",
+              "x": 420,
+              "y": 300
+            },
+            {
+              "id": "QB",
+              "label": "QB",
+              "x": 350.421875,
+              "y": 292.49625
+            },
+            {
+              "id": "RB",
+              "label": "RB",
+              "x": 319.99,
+              "y": 320.01
+            },
+            {
+              "id": "TE",
+              "label": "TE",
+              "x": 402.3228125,
+              "y": 273.9453125
+            },
+            {
+              "id": "WR_X",
+              "label": "X",
+              "x": 255.79125,
+              "y": 265.2604166666667
+            },
+            {
+              "id": "WR_Z",
+              "label": "Z",
+              "x": 460.06,
+              "y": 272.2083333333333
+            }
+          ],
+          "routes": []
+        },
+        {
+          "index": 3,
+          "positions": [
+            {
+              "id": "LT",
+              "label": "LT",
+              "x": 260,
+              "y": 300
+            },
+            {
+              "id": "LG",
+              "label": "LG",
+              "x": 300,
+              "y": 300
+            },
+            {
+              "id": "C",
+              "label": "C",
+              "x": 340,
+              "y": 300
+            },
+            {
+              "id": "RG",
+              "label": "RG",
+              "x": 380,
+              "y": 300
+            },
+            {
+              "id": "RT",
+              "label": "RT",
+              "x": 420,
+              "y": 300
+            },
+            {
+              "id": "QB",
+              "label": "QB",
+              "x": 353.34,
+              "y": 286.66
+            },
+            {
+              "id": "RB",
+              "label": "RB",
+              "x": 319.99,
+              "y": 320.01
+            },
+            {
+              "id": "TE",
+              "label": "TE",
+              "x": 406.7,
+              "y": 266.65
+            },
+            {
+              "id": "WR_X",
+              "label": "X",
+              "x": 318.3225,
+              "y": 230.52083333333334
+            },
+            {
+              "id": "WR_Z",
+              "label": "Z",
+              "x": 460.06,
+              "y": 244.41666666666666
+            }
+          ],
+          "routes": []
+        },
+        {
+          "index": 4,
+          "positions": [
+            {
+              "id": "LT",
+              "label": "LT",
+              "x": 260,
+              "y": 300
+            },
+            {
+              "id": "LG",
+              "label": "LG",
+              "x": 300,
+              "y": 300
+            },
+            {
+              "id": "C",
+              "label": "C",
+              "x": 340,
+              "y": 300
+            },
+            {
+              "id": "RG",
+              "label": "RG",
+              "x": 380,
+              "y": 300
+            },
+            {
+              "id": "RT",
+              "label": "RT",
+              "x": 420,
+              "y": 300
+            },
+            {
+              "id": "QB",
+              "label": "QB",
+              "x": 353.34,
+              "y": 286.66
+            },
+            {
+              "id": "RB",
+              "label": "RB",
+              "x": 319.99,
+              "y": 320.01
+            },
+            {
+              "id": "TE",
+              "label": "TE",
+              "x": 406.7,
+              "y": 266.65
+            },
+            {
+              "id": "WR_X",
+              "label": "X",
+              "x": 373.35,
+              "y": 199.95
+            },
+            {
+              "id": "WR_Z",
+              "label": "Z",
+              "x": 460.06,
+              "y": 233.3
+            }
+          ],
+          "routes": []
+        },
+        {
+          "index": 5,
+          "positions": [
+            {
+              "id": "LT",
+              "label": "LT",
+              "x": 260,
+              "y": 300
+            },
+            {
+              "id": "LG",
+              "label": "LG",
+              "x": 300,
+              "y": 300
+            },
+            {
+              "id": "C",
+              "label": "C",
+              "x": 340,
+              "y": 300
+            },
+            {
+              "id": "RG",
+              "label": "RG",
+              "x": 380,
+              "y": 300
+            },
+            {
+              "id": "RT",
+              "label": "RT",
+              "x": 420,
+              "y": 300
+            },
+            {
+              "id": "QB",
+              "label": "QB",
+              "x": 353.34,
+              "y": 286.66
+            },
+            {
+              "id": "RB",
+              "label": "RB",
+              "x": 319.99,
+              "y": 320.01
+            },
+            {
+              "id": "TE",
+              "label": "TE",
+              "x": 406.7,
+              "y": 266.65
+            },
+            {
+              "id": "WR_X",
+              "label": "X",
+              "x": 373.35,
+              "y": 199.95
+            },
+            {
+              "id": "WR_Z",
+              "label": "Z",
+              "x": 460.06,
+              "y": 233.3
+            }
+          ],
+          "routes": []
+        }
+      ]
+    },
+    {
+      "name": "Bubble RPO",
+      "formation": "trips",
+      "notes": "If apex widens, handoff; if he fits, throw bubble.\n\nConcept: RPO\nFormation: Trips Right\nCategory: rpo_and_trick",
+      "slides": [
+        {
+          "index": 1,
+          "positions": [
+            {
+              "id": "LT",
+              "label": "LT",
+              "x": 260,
+              "y": 300
+            },
+            {
+              "id": "LG",
+              "label": "LG",
+              "x": 300,
+              "y": 300
+            },
+            {
+              "id": "C",
+              "label": "C",
+              "x": 340,
+              "y": 300
+            },
+            {
+              "id": "RG",
+              "label": "RG",
+              "x": 380,
+              "y": 300
+            },
+            {
+              "id": "RT",
+              "label": "RT",
+              "x": 420,
+              "y": 300
+            },
+            {
+              "id": "QB",
+              "label": "QB",
+              "x": 340,
+              "y": 326.68
+            },
+            {
+              "id": "RB",
+              "label": "RB",
+              "x": 319.99,
+              "y": 340.02
+            },
+            {
+              "id": "TE",
+              "label": "TE",
+              "x": 460,
+              "y": 300
+            },
+            {
+              "id": "WR_X",
+              "label": "X",
+              "x": 193.26,
+              "y": 300
+            },
+            {
+              "id": "WR_Z",
+              "label": "Z",
+              "x": 486.74,
+              "y": 300
+            },
+            {
+              "id": "SL_Z",
+              "label": "SL",
+              "x": 433.38,
+              "y": 300
+            }
+          ],
+          "routes": [
+            {
+              "id": "rb-route",
+              "playerId": "RB",
+              "points": [
+                {
+                  "x": 319.99,
+                  "y": 340.02
+                },
+                {
+                  "x": 346.67,
+                  "y": 313.34
+                }
+              ],
+              "color": "#10b981"
+            },
+            {
+              "id": "sl_z-route",
+              "playerId": "SL_Z",
+              "points": [
+                {
+                  "x": 433.38,
+                  "y": 300
+                },
+                {
+                  "x": 460.06,
+                  "y": 306.67
+                }
+              ],
+              "color": "#3b82f6"
+            },
+            {
+              "id": "wr_z-route",
+              "playerId": "WR_Z",
+              "points": [
+                {
+                  "x": 486.74,
+                  "y": 300
+                },
+                {
+                  "x": 500.08,
+                  "y": 266.65
+                }
+              ],
+              "color": "#3b82f6"
+            },
+            {
+              "id": "wr_x-route",
+              "playerId": "WR_X",
+              "points": [
+                {
+                  "x": 193.26,
+                  "y": 300
+                },
+                {
+                  "x": 306.65,
+                  "y": 246.64
+                }
+              ],
+              "color": "#3b82f6"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "positions": [
+            {
+              "id": "LT",
+              "label": "LT",
+              "x": 260,
+              "y": 300
+            },
+            {
+              "id": "LG",
+              "label": "LG",
+              "x": 300,
+              "y": 300
+            },
+            {
+              "id": "C",
+              "label": "C",
+              "x": 340,
+              "y": 300
+            },
+            {
+              "id": "RG",
+              "label": "RG",
+              "x": 380,
+              "y": 300
+            },
+            {
+              "id": "RT",
+              "label": "RT",
+              "x": 420,
+              "y": 300
+            },
+            {
+              "id": "QB",
+              "label": "QB",
+              "x": 340,
+              "y": 320.01
+            },
+            {
+              "id": "RB",
+              "label": "RB",
+              "x": 346.67,
+              "y": 313.34
+            },
+            {
+              "id": "TE",
+              "label": "TE",
+              "x": 460,
+              "y": 300
+            },
+            {
+              "id": "WR_X",
+              "label": "X",
+              "x": 264.12874999999997,
+              "y": 266.65
+            },
+            {
+              "id": "WR_Z",
+              "label": "Z",
+              "x": 500.08,
+              "y": 266.65
+            },
+            {
+              "id": "SL_Z",
+              "label": "SL",
+              "x": 460.06,
+              "y": 306.67
+            }
+          ],
+          "routes": []
+        },
+        {
+          "index": 3,
+          "positions": [
+            {
+              "id": "LT",
+              "label": "LT",
+              "x": 260,
+              "y": 300
+            },
+            {
+              "id": "LG",
+              "label": "LG",
+              "x": 300,
+              "y": 300
+            },
+            {
+              "id": "C",
+              "label": "C",
+              "x": 340,
+              "y": 300
+            },
+            {
+              "id": "RG",
+              "label": "RG",
+              "x": 380,
+              "y": 300
+            },
+            {
+              "id": "RT",
+              "label": "RT",
+              "x": 420,
+              "y": 300
+            },
+            {
+              "id": "QB",
+              "label": "QB",
+              "x": 340,
+              "y": 320.01
+            },
+            {
+              "id": "RB",
+              "label": "RB",
+              "x": 346.67,
+              "y": 313.34
+            },
+            {
+              "id": "TE",
+              "label": "TE",
+              "x": 460,
+              "y": 300
+            },
+            {
+              "id": "WR_X",
+              "label": "X",
+              "x": 306.65,
+              "y": 246.64
+            },
+            {
+              "id": "WR_Z",
+              "label": "Z",
+              "x": 500.08,
+              "y": 266.65
+            },
+            {
+              "id": "SL_Z",
+              "label": "SL",
+              "x": 460.06,
+              "y": 306.67
+            }
+          ],
+          "routes": []
+        },
+        {
+          "index": 4,
+          "positions": [
+            {
+              "id": "LT",
+              "label": "LT",
+              "x": 260,
+              "y": 300
+            },
+            {
+              "id": "LG",
+              "label": "LG",
+              "x": 300,
+              "y": 300
+            },
+            {
+              "id": "C",
+              "label": "C",
+              "x": 340,
+              "y": 300
+            },
+            {
+              "id": "RG",
+              "label": "RG",
+              "x": 380,
+              "y": 300
+            },
+            {
+              "id": "RT",
+              "label": "RT",
+              "x": 420,
+              "y": 300
+            },
+            {
+              "id": "QB",
+              "label": "QB",
+              "x": 340,
+              "y": 320.01
+            },
+            {
+              "id": "RB",
+              "label": "RB",
+              "x": 346.67,
+              "y": 313.34
+            },
+            {
+              "id": "TE",
+              "label": "TE",
+              "x": 460,
+              "y": 300
+            },
+            {
+              "id": "WR_X",
+              "label": "X",
+              "x": 306.65,
+              "y": 246.64
+            },
+            {
+              "id": "WR_Z",
+              "label": "Z",
+              "x": 500.08,
+              "y": 266.65
+            },
+            {
+              "id": "SL_Z",
+              "label": "SL",
+              "x": 460.06,
+              "y": 306.67
+            }
+          ],
+          "routes": []
+        },
+        {
+          "index": 5,
+          "positions": [
+            {
+              "id": "LT",
+              "label": "LT",
+              "x": 260,
+              "y": 300
+            },
+            {
+              "id": "LG",
+              "label": "LG",
+              "x": 300,
+              "y": 300
+            },
+            {
+              "id": "C",
+              "label": "C",
+              "x": 340,
+              "y": 300
+            },
+            {
+              "id": "RG",
+              "label": "RG",
+              "x": 380,
+              "y": 300
+            },
+            {
+              "id": "RT",
+              "label": "RT",
+              "x": 420,
+              "y": 300
+            },
+            {
+              "id": "QB",
+              "label": "QB",
+              "x": 340,
+              "y": 320.01
+            },
+            {
+              "id": "RB",
+              "label": "RB",
+              "x": 346.67,
+              "y": 313.34
+            },
+            {
+              "id": "TE",
+              "label": "TE",
+              "x": 460,
+              "y": 300
+            },
+            {
+              "id": "WR_X",
+              "label": "X",
+              "x": 306.65,
+              "y": 246.64
+            },
+            {
+              "id": "WR_Z",
+              "label": "Z",
+              "x": 500.08,
+              "y": 266.65
+            },
+            {
+              "id": "SL_Z",
+              "label": "SL",
+              "x": 460.06,
+              "y": 306.67
+            }
+          ],
+          "routes": []
+        }
+      ]
+    },
+    {
+      "name": "Flea Flicker",
+      "formation": "trips",
+      "notes": "Sell run; RB pitches back; QB launches deep.\n\nConcept: Trick\nFormation: Singleback\nCategory: rpo_and_trick",
+      "slides": [
+        {
+          "index": 1,
+          "positions": [
+            {
+              "id": "LT",
+              "label": "LT",
+              "x": 260,
+              "y": 300
+            },
+            {
+              "id": "LG",
+              "label": "LG",
+              "x": 300,
+              "y": 300
+            },
+            {
+              "id": "C",
+              "label": "C",
+              "x": 340,
+              "y": 300
+            },
+            {
+              "id": "RG",
+              "label": "RG",
+              "x": 380,
+              "y": 300
+            },
+            {
+              "id": "RT",
+              "label": "RT",
+              "x": 420,
+              "y": 300
+            },
+            {
+              "id": "QB",
+              "label": "QB",
+              "x": 340,
+              "y": 313.34
+            },
+            {
+              "id": "RB",
+              "label": "RB",
+              "x": 360,
+              "y": 360
+            },
+            {
+              "id": "TE",
+              "label": "TE",
+              "x": 386.69,
+              "y": 300
+            },
+            {
+              "id": "WR_X",
+              "label": "X",
+              "x": 193.26,
+              "y": 300
+            },
+            {
+              "id": "WR_Z",
+              "label": "Z",
+              "x": 460.06,
+              "y": 300
+            }
+          ],
+          "routes": [
+            {
+              "id": "wr_z-route",
+              "playerId": "WR_Z",
+              "points": [
+                {
+                  "x": 460.06,
+                  "y": 300
+                },
+                {
+                  "x": 506.75,
+                  "y": 233.3
+                }
+              ],
+              "color": "#3b82f6"
+            },
+            {
+              "id": "wr_x-route",
+              "playerId": "WR_X",
+              "points": [
+                {
+                  "x": 193.26,
+                  "y": 300
+                },
+                {
+                  "x": 573.45,
+                  "y": 446.74
+                }
+              ],
+              "color": "#3b82f6"
+            },
+            {
+              "id": "te-route",
+              "playerId": "TE",
+              "points": [
+                {
+                  "x": 386.69,
+                  "y": 300
+                },
+                {
+                  "x": 440.05,
+                  "y": 219.96
+                }
+              ],
+              "color": "#3b82f6"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "positions": [
+            {
+              "id": "LT",
+              "label": "LT",
+              "x": 260,
+              "y": 300
+            },
+            {
+              "id": "LG",
+              "label": "LG",
+              "x": 300,
+              "y": 300
+            },
+            {
+              "id": "C",
+              "label": "C",
+              "x": 340,
+              "y": 300
+            },
+            {
+              "id": "RG",
+              "label": "RG",
+              "x": 380,
+              "y": 300
+            },
+            {
+              "id": "RT",
+              "label": "RT",
+              "x": 420,
+              "y": 300
+            },
+            {
+              "id": "QB",
+              "label": "QB",
+              "x": 340,
+              "y": 309.17125
+            },
+            {
+              "id": "RB",
+              "label": "RB",
+              "x": 360,
+              "y": 360
+            },
+            {
+              "id": "TE",
+              "label": "TE",
+              "x": 408.92333333333335,
+              "y": 266.65
+            },
+            {
+              "id": "WR_X",
+              "label": "X",
+              "x": 312.069375,
+              "y": 345.85625
+            },
+            {
+              "id": "WR_Z",
+              "label": "Z",
+              "x": 474.650625,
+              "y": 279.15625
+            }
+          ],
+          "routes": []
+        },
+        {
+          "index": 3,
+          "positions": [
+            {
+              "id": "LT",
+              "label": "LT",
+              "x": 260,
+              "y": 300
+            },
+            {
+              "id": "LG",
+              "label": "LG",
+              "x": 300,
+              "y": 300
+            },
+            {
+              "id": "C",
+              "label": "C",
+              "x": 340,
+              "y": 300
+            },
+            {
+              "id": "RG",
+              "label": "RG",
+              "x": 380,
+              "y": 300
+            },
+            {
+              "id": "RT",
+              "label": "RT",
+              "x": 420,
+              "y": 300
+            },
+            {
+              "id": "QB",
+              "label": "QB",
+              "x": 340,
+              "y": 313.34
+            },
+            {
+              "id": "RB",
+              "label": "RB",
+              "x": 360,
+              "y": 360
+            },
+            {
+              "id": "TE",
+              "label": "TE",
+              "x": 431.1566666666667,
+              "y": 233.3
+            },
+            {
+              "id": "WR_X",
+              "label": "X",
+              "x": 430.87874999999997,
+              "y": 391.7125
+            },
+            {
+              "id": "WR_Z",
+              "label": "Z",
+              "x": 489.24125000000004,
+              "y": 258.3125
+            }
+          ],
+          "routes": []
+        },
+        {
+          "index": 4,
+          "positions": [
+            {
+              "id": "LT",
+              "label": "LT",
+              "x": 260,
+              "y": 300
+            },
+            {
+              "id": "LG",
+              "label": "LG",
+              "x": 300,
+              "y": 300
+            },
+            {
+              "id": "C",
+              "label": "C",
+              "x": 340,
+              "y": 300
+            },
+            {
+              "id": "RG",
+              "label": "RG",
+              "x": 380,
+              "y": 300
+            },
+            {
+              "id": "RT",
+              "label": "RT",
+              "x": 420,
+              "y": 300
+            },
+            {
+              "id": "QB",
+              "label": "QB",
+              "x": 340,
+              "y": 313.34
+            },
+            {
+              "id": "RB",
+              "label": "RB",
+              "x": 360,
+              "y": 360
+            },
+            {
+              "id": "TE",
+              "label": "TE",
+              "x": 440.05,
+              "y": 219.96
+            },
+            {
+              "id": "WR_X",
+              "label": "X",
+              "x": 549.688125,
+              "y": 437.56875
+            },
+            {
+              "id": "WR_Z",
+              "label": "Z",
+              "x": 503.83187499999997,
+              "y": 237.46875
+            }
+          ],
+          "routes": []
+        },
+        {
+          "index": 5,
+          "positions": [
+            {
+              "id": "LT",
+              "label": "LT",
+              "x": 260,
+              "y": 300
+            },
+            {
+              "id": "LG",
+              "label": "LG",
+              "x": 300,
+              "y": 300
+            },
+            {
+              "id": "C",
+              "label": "C",
+              "x": 340,
+              "y": 300
+            },
+            {
+              "id": "RG",
+              "label": "RG",
+              "x": 380,
+              "y": 300
+            },
+            {
+              "id": "RT",
+              "label": "RT",
+              "x": 420,
+              "y": 300
+            },
+            {
+              "id": "QB",
+              "label": "QB",
+              "x": 340,
+              "y": 313.34
+            },
+            {
+              "id": "RB",
+              "label": "RB",
+              "x": 360,
+              "y": 360
+            },
+            {
+              "id": "TE",
+              "label": "TE",
+              "x": 440.05,
+              "y": 219.96
+            },
+            {
+              "id": "WR_X",
+              "label": "X",
+              "x": 573.45,
+              "y": 446.74
+            },
+            {
+              "id": "WR_Z",
+              "label": "Z",
+              "x": 506.75,
+              "y": 233.3
+            }
+          ],
+          "routes": []
+        }
+      ]
+    }
+  ]
+}
