@@ -21,7 +21,8 @@
       "Bash(git branch:*)",
       "Bash(git push:*)",
       "Bash(git commit:*)",
-      "Bash(firebase login:*)"
+      "Bash(firebase login:*)",
+      "Bash(git checkout:*)"
     ],
     "deny": [],
     "ask": []

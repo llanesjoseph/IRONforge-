@@ -136,6 +136,17 @@ export default function PlayEditor() {
     setPreviousSlideIndex(slideIndex);
   }, [slideIndex]);
 
+  // Listen for complete player setup event
+  useEffect(() => {
+    const handleCompleteSetup = () => {
+      setEditingMode('traditional');
+      setSlideIndex(1); // Go to first slide
+    };
+
+    window.addEventListener('completePlayerSetup', handleCompleteSetup);
+    return () => window.removeEventListener('completePlayerSetup', handleCompleteSetup);
+  }, []);
+
   const updatePosition = async (playerId: string, x: number, y: number) => {
     if (!play || !canEdit) return;
 
