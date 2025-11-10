@@ -24,6 +24,7 @@ export default function AIAssistant({
   const [activeFeature, setActiveFeature] = useState<string | null>(null);
   const [suggestions, setSuggestions] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
+  const [playDescription, setPlayDescription] = useState('');
 
   // Game context for formation suggestions
   const [gameContext, setGameContext] = useState({
@@ -113,6 +114,26 @@ export default function AIAssistant({
       setSuggestions(variation);
     } catch (err: any) {
       setError(err.message || 'Failed to create variation');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGenerateFromDescription = async () => {
+    if (!playDescription.trim()) {
+      setError('Please enter a play description');
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+    setActiveFeature('description');
+
+    try {
+      const generatedPlay = await ai.generatePlayFromDescription(playDescription, currentSlide);
+      setSuggestions(generatedPlay);
+    } catch (err: any) {
+      setError(err.message || 'Failed to generate play from description');
     } finally {
       setLoading(false);
     }
@@ -225,6 +246,34 @@ export default function AIAssistant({
           </div>
         );
 
+      case 'description':
+        return (
+          <div className="space-y-3">
+            <h4 className="font-semibold text-gray-900">{suggestions.formation}</h4>
+            <p className="text-sm text-gray-600 italic">{suggestions.explanation}</p>
+            <div className="text-xs text-gray-500">
+              {suggestions.playerPositions.length} players, {suggestions.routes.length} routes
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={() => {
+                  onApplyFormation(suggestions.playerPositions);
+                  onApplyRoutes(suggestions.routes);
+                }}
+                className="flex-1 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+              >
+                Apply Play
+              </button>
+              <button
+                onClick={() => onUpdatePlayName(suggestions.formation)}
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
+              >
+                Use Name
+              </button>
+            </div>
+          </div>
+        );
+
       default:
         return null;
     }
@@ -312,6 +361,27 @@ export default function AIAssistant({
                   />
                 </div>
               </div>
+            </div>
+
+            {/* Natural Language Play Generation */}
+            <div className="mb-6 p-4 bg-gradient-to-br from-purple-50 to-blue-50 rounded-lg border-2 border-purple-200">
+              <h3 className="font-semibold mb-2 text-purple-900">Generate Play from Description</h3>
+              <p className="text-xs text-gray-600 mb-3">Describe your play in natural language and let AI create it!</p>
+              <textarea
+                value={playDescription}
+                onChange={(e) => setPlayDescription(e.target.value)}
+                placeholder="e.g., 'Create a play-action pass with a deep post route to WR1 and a corner route to WR2, RB runs a wheel route out of the backfield'"
+                className="w-full px-3 py-2 border rounded resize-none text-sm"
+                rows={4}
+                disabled={loading}
+              />
+              <button
+                onClick={handleGenerateFromDescription}
+                disabled={loading || !playDescription.trim()}
+                className="w-full mt-2 px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 disabled:opacity-50 font-medium"
+              >
+                Generate Play
+              </button>
             </div>
 
             {/* AI Features */}

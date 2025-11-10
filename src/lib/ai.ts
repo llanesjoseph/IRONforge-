@@ -647,3 +647,114 @@ export function setAIProvider(provider: AIProvider): void {
   console.log(`AI Provider would be set to: ${provider}`);
   console.log('Note: To actually change providers, update VITE_AI_PROVIDER in your .env.local file');
 }
+
+/**
+ * Generate a complete play from natural language description
+ */
+export async function generatePlayFromDescription(
+  description: string,
+  currentSlide?: Slide
+): Promise<GeneratedPlay> {
+  const contextInfo = currentSlide ? `
+Current formation context:
+- Existing player positions: ${JSON.stringify(currentSlide.positions.map(p => ({id: p.id, label: p.label, x: p.x, y: p.y})))}
+- Existing routes: ${currentSlide.routes ? JSON.stringify(currentSlide.routes) : 'None'}
+` : '';
+
+  const prompt = `You are a professional football offensive coordinator AI designing plays from natural language descriptions.
+
+User's play description:
+"${description}"
+
+${contextInfo}
+
+Field dimensions: 700x400 (width x height)
+Line of Scrimmage: y=300
+Grid alignment: All positions should snap to 20-pixel grid (20, 40, 60, etc.)
+
+Based on the user's description, design a complete offensive play that matches their intent.
+
+Requirements:
+1. Interpret the description to understand:
+   - Play type (pass/run/play-action/screen/trick play)
+   - Formation preferences (if mentioned)
+   - Key players and their roles
+   - Route concepts (if specified)
+   - Timing and strategy
+2. Position all 11 offensive players optimally
+3. Create realistic routes that match the description
+4. Design blocking assignments for linemen
+5. Ensure proper spacing, timing, and strategic soundness
+
+Common player IDs to use:
+- QB: Quarterback
+- RB: Running Back
+- FB: Fullback (optional)
+- WR1, WR2, WR3: Wide Receivers
+- TE: Tight End
+- LT, LG, C, RG, RT: Offensive Line
+
+Return your response in this exact JSON format:
+{
+  "formation": "Formation name (e.g., Shotgun Trips, I-Formation, Empty Set)",
+  "playerPositions": [
+    {"id": "QB", "label": "QB", "x": 350, "y": 320},
+    {"id": "RB", "label": "RB", "x": 350, "y": 340},
+    {"id": "LT", "label": "LT", "x": 250, "y": 300},
+    {"id": "LG", "label": "LG", "x": 290, "y": 300},
+    {"id": "C", "label": "C", "x": 330, "y": 300},
+    {"id": "RG", "label": "RG", "x": 370, "y": 300},
+    {"id": "RT", "label": "RT", "x": 410, "y": 300},
+    {"id": "TE", "label": "TE", "x": 450, "y": 280},
+    {"id": "WR1", "label": "WR1", "x": 150, "y": 250},
+    {"id": "WR2", "label": "WR2", "x": 550, "y": 250},
+    {"id": "WR3", "label": "WR3", "x": 480, "y": 260}
+  ],
+  "routes": [
+    {
+      "id": "route-wr1",
+      "playerId": "WR1",
+      "points": [{"x": 150, "y": 250}, {"x": 150, "y": 100}, {"x": 350, "y": 50}],
+      "color": "#FFD700"
+    },
+    {
+      "id": "route-wr2",
+      "playerId": "WR2",
+      "points": [{"x": 550, "y": 250}, {"x": 550, "y": 150}, {"x": 400, "y": 150}],
+      "color": "#00D4FF"
+    }
+  ],
+  "ballPath": [
+    {"x": 350, "y": 320},
+    {"x": 350, "y": 50}
+  ],
+  "explanation": "Detailed explanation of how this play design matches the user's description, including formation choice, route concepts, and strategic reasoning"
+}
+
+Ensure all positions are within field bounds (0-700 width, 0-400 height) and aligned to 20-pixel grid.
+Create routes that are realistic and executable, with proper spacing and timing.
+The explanation should clearly tie back to the user's original description.`;
+
+  try {
+    const response = await callAI(prompt);
+    let cleanedResponse = response.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+
+    // Extract JSON if there's text before or after it
+    const jsonMatch = cleanedResponse.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      cleanedResponse = jsonMatch[0];
+    }
+
+    const parsed = JSON.parse(cleanedResponse);
+
+    // Ensure all required fields are present
+    if (!parsed.formation || !parsed.playerPositions || !parsed.routes || !parsed.ballPath || !parsed.explanation) {
+      throw new Error('Invalid response structure from AI');
+    }
+
+    return parsed as GeneratedPlay;
+  } catch (error) {
+    console.error('Failed to generate play from description:', error);
+    throw new Error('Failed to generate play. Please try again with a more detailed description.');
+  }
+}
