@@ -501,6 +501,43 @@ export default function PlayEditor() {
   };
 
   const handleCanvasClick = (x: number, y: number, e?: any) => {
+    // Check for double-click to finish route
+    if (e && e.evt && e.evt.detail === 2) {
+      if (isDrawingRoute && currentRoute && currentRoute.points.length >= 2) {
+        finishRoute();
+        return;
+      }
+      if (isDrawingMovementRoute && currentMovementRoute && currentMovementRoute.points.length >= 2) {
+        finishMovementRoute();
+        return;
+      }
+    }
+
+    // Check for right-click to undo last waypoint
+    if (e && e.evt && e.evt.button === 2) {
+      e.evt.preventDefault();
+
+      if (isDrawingRoute && currentRoute && currentRoute.points.length > 1) {
+        const updatedRoute = {
+          ...currentRoute,
+          points: currentRoute.points.slice(0, -1) // Remove last point
+        };
+        setCurrentRoute(updatedRoute);
+        return;
+      }
+
+      if (isDrawingMovementRoute && currentMovementRoute && currentMovementRoute.points.length > 2) {
+        // Keep at least start and end points for movement routes
+        const updatedRoute = {
+          ...currentMovementRoute,
+          points: currentMovementRoute.points.slice(0, -1)
+        };
+        setCurrentMovementRoute(updatedRoute);
+        return;
+      }
+      return;
+    }
+
     // Movement route drawing mode
     if (isDrawingMovementRoute && currentMovementRoute && canEdit) {
       // Snap route points to grid if snapping is enabled
@@ -663,6 +700,79 @@ export default function PlayEditor() {
         setSaving(false);
       }
     }
+  };
+
+  // Waypoint drag handlers for editing routes
+  const handleWaypointDrag = async (routeId: string, pointIndex: number, x: number, y: number) => {
+    if (!play || !canEdit) return;
+
+    // Apply snapping if enabled
+    let newX = x;
+    let newY = y;
+    if (enableSnapping) {
+      const snapped = snapToGrid(x, y);
+      newX = snapped.x;
+      newY = snapped.y;
+    }
+
+    // Update the specific waypoint in the route
+    const updatedSlides = play.slides.map(s => {
+      if (s.index === slideIndex && s.routes) {
+        return {
+          ...s,
+          routes: s.routes.map(r => {
+            if (r.id === routeId) {
+              const updatedPoints = r.points.map((point, idx) =>
+                idx === pointIndex ? { x: newX, y: newY } : point
+              );
+              return {
+                ...r,
+                points: updatedPoints,
+                yardage: calculateRouteYardage({ ...r, points: updatedPoints })
+              };
+            }
+            return r;
+          })
+        };
+      }
+      return s;
+    });
+
+    const newPlay = { ...play, slides: updatedSlides };
+    setPlay(newPlay);
+
+    // Auto-save to Firestore
+    try {
+      setSaving(true);
+      await updateDoc(doc(db, 'plays', play.id), { slides: updatedSlides });
+    } catch (error) {
+      console.error('Error saving waypoint drag:', error);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleCurrentWaypointDrag = (pointIndex: number, x: number, y: number) => {
+    if (!currentRoute || !canEdit) return;
+
+    // Apply snapping if enabled
+    let newX = x;
+    let newY = y;
+    if (enableSnapping) {
+      const snapped = snapToGrid(x, y);
+      newX = snapped.x;
+      newY = snapped.y;
+    }
+
+    // Update the specific waypoint in the current route being drawn
+    const updatedPoints = currentRoute.points.map((point, idx) =>
+      idx === pointIndex ? { x: newX, y: newY } : point
+    );
+
+    setCurrentRoute({
+      ...currentRoute,
+      points: updatedPoints
+    });
   };
 
   // Movement Route Drawing Functions
@@ -1626,6 +1736,8 @@ export default function PlayEditor() {
                   onPlayerClick={handlePlayerClick}
                   onRouteClick={deleteRoute}
                   onWaypointClick={handleWaypointClick}
+                  onWaypointDrag={handleWaypointDrag}
+                  onCurrentWaypointDrag={handleCurrentWaypointDrag}
                   editable={!!canEdit && !isAnimating}
                   showGrid={showGrid}
                   enableSnapping={enableSnapping}

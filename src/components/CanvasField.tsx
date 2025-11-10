@@ -24,6 +24,8 @@ type CanvasProps = {
   onPlayerClick?: (playerId: string) => void;
   onRouteClick?: (routeId: string) => void;
   onWaypointClick?: (waypointIndex: number) => void;
+  onWaypointDrag?: (routeId: string, pointIndex: number, x: number, y: number) => void;
+  onCurrentWaypointDrag?: (pointIndex: number, x: number, y: number) => void;
   editable?: boolean;
   showGrid?: boolean;
   enableSnapping?: boolean;
@@ -59,6 +61,8 @@ const CanvasField = forwardRef<CanvasHandle, CanvasProps>(
     onPlayerClick,
     onRouteClick,
     onWaypointClick,
+    onWaypointDrag,
+    onCurrentWaypointDrag,
     editable = true,
     showGrid = false,
     enableSnapping = true,
@@ -366,6 +370,9 @@ const CanvasField = forwardRef<CanvasHandle, CanvasProps>(
             currentRoute={currentRoute}
             isDrawing={isDrawing}
             onRouteClick={onRouteClick}
+            onWaypointDrag={onWaypointDrag}
+            onCurrentWaypointDrag={onCurrentWaypointDrag}
+            enableWaypointEditing={editable}
           />
 
           {/* Defensive Routes */}

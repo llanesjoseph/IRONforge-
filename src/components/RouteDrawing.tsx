@@ -8,13 +8,19 @@ type RouteDrawingProps = {
   currentRoute: Route | null;
   isDrawing: boolean;
   onRouteClick?: (routeId: string) => void;
+  onWaypointDrag?: (routeId: string, pointIndex: number, x: number, y: number) => void;
+  onCurrentWaypointDrag?: (pointIndex: number, x: number, y: number) => void;
+  enableWaypointEditing?: boolean;
 };
 
 const RouteDrawing: React.FC<RouteDrawingProps> = ({
   routes,
   currentRoute,
   isDrawing,
-  onRouteClick
+  onRouteClick,
+  onWaypointDrag,
+  onCurrentWaypointDrag,
+  enableWaypointEditing = true
 }) => {
   // Convert route points to flat array for Konva Line
   const getLinePoints = (route: Route): number[] => {
@@ -83,17 +89,50 @@ const RouteDrawing: React.FC<RouteDrawingProps> = ({
               />
             )}
 
-            {/* Route points for editing */}
+            {/* Route points for editing - larger hit targets and draggable */}
             {route.points.map((point, idx) => (
-              <Circle
-                key={`${route.id}-point-${idx}`}
-                x={point.x}
-                y={point.y}
-                radius={4}
-                fill={route.color || '#FF6B6B'}
-                stroke="#fff"
-                strokeWidth={1}
-              />
+              <Group key={`${route.id}-point-${idx}`}>
+                {/* Larger invisible hit area for easier clicking */}
+                {enableWaypointEditing && onWaypointDrag && (
+                  <Circle
+                    x={point.x}
+                    y={point.y}
+                    radius={15}
+                    fill="transparent"
+                    draggable={true}
+                    onDragMove={(e) => {
+                      const node = e.target;
+                      onWaypointDrag(route.id, idx, node.x(), node.y());
+                    }}
+                    onMouseEnter={(e) => {
+                      const container = e.target.getStage()?.container();
+                      if (container) container.style.cursor = 'grab';
+                    }}
+                    onMouseLeave={(e) => {
+                      const container = e.target.getStage()?.container();
+                      if (container) container.style.cursor = 'default';
+                    }}
+                    onDragStart={(e) => {
+                      const container = e.target.getStage()?.container();
+                      if (container) container.style.cursor = 'grabbing';
+                    }}
+                    onDragEnd={(e) => {
+                      const container = e.target.getStage()?.container();
+                      if (container) container.style.cursor = 'default';
+                    }}
+                  />
+                )}
+                {/* Visible waypoint */}
+                <Circle
+                  x={point.x}
+                  y={point.y}
+                  radius={6}
+                  fill={route.color || '#FF6B6B'}
+                  stroke="#fff"
+                  strokeWidth={2}
+                  listening={false}
+                />
+              </Group>
             ))}
 
             {/* Yardage label */}
@@ -139,17 +178,50 @@ const RouteDrawing: React.FC<RouteDrawingProps> = ({
             dash={[10, 5]}
           />
 
-          {/* Show points while drawing */}
+          {/* Show points while drawing - draggable */}
           {currentRoute.points.map((point, idx) => (
-            <Circle
-              key={`current-point-${idx}`}
-              x={point.x}
-              y={point.y}
-              radius={5}
-              fill={currentRoute.color || '#4ECDC4'}
-              stroke="#fff"
-              strokeWidth={2}
-            />
+            <Group key={`current-point-${idx}`}>
+              {/* Larger invisible hit area for easier interaction */}
+              {onCurrentWaypointDrag && (
+                <Circle
+                  x={point.x}
+                  y={point.y}
+                  radius={15}
+                  fill="transparent"
+                  draggable={true}
+                  onDragMove={(e) => {
+                    const node = e.target;
+                    onCurrentWaypointDrag(idx, node.x(), node.y());
+                  }}
+                  onMouseEnter={(e) => {
+                    const container = e.target.getStage()?.container();
+                    if (container) container.style.cursor = 'grab';
+                  }}
+                  onMouseLeave={(e) => {
+                    const container = e.target.getStage()?.container();
+                    if (container) container.style.cursor = 'crosshair';
+                  }}
+                  onDragStart={(e) => {
+                    const container = e.target.getStage()?.container();
+                    if (container) container.style.cursor = 'grabbing';
+                  }}
+                  onDragEnd={(e) => {
+                    const container = e.target.getStage()?.container();
+                    if (container) container.style.cursor = 'crosshair';
+                  }}
+                />
+              )}
+              {/* Visible waypoint */}
+              <Circle
+                x={point.x}
+                y={point.y}
+                radius={7}
+                fill={currentRoute.color || '#4ECDC4'}
+                stroke="#fff"
+                strokeWidth={2}
+                listening={false}
+              />
+            </Group>
           ))}
 
           {/* Show yardage for current route */}
