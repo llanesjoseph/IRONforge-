@@ -63,14 +63,16 @@ export default function NewPlay() {
       return;
     }
 
+    // Check authentication
+    const user = auth.currentUser;
+    if (!user) {
+      setError('You must be logged in to create plays. Please sign in and try again.');
+      return;
+    }
+
     setLoading(true);
     setError(null);
     try {
-      const user = auth.currentUser;
-      if (!user) {
-        throw new Error('No authenticated user');
-      }
-
       // Generate play from AI description
       const generatedPlay = await ai.generatePlayFromDescription(playDescription);
 
@@ -104,7 +106,15 @@ export default function NewPlay() {
       navigate(`/play/${docRef.id}`);
     } catch (error: any) {
       console.error('Error creating AI play:', error);
-      setError(error.message || 'Failed to generate play. Please try again with a more detailed description.');
+
+      // Better error messages
+      if (error.code === 'permission-denied' || error.message?.includes('permission')) {
+        setError('You don\'t have permission to create plays. Please contact your coach to get access.');
+      } else if (error.message?.includes('API')) {
+        setError('AI service error. Please check your AI API key configuration.');
+      } else {
+        setError(error.message || 'Failed to generate play. Please try again with a more detailed description.');
+      }
     } finally {
       setLoading(false);
     }

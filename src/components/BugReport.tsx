@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { auth } from '../lib/firebase';
+import { auth, db } from '../lib/firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { useLocation } from 'react-router-dom';
 
 export default function BugReport() {
@@ -21,32 +22,27 @@ export default function BugReport() {
 
     try {
       const user = auth.currentUser;
-      const response = await fetch('/api/send-bug-report', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          userEmail: user?.email || 'anonymous@gridairon.com',
-          userName: user?.displayName || 'Anonymous User',
-          bugDescription,
-          stepsToReproduce,
-          pageLocation: location.pathname,
-          userAgent: navigator.userAgent,
-        }),
+
+      // Save bug report to Firestore
+      await addDoc(collection(db, 'bugReports'), {
+        userEmail: user?.email || 'anonymous@gridairon.com',
+        userName: user?.displayName || 'Anonymous User',
+        userId: user?.uid || 'anonymous',
+        bugDescription,
+        stepsToReproduce,
+        pageLocation: location.pathname,
+        userAgent: navigator.userAgent,
+        status: 'new',
+        createdAt: serverTimestamp(),
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to send bug report');
-      }
-
-      alert('Bug report sent successfully! Thank you for your feedback.');
+      alert('Bug report submitted successfully! Thank you for your feedback.');
       setBugDescription('');
       setStepsToReproduce('');
       setShowModal(false);
     } catch (error) {
-      console.error('Error sending bug report:', error);
-      alert('Failed to send bug report. Please try again.');
+      console.error('Error submitting bug report:', error);
+      alert('Failed to submit bug report. Please try again.');
     } finally {
       setSending(false);
     }

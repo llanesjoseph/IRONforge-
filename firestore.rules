@@ -181,5 +181,17 @@ service cloud.firestore {
         allow write: if isAuthenticated();
       }
     }
+
+    // Bug Reports collection
+    match /bugReports/{reportId} {
+      // Anyone can create bug reports (even anonymous users)
+      allow create: if true;
+
+      // Only admins can read bug reports
+      allow read: if isAdmin();
+
+      // Only admins can update/delete bug reports
+      allow update, delete: if isAdmin();
+    }
   }
 }
