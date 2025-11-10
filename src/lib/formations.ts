@@ -105,7 +105,7 @@ export function tripsRightTemplate(): Slide[] {
     { id: 'Y',  label: 'Y',  x: 500, y: 220 }, // Adjusted position for trips
     { id: 'Z',  label: 'Z',  x: 540, y: 200 }  // Adjusted position for trips
   ];
-  return [1, 2, 3].map(i => ({
+  return [1, 2, 3, 4, 5].map(i => ({
     index: i,
     positions: clonePositions(base)
   }));
@@ -125,7 +125,7 @@ export function doublesTemplate(): Slide[] {
     { id: 'Y',  label: 'Y',  x: 460, y: 200 },
     { id: 'Z',  label: 'Z',  x: 460, y: 180 }
   ];
-  return [1, 2, 3].map(i => ({
+  return [1, 2, 3, 4, 5].map(i => ({
     index: i,
     positions: clonePositions(base)
   }));
@@ -145,7 +145,7 @@ export function emptyTemplate(): Slide[] {
     { id: 'Z',  label: 'Z',  x: 460, y: 200 },
     { id: 'W',  label: 'W',  x: 420, y: 180 }
   ];
-  return [1, 2, 3].map(i => ({
+  return [1, 2, 3, 4, 5].map(i => ({
     index: i,
     positions: clonePositions(base)
   }));
