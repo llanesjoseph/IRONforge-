@@ -29,10 +29,43 @@ export default function PlayerFocusedEditor({
   const [linkedPlayerIds, setLinkedPlayerIds] = useState<Set<string>>(new Set());
   const stageRef = useRef<Konva.Stage>(null);
 
-  // Get all positions for the selected player across all slides
+  // Clear positions 2-5 when selecting a new player (keep only slide 1)
+  useEffect(() => {
+    if (!canEdit || !selectedPlayerId) return;
+
+    // Check if player has positions on slides 2-5
+    const hasMultiplePositions = play.slides.slice(1).some(slide => {
+      const pos = slide.positions.find(p => p.id === selectedPlayerId);
+      return pos && pos.x !== undefined;
+    });
+
+    // If they do, clear them so we can build from slide 1 → 2 → 3 → 4 → 5
+    if (hasMultiplePositions) {
+      const slide1Position = play.slides[0].positions.find(p => p.id === selectedPlayerId);
+
+      const updatedSlides = play.slides.map((slide, idx) => {
+        if (idx === 0) return slide; // Keep slide 1 as-is
+
+        // For slides 2-5, reset this player's position to slide 1's position but mark as "not placed"
+        return {
+          ...slide,
+          positions: slide.positions.map(pos =>
+            pos.id === selectedPlayerId
+              ? { ...pos, x: slide1Position?.x || pos.x, y: slide1Position?.y || pos.y, _notPlacedYet: true }
+              : pos
+          )
+        };
+      });
+
+      onUpdate(updatedSlides);
+    }
+  }, [selectedPlayerId]);
+
+  // Get all positions for the selected player across all slides (excluding "not placed yet" ones)
   const selectedPlayerPositions = play.slides.map((slide, slideIndex) => {
     const pos = slide.positions.find(p => p.id === selectedPlayerId);
-    return pos ? { ...pos, slideIndex: slideIndex + 1 } : null;
+    if (!pos || (pos as any)._notPlacedYet) return null;
+    return { ...pos, slideIndex: slideIndex + 1 };
   }).filter(Boolean) as (PlayerPosition & { slideIndex: number })[];
 
   // Get the selected player info
@@ -68,7 +101,9 @@ export default function PlayerFocusedEditor({
                 const newPosSnapped = enableSnapping
                   ? snapToGrid(pos.x + deltaX, pos.y + deltaY)
                   : { x: pos.x + deltaX, y: pos.y + deltaY };
-                return { ...pos, x: newPosSnapped.x, y: newPosSnapped.y };
+                // Remove _notPlacedYet marker when dragging
+                const { _notPlacedYet, ...cleanPos } = pos as any;
+                return { ...cleanPos, x: newPosSnapped.x, y: newPosSnapped.y };
               }
               return pos;
             })
@@ -84,11 +119,14 @@ export default function PlayerFocusedEditor({
         if (idx + 1 === slideIndex) {
           return {
             ...slide,
-            positions: slide.positions.map(pos =>
-              pos.id === (draggedPlayerId || selectedPlayerId)
-                ? { ...pos, x: finalX, y: finalY }
-                : pos
-            )
+            positions: slide.positions.map(pos => {
+              if (pos.id === (draggedPlayerId || selectedPlayerId)) {
+                // Remove _notPlacedYet marker when dragging
+                const { _notPlacedYet, ...cleanPos } = pos as any;
+                return { ...cleanPos, x: finalX, y: finalY };
+              }
+              return pos;
+            })
           };
         }
         return slide;
@@ -131,11 +169,14 @@ export default function PlayerFocusedEditor({
       if (idx === targetSlideIndex) {
         return {
           ...slide,
-          positions: slide.positions.map(pos =>
-            pos.id === selectedPlayerId
-              ? { ...pos, x: finalX, y: finalY }
-              : pos
-          )
+          positions: slide.positions.map(pos => {
+            if (pos.id === selectedPlayerId) {
+              // Remove _notPlacedYet marker and set new position
+              const { _notPlacedYet, ...cleanPos } = pos as any;
+              return { ...cleanPos, x: finalX, y: finalY };
+            }
+            return pos;
+          })
         };
       }
       return slide;
@@ -255,9 +296,10 @@ export default function PlayerFocusedEditor({
         {/* Horizontal scrollable player tabs */}
         <div className="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4">
           {allPlayers.map((player) => {
-            const playerPositionsCount = play.slides.filter(slide =>
-              slide.positions.find(p => p.id === player.id)?.x !== undefined
-            ).length;
+            const playerPositionsCount = play.slides.filter(slide => {
+              const pos = slide.positions.find(p => p.id === player.id);
+              return pos && pos.x !== undefined && !(pos as any)._notPlacedYet;
+            }).length;
             const isComplete = playerPositionsCount === play.slides.length;
             const isSelected = player.id === selectedPlayerId;
             const isLinked = linkedPlayerIds.has(player.id);
@@ -395,7 +437,8 @@ export default function PlayerFocusedEditor({
 
               const linkedPlayerPositions = play.slides.map((slide, slideIndex) => {
                 const pos = slide.positions.find(p => p.id === playerId);
-                return pos ? { ...pos, slideIndex: slideIndex + 1 } : null;
+                if (!pos || (pos as any)._notPlacedYet) return null;
+                return { ...pos, slideIndex: slideIndex + 1 };
               }).filter(Boolean) as (PlayerPosition & { slideIndex: number })[];
 
               return linkedPlayerPositions.map((pos, index) => (
@@ -672,9 +715,10 @@ export default function PlayerFocusedEditor({
             {/* Complete Setup Button - show when all players have all positions */}
             {(() => {
               const allPlayersComplete = allPlayers.every(player => {
-                const playerPosCount = play.slides.filter(slide =>
-                  slide.positions.find(p => p.id === player.id)?.x !== undefined
-                ).length;
+                const playerPosCount = play.slides.filter(slide => {
+                  const pos = slide.positions.find(p => p.id === player.id);
+                  return pos && pos.x !== undefined && !(pos as any)._notPlacedYet;
+                }).length;
                 return playerPosCount === play.slides.length;
               });
 

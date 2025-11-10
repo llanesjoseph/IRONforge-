@@ -9,7 +9,9 @@
       "Bash(git stash:*)",
       "Bash(git merge:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(npm run build:*)",
+      "Bash(git push:*)"
     ],
     "deny": [],
     "ask": []
