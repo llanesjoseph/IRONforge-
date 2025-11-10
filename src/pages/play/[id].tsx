@@ -8,6 +8,7 @@ import ExportButtons from '../../components/ExportButtons';
 import AIAssistant from '../../components/AIAssistant';
 import PlayGeneratorModal from '../../components/PlayGeneratorModal';
 import RedTeamPanel from '../../components/RedTeamPanel';
+import PlayerFocusedEditor from '../../components/PlayerFocusedEditor';
 import {
   Play,
   Route,
@@ -79,6 +80,9 @@ export default function PlayEditor() {
   const [autoAnimate, setAutoAnimate] = useState(true);
   const [previousSlideIndex, setPreviousSlideIndex] = useState(slideIndex);
 
+  // Editing mode state
+  const [editingMode, setEditingMode] = useState<'traditional' | 'player-focused'>('player-focused');
+
   // Allow anyone who owns the play to edit it (both coaches and players)
   const canEdit = auth.currentUser && play && play.createdBy === auth.currentUser.uid;
 
@@ -133,6 +137,17 @@ export default function PlayEditor() {
     }
     setPreviousSlideIndex(slideIndex);
   }, [slideIndex]);
+
+  // Listen for complete player setup event
+  useEffect(() => {
+    const handleCompleteSetup = () => {
+      setEditingMode('traditional');
+      setSlideIndex(1); // Go to first slide
+    };
+
+    window.addEventListener('completePlayerSetup', handleCompleteSetup);
+    return () => window.removeEventListener('completePlayerSetup', handleCompleteSetup);
+  }, []);
 
   const updatePosition = async (playerId: string, x: number, y: number) => {
     if (!play || !canEdit) return;
@@ -988,6 +1003,47 @@ export default function PlayEditor() {
     }
   };
 
+  const reorderSlides = async (oldIndex: number, newIndex: number) => {
+    if (!play || !canEdit) return;
+
+    // Create a copy of the slides array
+    const slidesCopy = [...play.slides];
+
+    // Move the slide from oldIndex to newIndex
+    const [movedSlide] = slidesCopy.splice(oldIndex, 1);
+    slidesCopy.splice(newIndex, 0, movedSlide);
+
+    // Reindex all slides based on their new positions
+    const updatedSlides = slidesCopy.map((slide, i) => ({
+      ...slide,
+      index: i + 1
+    }));
+
+    const newPlay = { ...play, slides: updatedSlides };
+    setPlay(newPlay);
+
+    // Adjust current slide index if needed
+    if (slideIndex === oldIndex + 1) {
+      // If we moved the current slide, follow it to its new position
+      setSlideIndex(newIndex + 1);
+    } else if (slideIndex > oldIndex + 1 && slideIndex <= newIndex + 1) {
+      // Current slide was shifted left
+      setSlideIndex(slideIndex - 1);
+    } else if (slideIndex < oldIndex + 1 && slideIndex >= newIndex + 1) {
+      // Current slide was shifted right
+      setSlideIndex(slideIndex + 1);
+    }
+
+    try {
+      setSaving(true);
+      await updateDoc(doc(db, 'plays', play.id), { slides: updatedSlides });
+    } catch (error) {
+      console.error('Error reordering slides:', error);
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const current = useMemo(() => play?.slides.find(s => s.index === slideIndex) || null, [play, slideIndex]);
 
   const previous = useMemo(() => {
@@ -1363,7 +1419,47 @@ export default function PlayEditor() {
             </div>
           </div>
 
+          {/* Mode Toggle */}
+          {canEdit && (
+            <div className="mb-4 p-3 bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg">
+              <div className="flex items-center justify-between flex-wrap gap-3">
+                <div>
+                  <h3 className="font-bold text-gray-900 text-sm sm:text-base">Editing Mode</h3>
+                  <p className="text-xs sm:text-sm text-gray-600 mt-0.5">
+                    {editingMode === 'player-focused'
+                      ? 'Focus on one player at a time - perfect for mobile!'
+                      : 'Traditional slide-by-slide editing'}
+                  </p>
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setEditingMode('player-focused')}
+                    className={`px-4 py-2 rounded-lg font-semibold text-sm transition-all ${
+                      editingMode === 'player-focused'
+                        ? 'bg-blue-600 text-white ring-2 ring-blue-400 shadow-lg'
+                        : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300'
+                    }`}
+                  >
+                    <span className="hidden sm:inline">📱 </span>Player Focus
+                  </button>
+                  <button
+                    onClick={() => setEditingMode('traditional')}
+                    className={`px-4 py-2 rounded-lg font-semibold text-sm transition-all ${
+                      editingMode === 'traditional'
+                        ? 'bg-blue-600 text-white ring-2 ring-blue-400 shadow-lg'
+                        : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300'
+                    }`}
+                  >
+                    <span className="hidden sm:inline">🎬 </span>Traditional
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className="space-y-3 sm:space-y-4">
+            {editingMode === 'traditional' && (
+            <>
             <div className="flex gap-2 flex-wrap items-center text-sm sm:text-base">
               <button
                 disabled={!canEdit}
@@ -1950,8 +2046,28 @@ export default function PlayEditor() {
               slides={play.slides}
               onAddSlide={addSlide}
               onDeleteSlide={deleteSlide}
+              onReorderSlides={reorderSlides}
               canEdit={!!canEdit}
             />
+            </>
+            )}
+
+            {/* Player-Focused Editor Mode */}
+            {editingMode === 'player-focused' && (
+              <div className="border border-gray-200 rounded-lg overflow-hidden bg-white h-[600px] md:h-[700px]">
+                <PlayerFocusedEditor
+                  play={play}
+                  onUpdate={(updatedSlides) => {
+                    const newPlay = { ...play, slides: updatedSlides };
+                    setPlay(newPlay);
+                    updateDoc(doc(db, 'plays', play.id), { slides: updatedSlides }).catch(console.error);
+                  }}
+                  canEdit={!!canEdit}
+                  showGrid={showGrid}
+                  enableSnapping={enableSnapping}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>

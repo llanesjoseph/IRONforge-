@@ -2,6 +2,23 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Stage, Layer, Rect, Circle, Text, Line, Arrow } from 'react-konva';
 import { Slide } from '../types';
 import { FIELD } from '../lib/formations';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  rectSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 interface SlideControlsProps {
   current: number;
@@ -10,6 +27,7 @@ interface SlideControlsProps {
   slides: Slide[];
   onAddSlide?: () => void;
   onDeleteSlide?: (index: number) => void;
+  onReorderSlides?: (oldIndex: number, newIndex: number) => void;
   canEdit?: boolean;
 }
 
@@ -20,6 +38,7 @@ export default function SlideControls({
   slides,
   onAddSlide,
   onDeleteSlide,
+  onReorderSlides,
   canEdit = false
 }: SlideControlsProps) {
   const labels = ['Setup', 'Mid', 'Final', 'Extra 1', 'Extra 2', 'Extra 3', 'Extra 4', 'Extra 5', 'Extra 6', 'Extra 7'];
@@ -33,6 +52,24 @@ export default function SlideControls({
   const scale = 0.2; // Smaller scale for thumbnails
   const thumbWidth = fieldWidth * scale;
   const thumbHeight = fieldHeight * scale;
+
+  // Drag and drop sensors
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id && onReorderSlides) {
+      const oldIndex = parseInt(active.id as string);
+      const newIndex = parseInt(over.id as string);
+      onReorderSlides(oldIndex, newIndex);
+    }
+  };
 
   // Animation effect
   useEffect(() => {
@@ -70,20 +107,51 @@ export default function SlideControls({
     setSlide(1);
   };
 
-  const renderSlideThumbnail = (slide: Slide, index: number) => {
+  // Sortable thumbnail component
+  const SortableThumbnail = ({ slide, index }: { slide: Slide; index: number }) => {
+    const {
+      attributes,
+      listeners,
+      setNodeRef,
+      transform,
+      transition,
+      isDragging,
+    } = useSortable({ id: String(index), disabled: !canEdit });
+
+    const style = {
+      transform: CSS.Transform.toString(transform),
+      transition,
+      opacity: isDragging ? 0.5 : 1,
+    };
+
     const isActive = current === index + 1;
 
     return (
       <div
-        key={index}
-        className={`relative cursor-pointer transition-all ${
+        ref={setNodeRef}
+        style={style}
+        {...attributes}
+        {...listeners}
+        className={`relative ${canEdit ? 'cursor-move' : 'cursor-pointer'} transition-all ${
           isActive ? 'ring-4 ring-blue-500 scale-105' : 'ring-2 ring-gray-300 hover:ring-blue-300'
         } rounded-lg overflow-hidden bg-gray-100`}
-        onClick={() => {
-          setIsPlaying(false);
-          setSlide(index + 1);
+        onClick={(e) => {
+          // Only change slide if not dragging
+          if (!isDragging) {
+            setIsPlaying(false);
+            setSlide(index + 1);
+          }
         }}
       >
+        {/* Drag handle indicator */}
+        {canEdit && (
+          <div className="absolute top-1 right-1 z-10 bg-gray-700 bg-opacity-70 rounded px-1.5 py-0.5 text-white text-xs font-bold">
+            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M7 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 2zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 14zm6-8a2 2 0 1 0-.001-4.001A2 2 0 0 0 13 6zm0 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 14z"></path>
+            </svg>
+          </div>
+        )}
+
         <div className="relative">
           <Stage width={thumbWidth} height={thumbHeight}>
             <Layer>
@@ -244,9 +312,22 @@ export default function SlideControls({
       </div>
 
       {/* Slide Thumbnails */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-        {slides.map((slide, index) => renderSlideThumbnail(slide, index))}
-      </div>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+      >
+        <SortableContext
+          items={slides.map((_, index) => String(index))}
+          strategy={rectSortingStrategy}
+        >
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+            {slides.map((slide, index) => (
+              <SortableThumbnail key={index} slide={slide} index={index} />
+            ))}
+          </div>
+        </SortableContext>
+      </DndContext>
     </div>
   );
 }
