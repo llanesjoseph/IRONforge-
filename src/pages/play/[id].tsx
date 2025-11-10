@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { doc, getDoc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, deleteDoc, addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '../../lib/firebase';
 import CanvasField, { CanvasHandle } from '../../components/CanvasField';
 import SlideControls from '../../components/SlideControls';
@@ -390,6 +390,42 @@ export default function PlayEditor() {
         console.error('Error deleting play:', error);
         alert('Failed to delete play');
       }
+    }
+  };
+
+  const handleDuplicate = async () => {
+    if (!play) return;
+
+    const user = auth.currentUser;
+    if (!user) {
+      alert('You must be logged in to duplicate plays');
+      return;
+    }
+
+    try {
+      setSaving(true);
+
+      // Create a copy of the play with a new name and current user as creator
+      const newPlayName = play.name.replace('[Official]', '').trim();
+      const duplicatedPlay = {
+        name: `${newPlayName} (Copy)`,
+        teamId: play.teamId,
+        createdBy: user.uid,
+        slides: JSON.parse(JSON.stringify(play.slides)), // Deep copy slides
+        formation: play.formation,
+        notes: play.notes ? `${play.notes}\n\n📋 Duplicated from: ${play.name}` : `📋 Duplicated from: ${play.name}`,
+        createdAt: serverTimestamp(),
+      };
+
+      const docRef = await addDoc(collection(db, 'plays'), duplicatedPlay);
+
+      // Navigate to the new play
+      navigate(`/play/${docRef.id}`);
+    } catch (error) {
+      console.error('Error duplicating play:', error);
+      alert('Failed to duplicate play. Please try again.');
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -1401,7 +1437,14 @@ export default function PlayEditor() {
                 {saving && <span className="ml-2 text-blue-600">Saving...</span>}
               </p>
             </div>
-            <div className="flex gap-2 w-full sm:w-auto">
+            <div className="flex gap-2 w-full sm:w-auto flex-wrap">
+              <button
+                onClick={handleDuplicate}
+                className="flex-1 sm:flex-none px-3 sm:px-4 py-2 rounded-md bg-purple-600 text-white hover:bg-purple-700 transition-colors text-sm sm:text-base"
+                title="Create your own editable copy of this play"
+              >
+                📋 Duplicate
+              </button>
               {canEdit && (
                 <button
                   onClick={handleDelete}
