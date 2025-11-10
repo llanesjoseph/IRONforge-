@@ -922,6 +922,47 @@ export default function PlayEditor() {
     }
   };
 
+  const reorderSlides = async (oldIndex: number, newIndex: number) => {
+    if (!play || !canEdit) return;
+
+    // Create a copy of the slides array
+    const slidesCopy = [...play.slides];
+
+    // Move the slide from oldIndex to newIndex
+    const [movedSlide] = slidesCopy.splice(oldIndex, 1);
+    slidesCopy.splice(newIndex, 0, movedSlide);
+
+    // Reindex all slides based on their new positions
+    const updatedSlides = slidesCopy.map((slide, i) => ({
+      ...slide,
+      index: i + 1
+    }));
+
+    const newPlay = { ...play, slides: updatedSlides };
+    setPlay(newPlay);
+
+    // Adjust current slide index if needed
+    if (slideIndex === oldIndex + 1) {
+      // If we moved the current slide, follow it to its new position
+      setSlideIndex(newIndex + 1);
+    } else if (slideIndex > oldIndex + 1 && slideIndex <= newIndex + 1) {
+      // Current slide was shifted left
+      setSlideIndex(slideIndex - 1);
+    } else if (slideIndex < oldIndex + 1 && slideIndex >= newIndex + 1) {
+      // Current slide was shifted right
+      setSlideIndex(slideIndex + 1);
+    }
+
+    try {
+      setSaving(true);
+      await updateDoc(doc(db, 'plays', play.id), { slides: updatedSlides });
+    } catch (error) {
+      console.error('Error reordering slides:', error);
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const current = useMemo(() => play?.slides.find(s => s.index === slideIndex) || null, [play, slideIndex]);
 
   const previous = useMemo(() => {
@@ -1845,6 +1886,7 @@ export default function PlayEditor() {
               slides={play.slides}
               onAddSlide={addSlide}
               onDeleteSlide={deleteSlide}
+              onReorderSlides={reorderSlides}
               canEdit={!!canEdit}
             />
           </div>
