@@ -451,7 +451,9 @@ export default function ImportPlays() {
     setLogs([]);
     setComplete(false);
 
-    addLog(`Starting import of ${playTemplates.length} plays...`);
+    addLog(`Starting import of ${playTemplates.length} official plays...`);
+    addLog(`These plays will be shared with all team members.`);
+    addLog('');
 
     let successCount = 0;
     let errorCount = 0;
@@ -463,12 +465,12 @@ export default function ImportPlays() {
         const slides = play.getSlides();
 
         const docRef = await addDoc(collection(db, 'plays'), {
-          name: play.name,
+          name: `[Official] ${play.name}`,
           teamId: 'team-1',
-          createdBy: user.uid,
+          createdBy: user.uid, // Created by you so you can manage them
           slides,
           formation: play.formation,
-          notes: play.notes,
+          notes: `${play.notes}\n\n📚 Official playbook template - shared with all team members.`,
           createdAt: serverTimestamp(),
         });
 
@@ -484,10 +486,12 @@ export default function ImportPlays() {
 
     addLog('');
     addLog(`✅ Import complete!`);
-    addLog(`Successfully imported: ${successCount} plays`);
+    addLog(`Successfully imported: ${successCount} official plays`);
     if (errorCount > 0) {
       addLog(`Failed: ${errorCount} plays`);
     }
+    addLog('');
+    addLog('📚 All plays are now available to your entire team!');
 
     setLoading(false);
     setComplete(true);
@@ -499,8 +503,8 @@ export default function ImportPlays() {
         <div className="card p-6">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h1 className="text-3xl font-display font-bold text-white mb-2">Import Sample Plays</h1>
-              <p className="text-iron-300">Import 20 common offensive plays into your playbook</p>
+              <h1 className="text-3xl font-display font-bold text-white mb-2">Import Official Plays</h1>
+              <p className="text-iron-300">Import 20 common offensive plays to share with your entire team</p>
             </div>
             {!complete && (
               <button
@@ -513,18 +517,32 @@ export default function ImportPlays() {
           </div>
 
           {!loading && !complete && (
-            <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-6 mb-6">
-              <h2 className="text-xl font-semibold text-white mb-3">Plays to be imported:</h2>
-              <div className="grid grid-cols-2 gap-2 text-sm text-iron-200">
-                {playTemplates.map((play, idx) => (
-                  <div key={idx} className="flex items-center gap-2">
-                    <span className="text-purple-400">•</span>
-                    <span>{play.name}</span>
-                    <span className="text-iron-400 text-xs">({play.formation})</span>
+            <>
+              <div className="bg-purple-500/10 border border-purple-500/30 rounded-lg p-4 mb-6">
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">📚</span>
+                  <div>
+                    <h3 className="font-semibold text-white mb-1">Official Team Playbook</h3>
+                    <p className="text-sm text-iron-300">
+                      These plays will be marked as "[Official]" and visible to all team members.
+                      As the creator, you'll be able to edit or delete them.
+                    </p>
                   </div>
-                ))}
+                </div>
               </div>
-            </div>
+              <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-6 mb-6">
+                <h2 className="text-xl font-semibold text-white mb-3">Plays to be imported:</h2>
+                <div className="grid grid-cols-2 gap-2 text-sm text-iron-200">
+                  {playTemplates.map((play, idx) => (
+                    <div key={idx} className="flex items-center gap-2">
+                      <span className="text-purple-400">•</span>
+                      <span>{play.name}</span>
+                      <span className="text-iron-400 text-xs">({play.formation})</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
           )}
 
           {!complete ? (
