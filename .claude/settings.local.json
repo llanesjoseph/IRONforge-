@@ -11,7 +11,16 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(npm run build:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(firebase deploy:*)",
+      "WebFetch(domain:gist.githubusercontent.com)",
+      "Bash(curl -s \"https://gist.githubusercontent.com/chatgpt-samples/20plays-offense/main/playbook.json\" -o playbook.json)",
+      "Bash(cat:*)",
+      "Bash(npm install:*)",
+      "Bash(node scripts/import-plays.mjs:*)",
+      "Bash(node build_playbook.mjs:*)",
+      "Bash(node convert-playbook.mjs:*)",
+      "Bash(firebase login:*)"
     ],
     "deny": [],
     "ask": []

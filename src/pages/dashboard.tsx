@@ -23,8 +23,12 @@ export default function Dashboard() {
         const userProfile = await getOrCreateUserProfile();
         setProfile(userProfile);
 
-        // Fetch plays
-        const snapshot = await getDocs(collection(db, 'plays'));
+        // Fetch plays for team-1
+        const playsQuery = query(
+          collection(db, 'plays'),
+          where('teamId', '==', 'team-1')
+        );
+        const snapshot = await getDocs(playsQuery);
         const results = snapshot.docs.map(doc => ({
           id: doc.id,
           ...(doc.data() as Omit<Play, 'id'>)
