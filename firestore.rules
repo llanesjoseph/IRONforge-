@@ -50,20 +50,18 @@ service cloud.firestore {
 
     // Plays collection
     match /plays/{playId} {
-      // Read: Must be authenticated and belong to same team
-      allow read: if isAuthenticated() && belongsToTeam(resource.data.teamId);
+      // Read: Any authenticated user can see all plays
+      allow read: if isAuthenticated();
 
-      // Create: Any authenticated user can create plays (for now)
+      // Create: Any authenticated user can create plays
       allow create: if isAuthenticated() &&
         validPlayData() &&
-        request.resource.data.createdBy == request.auth.uid &&
-        belongsToTeam(request.resource.data.teamId);
+        request.resource.data.createdBy == request.auth.uid;
 
       // Update: Must be owner (players can edit their own plays)
       allow update: if isOwner(resource.data.createdBy) &&
         validPlayData() &&
-        request.resource.data.createdBy == resource.data.createdBy &&
-        request.resource.data.teamId == resource.data.teamId;
+        request.resource.data.createdBy == resource.data.createdBy;
 
       // Delete: Must be owner (players can delete their own plays)
       allow delete: if isOwner(resource.data.createdBy);

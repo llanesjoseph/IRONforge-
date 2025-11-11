@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
 import { db, auth } from '../lib/firebase';
 import { Play, UserProfile, Team as TeamType, Invite } from '../types';
 import { Link } from 'react-router-dom';
@@ -23,12 +23,8 @@ export default function Dashboard() {
         const userProfile = await getOrCreateUserProfile();
         setProfile(userProfile);
 
-        // Fetch plays for team-1
-        const playsQuery = query(
-          collection(db, 'plays'),
-          where('teamId', '==', 'team-1')
-        );
-        const snapshot = await getDocs(playsQuery);
+        // Fetch all plays (everyone sees everything)
+        const snapshot = await getDocs(collection(db, 'plays'));
         const results = snapshot.docs.map(doc => ({
           id: doc.id,
           ...(doc.data() as Omit<Play, 'id'>)
