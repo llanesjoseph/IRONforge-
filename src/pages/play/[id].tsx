@@ -79,6 +79,7 @@ export default function PlayEditor() {
   const [animatedPositions, setAnimatedPositions] = useState<PlayerPosition[]>([]);
   const [autoAnimate, setAutoAnimate] = useState(true);
   const [previousSlideIndex, setPreviousSlideIndex] = useState(slideIndex);
+  const [isPlayingAll, setIsPlayingAll] = useState(false);
 
   // Editing mode state
   const [editingMode, setEditingMode] = useState<'traditional' | 'player-focused'>('player-focused');
@@ -1183,6 +1184,88 @@ export default function PlayEditor() {
     setAnimatedPositions([]);
   };
 
+  const playAllSlides = async () => {
+    if (!play || play.slides.length <= 1) return;
+
+    setIsPlayingAll(true);
+    setSlideIndex(1);
+
+    // Wait a bit for slide to render
+    await new Promise(resolve => setTimeout(resolve, 300));
+
+    // Play through each slide
+    for (let i = 2; i <= play.slides.length; i++) {
+      if (!isPlayingAll && i > 2) break; // Allow stopping
+
+      setSlideIndex(i);
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      // Animate to this slide
+      await new Promise(resolve => {
+        setIsAnimating(true);
+        setAnimationProgress(0);
+
+        const previous = play.slides.find(s => s.index === i - 1);
+        const current = play.slides.find(s => s.index === i);
+        if (!previous || !current) {
+          resolve(undefined);
+          return;
+        }
+
+        const duration = 2000; // 2 seconds
+        const startTime = Date.now();
+
+        const animate = () => {
+          const elapsed = Date.now() - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+
+          setAnimationProgress(progress);
+
+          const newPositions = current.positions.map(player => {
+            const prevPos = previous.positions.find(p => p.id === player.id);
+            if (!prevPos) return player;
+
+            const movementRoute = current.movementRoutes?.find(r => r.playerId === player.id);
+
+            if (movementRoute && movementRoute.points.length > 0) {
+              const pos = getPositionAlongPath(movementRoute.points, progress);
+              return pos ? { ...player, x: pos.x, y: pos.y } : player;
+            } else {
+              return {
+                ...player,
+                x: prevPos.x + (player.x - prevPos.x) * progress,
+                y: prevPos.y + (player.y - prevPos.y) * progress
+              };
+            }
+          });
+
+          setAnimatedPositions(newPositions);
+
+          if (progress < 1) {
+            requestAnimationFrame(animate);
+          } else {
+            setIsAnimating(false);
+            setAnimationProgress(0);
+            setAnimatedPositions([]);
+            resolve(undefined);
+          }
+        };
+
+        requestAnimationFrame(animate);
+      });
+
+      // Pause between slides
+      await new Promise(resolve => setTimeout(resolve, 500));
+    }
+
+    setIsPlayingAll(false);
+  };
+
+  const stopPlayAll = () => {
+    setIsPlayingAll(false);
+    stopAnimation();
+  };
+
   // AI Assistant handlers
   const handleApplyFormation = async (positions: PlayerPosition[]) => {
     if (!play || !canEdit) return;
@@ -1631,7 +1714,18 @@ export default function PlayEditor() {
                     </label>
                   </>
                 )}
-                {slideIndex > 1 && !isAnimating && (
+                {!isPlayingAll && !isAnimating && play && play.slides.length > 1 && (
+                  <button
+                    onClick={playAllSlides}
+                    className="px-3 py-1.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all flex items-center gap-2 font-bold text-xs sm:text-sm shadow-lg"
+                  >
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M6 4l14 8-14 8V4z" />
+                    </svg>
+                    Play All
+                  </button>
+                )}
+                {slideIndex > 1 && !isAnimating && !isPlayingAll && (
                   <button
                     onClick={playAnimation}
                     className="px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all flex items-center gap-2 font-bold text-xs sm:text-sm"
@@ -1639,12 +1733,12 @@ export default function PlayEditor() {
                     <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M8 5v14l11-7z" />
                     </svg>
-                    Play
+                    Play Slide
                   </button>
                 )}
-                {isAnimating && (
+                {(isAnimating || isPlayingAll) && (
                   <button
-                    onClick={stopAnimation}
+                    onClick={isPlayingAll ? stopPlayAll : stopAnimation}
                     className="px-3 py-1.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all flex items-center gap-2 font-bold text-xs sm:text-sm"
                   >
                     <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
