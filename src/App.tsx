@@ -4,6 +4,7 @@ import Login from './pages/login';
 import PlayEditor from './pages/play/[id]';
 import NewPlay from './pages/new-play';
 import ImportPlays from './pages/import-plays';
+import RemoveDuplicates from './pages/remove-duplicates';
 import Schedule from './pages/schedule';
 import AITest from './pages/ai-test';
 import Team from './pages/Team';
@@ -65,6 +66,14 @@ export default function App() {
           element={
             <ProtectedRoute>
               <ImportPlays />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/remove-duplicates"
+          element={
+            <ProtectedRoute>
+              <RemoveDuplicates />
             </ProtectedRoute>
           }
         />

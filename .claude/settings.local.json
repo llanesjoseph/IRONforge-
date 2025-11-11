@@ -20,7 +20,9 @@
       "Bash(node scripts/import-plays.mjs:*)",
       "Bash(node build_playbook.mjs:*)",
       "Bash(node convert-playbook.mjs:*)",
-      "Bash(firebase login:*)"
+      "Bash(firebase login:*)",
+      "Bash(node scripts/check-plays.mjs:*)",
+      "Bash(node scripts/remove-duplicates.mjs:*)"
     ],
     "deny": [],
     "ask": []
